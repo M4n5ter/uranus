@@ -20,4 +20,5 @@ func init() {
 		log.Fatalln(err)
 	}
 	GlobalDB = db
+	GlobalDB.AutoMigrate(&Flight{}, &FlightInfo{}, &Space{})
 }

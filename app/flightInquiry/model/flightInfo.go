@@ -8,8 +8,8 @@ import (
 // FlightInfo 航班信息
 type FlightInfo struct {
 	gorm.Model
-	//对应的航班ID
-	FlightID uint
+	//对应的航班号
+	FlightNumber string
 	//出发日期
 	SetOutDate time.Time
 	//舱位
