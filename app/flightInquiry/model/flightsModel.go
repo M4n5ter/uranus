@@ -34,7 +34,7 @@ type (
 		Insert(session sqlx.Session, data *Flights) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*Flights, error)
-		// FindOneBy 根据唯一索引查询一条数据，走缓存
+		// FindOneByNumber 根据唯一索引查询一条数据，走缓存
 		FindOneByNumber(number sql.NullString) (*Flights, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error

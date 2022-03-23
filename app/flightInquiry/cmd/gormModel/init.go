@@ -24,6 +24,6 @@ func init() {
 
 type Model struct {
 	gorm.Model
-	DelState bool `gorm:"not null;default:0"`
-	Version  int  `gorm:"not null;default:0"`
+	DelState bool `gorm:"not null;default:0;comment:是否已经删除"`
+	Version  int  `gorm:"not null;default:0;comment:版本号"`
 }

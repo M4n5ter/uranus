@@ -11,7 +11,7 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 23/03/2022 11:07:10
+ Date: 23/03/2022 19:03:25
 */
 
 SET NAMES utf8mb4;
@@ -26,10 +26,10 @@ CREATE TABLE `flights`  (
   `created_at` datetime(3) NULL DEFAULT NULL,
   `updated_at` datetime(3) NULL DEFAULT NULL,
   `deleted_at` datetime(3) NULL DEFAULT NULL,
-  `del_state` tinyint(1) NOT NULL DEFAULT 0,
-  `version` bigint(20) NOT NULL DEFAULT 0,
-  `number` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `flt_type_jmp` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `del_state` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已经删除',
+  `version` bigint(20) NOT NULL DEFAULT 0 COMMENT '版本号',
+  `number` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '航班号',
+  `flt_type_jmp` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '机型',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `number`(`number`) USING BTREE,
   INDEX `idx_flights_deleted_at`(`deleted_at`) USING BTREE
