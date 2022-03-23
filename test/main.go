@@ -1,7 +1,10 @@
 package main
 
+import "uranus/app/flightInquiry/cmd/gormModel"
+
 func main() {
-	//model.GlobalDB.AutoMigrate(&model.Flight{}, &model.FlightInfo{}, &model.Space{})
+	gormModel.GlobalDB.AutoMigrate(&gormModel.FlightInfo{}, &gormModel.Flight{}, &gormModel.Space{})
+	//model.GlobalDB.AutoMigrate(&model.Space{})
 	//s1 := model.Space{
 	//	IsFirstClass: true,
 	//	Price:        999,

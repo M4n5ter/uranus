@@ -1,0 +1,10 @@
+Name: flightinquiry-rpc
+ListenOn: 0.0.0.0:9001
+Mode: dev
+
+Log:
+  ServiceName: flightinquiry-rpc
+  Level: error
+
+DB:
+  DataSource: "root:123456(host:port)/dbname?charset=utf8mb4&parseTime=True&loc=Local"

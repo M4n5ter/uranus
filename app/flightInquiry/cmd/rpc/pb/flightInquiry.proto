@@ -1,3 +1,64 @@
 syntax = "proto3";
 
-package template;
+option go_package = "./pb";
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+message FlightInfo {
+  // 航班号，例如MU5735
+  string                    FlightNumber  = 1;
+  // 出发日期
+  google.protobuf.Timestamp SetOutTime    = 2;
+  // 是否为头等舱/商务舱
+  bool                      IsFirstClass  = 3;
+  // 票价
+  uint64                    Price         = 4;
+  // 剩余量(由于有超卖可能性，可能为负)
+  int64                     Surplus       = 5;
+  // 准点率(例如97，表示97%)
+  uint32                    Punctuality   = 6;
+  //起飞地点
+  string                    StartPosition = 7;
+  //起飞时间
+  google.protobuf.Timestamp StartTime     = 8;
+  //降落地点
+  string                    EndPosition   = 9;
+  //降落时间
+  google.protobuf.Timestamp EndTime       = 10;
+}
+
+// QuireBySetOutTimeAndFlightNumberReq 通过给定日期、航班号进行航班查询请求
+message QuireBySetOutTimeAndFlightNumberReq {
+  // 航班号，例如MU5735
+  string                    FlightNumber  = 1;
+  // 出发日期
+  google.protobuf.Timestamp SetOutTime    = 2;
+}
+// QuireBySetOutTimeAndFlightNumberResp 为 QuireBySetOutTimeAndFlightNumberReq 的响应
+message QuireBySetOutTimeAndFlightNumberResp {
+  // 查询结果
+  repeated FlightInfo FlightInfos = 1;
+}
+
+
+
+// QuireBySetOutTimeStartPositionEndPositionReq 通过给定日期、出发地、目的地进行航班查询请求
+message QuireBySetOutTimeStartPositionEndPositionReq {
+  // 出发日期
+  google.protobuf.Timestamp SetOutTime    = 1;
+  //起飞地点
+  string                    StartPosition = 2;
+  //降落地点
+  string                    EndPosition   = 3;
+}
+// QuireBySetOutTimeStartPositionEndPositionResp 为 QuireBySetOutTimeStartPositionEndPositionReq 的响应
+message QuireBySetOutTimeStartPositionEndPositionResp {
+  // 查询结果
+  repeated FlightInfo FlightInfos = 1;
+}
+
+service flightInquiry {
+  rpc QuireBySetOutTimeAndFlightNumber(QuireBySetOutTimeAndFlightNumberReq) returns(QuireBySetOutTimeAndFlightNumberResp);
+  rpc QuireBySetOutTimeStartPositionEndPosition(QuireBySetOutTimeStartPositionEndPositionReq) returns(QuireBySetOutTimeStartPositionEndPositionResp);
+}
