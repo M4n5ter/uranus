@@ -21,8 +21,8 @@ import (
 var (
 	flightsFieldNames          = builder.RawFieldNames(&Flights{})
 	flightsRows                = strings.Join(flightsFieldNames, ",")
-	flightsRowsExpectAutoSet   = strings.Join(stringx.Remove(flightsFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
-	flightsRowsWithPlaceHolder = strings.Join(stringx.Remove(flightsFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
+	flightsRowsExpectAutoSet   = strings.Join(stringx.Remove(flightsFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
+	flightsRowsWithPlaceHolder = strings.Join(stringx.Remove(flightsFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
 
 	cacheFlightsIdPrefix     = "cache:flights:id:"
 	cacheFlightsNumberPrefix = "cache:flights:number:"
@@ -78,10 +78,10 @@ type (
 		CreatedAt  sql.NullTime   `db:"created_at"`
 		UpdatedAt  sql.NullTime   `db:"updated_at"`
 		DeletedAt  sql.NullTime   `db:"deleted_at"`
-		DelState   int64          `db:"del_state"`
-		Version    int64          `db:"version"`
-		Number     sql.NullString `db:"number"`
-		FltTypeJmp sql.NullString `db:"flt_type_jmp"`
+		DelState   int64          `db:"del_state"`    // 是否已经删除
+		Version    int64          `db:"version"`      // 版本号
+		Number     sql.NullString `db:"number"`       // 航班号
+		FltTypeJmp sql.NullString `db:"flt_type_jmp"` // 机型
 	}
 )
 
@@ -130,7 +130,7 @@ func (m *defaultFlightsModel) FindOne(id int64) (*Flights, error) {
 	}
 }
 
-// FindOneBy 根据唯一索引查询一条数据，走缓存
+// FindOneByNumber 根据唯一索引查询一条数据，走缓存
 func (m *defaultFlightsModel) FindOneByNumber(number sql.NullString) (*Flights, error) {
 	flightsNumberKey := fmt.Sprintf("%s%v", cacheFlightsNumberPrefix, number)
 	var resp Flights
@@ -164,7 +164,7 @@ func (m *defaultFlightsModel) Update(session sqlx.Session, data *Flights) (sql.R
 			return session.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp, data.Id)
 		}
 		return conn.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp, data.Id)
-	}, flightsIdKey, flightsNumberKey)
+	}, flightsNumberKey, flightsIdKey)
 }
 
 // UpdateWithVersion 乐观锁修改数据 ,推荐使用
@@ -184,7 +184,7 @@ func (m *defaultFlightsModel) UpdateWithVersion(session sqlx.Session, data *Flig
 			return session.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp, data.Id, oldVersion)
 		}
 		return conn.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp, data.Id, oldVersion)
-	}, flightsIdKey, flightsNumberKey)
+	}, flightsNumberKey, flightsIdKey)
 	if err != nil {
 		return err
 	}

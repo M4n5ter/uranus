@@ -21,8 +21,8 @@ import (
 var (
 	flightInfosFieldNames          = builder.RawFieldNames(&FlightInfos{})
 	flightInfosRows                = strings.Join(flightInfosFieldNames, ",")
-	flightInfosRowsExpectAutoSet   = strings.Join(stringx.Remove(flightInfosFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
-	flightInfosRowsWithPlaceHolder = strings.Join(stringx.Remove(flightInfosFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
+	flightInfosRowsExpectAutoSet   = strings.Join(stringx.Remove(flightInfosFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
+	flightInfosRowsWithPlaceHolder = strings.Join(stringx.Remove(flightInfosFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
 
 	cacheFlightInfosIdPrefix = "cache:flightInfos:id:"
 )
@@ -75,15 +75,15 @@ type (
 		CreatedAt     sql.NullTime   `db:"created_at"`
 		UpdatedAt     sql.NullTime   `db:"updated_at"`
 		DeletedAt     sql.NullTime   `db:"deleted_at"`
-		DelState      int64          `db:"del_state"`
-		Version       int64          `db:"version"`
-		FlightNumber  sql.NullString `db:"flight_number"`
-		SetOutDate    sql.NullTime   `db:"set_out_date"`
-		Punctuality   sql.NullInt64  `db:"punctuality"`
-		StartPosition sql.NullString `db:"start_position"`
-		StartTime     sql.NullTime   `db:"start_time"`
-		EndPosition   sql.NullString `db:"end_position"`
-		EndTime       sql.NullTime   `db:"end_time"`
+		DelState      int64          `db:"del_state"`      // 是否已经删除
+		Version       int64          `db:"version"`        // 版本号
+		FlightNumber  sql.NullString `db:"flight_number"`  // 对应的航班号
+		SetOutDate    sql.NullTime   `db:"set_out_date"`   // 出发日期
+		Punctuality   sql.NullInt64  `db:"punctuality"`    // 准点率
+		StartPosition sql.NullString `db:"start_position"` // 起飞地点
+		StartTime     sql.NullTime   `db:"start_time"`     // 起飞时间
+		EndPosition   sql.NullString `db:"end_position"`   // 降落地点
+		EndTime       sql.NullTime   `db:"end_time"`       // 降落时间
 	}
 )
 

@@ -21,8 +21,8 @@ import (
 var (
 	spacesFieldNames          = builder.RawFieldNames(&Spaces{})
 	spacesRows                = strings.Join(spacesFieldNames, ",")
-	spacesRowsExpectAutoSet   = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
-	spacesRowsWithPlaceHolder = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
+	spacesRowsExpectAutoSet   = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
+	spacesRowsWithPlaceHolder = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
 
 	cacheSpacesIdPrefix = "cache:spaces:id:"
 )
@@ -75,12 +75,12 @@ type (
 		CreatedAt    sql.NullTime  `db:"created_at"`
 		UpdatedAt    sql.NullTime  `db:"updated_at"`
 		DeletedAt    sql.NullTime  `db:"deleted_at"`
-		DelState     int64         `db:"del_state"`
-		Version      int64         `db:"version"`
-		FlightInfoId sql.NullInt64 `db:"flight_info_id"`
-		IsFirstClass sql.NullInt64 `db:"is_first_class"`
-		Price        sql.NullInt64 `db:"price"`
-		Surplus      sql.NullInt64 `db:"surplus"`
+		DelState     int64         `db:"del_state"`      // 是否已经删除
+		Version      int64         `db:"version"`        // 版本号
+		FlightInfoId sql.NullInt64 `db:"flight_info_id"` // 对应的航班信息id
+		IsFirstClass sql.NullInt64 `db:"is_first_class"` // 是否是头等舱/商务舱
+		Price        sql.NullInt64 `db:"price"`          // 价格
+		Surplus      sql.NullInt64 `db:"surplus"`        // 剩余量
 	}
 )
 
