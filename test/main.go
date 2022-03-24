@@ -1,9 +1,11 @@
 package main
 
-import "uranus/app/flightInquiry/cmd/gormModel"
+import (
+	gormModel2 "uranus/test/gormModel"
+)
 
 func main() {
-	gormModel.GlobalDB.AutoMigrate(&gormModel.FlightInfo{}, &gormModel.Flight{}, &gormModel.Space{}, &gormModel.Ticket{}, &gormModel.RefundAndChangeInfo{})
+	gormModel2.GlobalDB.AutoMigrate(&gormModel2.FlightInfo{}, &gormModel2.Flight{}, &gormModel2.Space{}, &gormModel2.Ticket{}, &gormModel2.RefundAndChangeInfo{})
 	//model.GlobalDB.AutoMigrate(&model.Space{})
 	//s1 := model.Space{
 	//	IsFirstClass: true,
