@@ -71,19 +71,19 @@ type (
 	}
 
 	FlightInfos struct {
-		Id            int64          `db:"id"`
-		CreatedAt     sql.NullTime   `db:"created_at"`
-		UpdatedAt     sql.NullTime   `db:"updated_at"`
-		DeletedAt     sql.NullTime   `db:"deleted_at"`
-		DelState      int64          `db:"del_state"`      // 是否已经删除
-		Version       int64          `db:"version"`        // 版本号
-		FlightNumber  sql.NullString `db:"flight_number"`  // 对应的航班号
-		SetOutDate    sql.NullTime   `db:"set_out_date"`   // 出发日期
-		Punctuality   sql.NullInt64  `db:"punctuality"`    // 准点率
-		StartPosition sql.NullString `db:"start_position"` // 起飞地点
-		StartTime     sql.NullTime   `db:"start_time"`     // 起飞时间
-		EndPosition   sql.NullString `db:"end_position"`   // 降落地点
-		EndTime       sql.NullTime   `db:"end_time"`       // 降落时间
+		Id             int64     `db:"id"`
+		CreateTime     time.Time `db:"create_time"`
+		UpdateTime     time.Time `db:"update_time"`
+		DeleteTime     time.Time `db:"delete_time"`
+		DelState       int64     `db:"del_state"`       // 是否已经删除
+		Version        int64     `db:"version"`         // 版本号
+		FlightNumber   string    `db:"flight_number"`   // 对应的航班号
+		SetOutDate     time.Time `db:"set_out_date"`    // 出发日期
+		Punctuality    int64     `db:"punctuality"`     // 准点率(%)
+		DepartPosition string    `db:"depart_position"` // 起飞地点
+		DepartTime     time.Time `db:"depart_time"`     // 起飞时间
+		ArrivePosition string    `db:"arrive_position"` // 降落地点
+		ArriveTime     time.Time `db:"arrive_time"`     // 降落时间
 	}
 )
 
@@ -97,15 +97,15 @@ func NewFlightInfosModel(conn sqlx.SqlConn, c cache.CacheConf) FlightInfosModel 
 // Insert 新增数据
 func (m *defaultFlightInfosModel) Insert(session sqlx.Session, data *FlightInfos) (sql.Result, error) {
 
-	data.DeletedAt.Time = time.Unix(0, 0)
+	data.DeleteTime = time.Unix(0, 0)
 
 	flightInfosIdKey := fmt.Sprintf("%s%v", cacheFlightInfosIdPrefix, data.Id)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, flightInfosRowsExpectAutoSet)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, flightInfosRowsExpectAutoSet)
 		if session != nil {
-			return session.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.StartPosition, data.StartTime, data.EndPosition, data.EndTime)
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime)
 		}
-		return conn.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.StartPosition, data.StartTime, data.EndPosition, data.EndTime)
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime)
 	}, flightInfosIdKey)
 
 }
@@ -137,9 +137,9 @@ func (m *defaultFlightInfosModel) Update(session sqlx.Session, data *FlightInfos
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, flightInfosRowsWithPlaceHolder)
 		if session != nil {
-			return session.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.StartPosition, data.StartTime, data.EndPosition, data.EndTime, data.Id)
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.Id)
 		}
-		return conn.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.StartPosition, data.StartTime, data.EndPosition, data.EndTime, data.Id)
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.Id)
 	}, flightInfosIdKey)
 }
 
@@ -156,9 +156,9 @@ func (m *defaultFlightInfosModel) UpdateWithVersion(session sqlx.Session, data *
 	sqlResult, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, flightInfosRowsWithPlaceHolder)
 		if session != nil {
-			return session.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.StartPosition, data.StartTime, data.EndPosition, data.EndTime, data.Id, oldVersion)
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.Id, oldVersion)
 		}
-		return conn.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.StartPosition, data.StartTime, data.EndPosition, data.EndTime, data.Id, oldVersion)
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightNumber, data.SetOutDate, data.Punctuality, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.Id, oldVersion)
 	}, flightInfosIdKey)
 	if err != nil {
 		return err
@@ -360,7 +360,7 @@ func (m *defaultFlightInfosModel) Delete(session sqlx.Session, id int64) error {
 // DeleteSoft 软删除数据
 func (m *defaultFlightInfosModel) DeleteSoft(session sqlx.Session, data *FlightInfos) error {
 	data.DelState = globalkey.DelStateYes
-	data.DeletedAt.Time = time.Now()
+	data.DeleteTime = time.Now()
 	if err := m.UpdateWithVersion(session, data); err != nil {
 		return errors.Wrapf(xerr.NewErrMsg("删除数据失败"), "FlightInfosModel delete err : %+v", err)
 	}

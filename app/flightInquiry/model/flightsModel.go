@@ -34,8 +34,8 @@ type (
 		Insert(session sqlx.Session, data *Flights) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*Flights, error)
-		// FindOneByNumber 根据唯一索引查询一条数据，走缓存
-		FindOneByNumber(number sql.NullString) (*Flights, error)
+		// FindOneBy 根据唯一索引查询一条数据，走缓存
+		FindOneByNumber(number string) (*Flights, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
 		// DeleteSoft 软删除数据
@@ -74,14 +74,14 @@ type (
 	}
 
 	Flights struct {
-		Id         int64          `db:"id"`
-		CreatedAt  sql.NullTime   `db:"created_at"`
-		UpdatedAt  sql.NullTime   `db:"updated_at"`
-		DeletedAt  sql.NullTime   `db:"deleted_at"`
-		DelState   int64          `db:"del_state"`    // 是否已经删除
-		Version    int64          `db:"version"`      // 版本号
-		Number     sql.NullString `db:"number"`       // 航班号
-		FltTypeJmp sql.NullString `db:"flt_type_jmp"` // 机型
+		Id         int64     `db:"id"`
+		CreateTime time.Time `db:"create_time"`
+		UpdateTime time.Time `db:"update_time"`
+		DeleteTime time.Time `db:"delete_time"`
+		DelState   int64     `db:"del_state"` // 是否已经删除
+		Version    int64     `db:"version"`   // 版本号
+		Number     string    `db:"number"`    // 航班号(YT1234)
+		FltType    string    `db:"flt_type"`  // 机型
 	}
 )
 
@@ -95,16 +95,16 @@ func NewFlightsModel(conn sqlx.SqlConn, c cache.CacheConf) FlightsModel {
 // Insert 新增数据
 func (m *defaultFlightsModel) Insert(session sqlx.Session, data *Flights) (sql.Result, error) {
 
-	data.DeletedAt.Time = time.Unix(0, 0)
+	data.DeleteTime = time.Unix(0, 0)
 
 	flightsIdKey := fmt.Sprintf("%s%v", cacheFlightsIdPrefix, data.Id)
 	flightsNumberKey := fmt.Sprintf("%s%v", cacheFlightsNumberPrefix, data.Number)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, flightsRowsExpectAutoSet)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, flightsRowsExpectAutoSet)
 		if session != nil {
-			return session.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp)
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Number, data.FltType)
 		}
-		return conn.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp)
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Number, data.FltType)
 	}, flightsIdKey, flightsNumberKey)
 
 }
@@ -130,8 +130,8 @@ func (m *defaultFlightsModel) FindOne(id int64) (*Flights, error) {
 	}
 }
 
-// FindOneByNumber 根据唯一索引查询一条数据，走缓存
-func (m *defaultFlightsModel) FindOneByNumber(number sql.NullString) (*Flights, error) {
+// FindOneBy 根据唯一索引查询一条数据，走缓存
+func (m *defaultFlightsModel) FindOneByNumber(number string) (*Flights, error) {
 	flightsNumberKey := fmt.Sprintf("%s%v", cacheFlightsNumberPrefix, number)
 	var resp Flights
 	err := m.QueryRowIndex(&resp, flightsNumberKey, m.formatPrimary, func(conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
@@ -161,10 +161,10 @@ func (m *defaultFlightsModel) Update(session sqlx.Session, data *Flights) (sql.R
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, flightsRowsWithPlaceHolder)
 		if session != nil {
-			return session.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp, data.Id)
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Number, data.FltType, data.Id)
 		}
-		return conn.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp, data.Id)
-	}, flightsNumberKey, flightsIdKey)
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Number, data.FltType, data.Id)
+	}, flightsIdKey, flightsNumberKey)
 }
 
 // UpdateWithVersion 乐观锁修改数据 ,推荐使用
@@ -181,10 +181,10 @@ func (m *defaultFlightsModel) UpdateWithVersion(session sqlx.Session, data *Flig
 	sqlResult, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, flightsRowsWithPlaceHolder)
 		if session != nil {
-			return session.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp, data.Id, oldVersion)
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Number, data.FltType, data.Id, oldVersion)
 		}
-		return conn.Exec(query, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.DelState, data.Version, data.Number, data.FltTypeJmp, data.Id, oldVersion)
-	}, flightsNumberKey, flightsIdKey)
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Number, data.FltType, data.Id, oldVersion)
+	}, flightsIdKey, flightsNumberKey)
 	if err != nil {
 		return err
 	}
@@ -383,14 +383,14 @@ func (m *defaultFlightsModel) Delete(session sqlx.Session, id int64) error {
 			return session.Exec(query, id)
 		}
 		return conn.Exec(query, id)
-	}, flightsIdKey, flightsNumberKey)
+	}, flightsNumberKey, flightsIdKey)
 	return err
 }
 
 // DeleteSoft 软删除数据
 func (m *defaultFlightsModel) DeleteSoft(session sqlx.Session, data *Flights) error {
 	data.DelState = globalkey.DelStateYes
-	data.DeletedAt.Time = time.Now()
+	data.DeleteTime = time.Now()
 	if err := m.UpdateWithVersion(session, data); err != nil {
 		return errors.Wrapf(xerr.NewErrMsg("删除数据失败"), "FlightsModel delete err : %+v", err)
 	}

@@ -24,7 +24,7 @@ func (m *default{{.upperStartCamelObject}}Model) Delete(session sqlx.Session, {{
 // DeleteSoft 软删除数据
 func (m *default{{.upperStartCamelObject}}Model) DeleteSoft(session sqlx.Session,data *{{.upperStartCamelObject}}) error {
 	data.DelState = globalkey.DelStateYes
-	data.DeletedAt.Time = time.Now()
+	data.DeleteTime = time.Now()
 	if err:= m.UpdateWithVersion(session, data);err!= nil{
 		return errors.Wrapf(xerr.NewErrMsg("删除数据失败"),"{{.upperStartCamelObject}}Model delete err : %+v",err)
 	}

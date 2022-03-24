@@ -3,7 +3,7 @@ package main
 import "uranus/app/flightInquiry/cmd/gormModel"
 
 func main() {
-	gormModel.GlobalDB.AutoMigrate(&gormModel.FlightInfo{}, &gormModel.Flight{}, &gormModel.Space{})
+	gormModel.GlobalDB.AutoMigrate(&gormModel.FlightInfo{}, &gormModel.Flight{}, &gormModel.Space{}, &gormModel.Ticket{}, &gormModel.RefundAndChangeInfo{})
 	//model.GlobalDB.AutoMigrate(&model.Space{})
 	//s1 := model.Space{
 	//	IsFirstClass: true,
