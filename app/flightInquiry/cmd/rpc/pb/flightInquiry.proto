@@ -5,6 +5,7 @@ package pb;
 
 import "google/protobuf/timestamp.proto";
 
+//航班信息
 message FlightInfo {
   // 航班号，例如MU5735
   string                    FlightNumber  = 1;
@@ -19,13 +20,31 @@ message FlightInfo {
   // 准点率(例如97，表示97%)
   uint32                    Punctuality   = 6;
   //起飞地点
-  string                    StartPosition = 7;
+  string                    DepartPosition = 7;
   //起飞时间
-  google.protobuf.Timestamp StartTime     = 8;
+  google.protobuf.Timestamp DepartTime     = 8;
   //降落地点
-  string                    EndPosition   = 9;
+  string                    ArrivePosition = 9;
   //降落时间
-  google.protobuf.Timestamp EndTime       = 10;
+  google.protobuf.Timestamp ArriveTime     = 10;
+  //退票信息
+  RefundInfo                RefundInfo     = 11;
+  //改票信息
+  ChangeInfo                ChangeInfo     = 12;
+}
+
+//时间-费用
+message TimeFee {
+  google.protobuf.Timestamp   Time         = 1;
+  uint64                      Fee          = 2;
+}
+// 退票信息
+message RefundInfo {
+  repeated TimeFee TimeFees = 1;
+}
+// 改票信息
+message ChangeInfo {
+  repeated TimeFee TimeFees = 1;
 }
 
 // QuireBySetOutTimeAndFlightNumberReq 通过给定日期、航班号进行航班查询请求
@@ -48,9 +67,9 @@ message QuireBySetOutTimeStartPositionEndPositionReq {
   // 出发日期
   google.protobuf.Timestamp SetOutTime    = 1;
   //起飞地点
-  string                    StartPosition = 2;
+  string                    DepartPosition = 2;
   //降落地点
-  string                    EndPosition   = 3;
+  string                    ArrivePosition   = 3;
 }
 // QuireBySetOutTimeStartPositionEndPositionResp 为 QuireBySetOutTimeStartPositionEndPositionReq 的响应
 message QuireBySetOutTimeStartPositionEndPositionResp {
@@ -59,6 +78,8 @@ message QuireBySetOutTimeStartPositionEndPositionResp {
 }
 
 service flightInquiry {
+  // QuireBySetOutTimeAndFlightNumber 通过给定日期、航班号进行航班查询请求
   rpc QuireBySetOutTimeAndFlightNumber(QuireBySetOutTimeAndFlightNumberReq) returns(QuireBySetOutTimeAndFlightNumberResp);
+  // QuireBySetOutTimeStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
   rpc QuireBySetOutTimeStartPositionEndPosition(QuireBySetOutTimeStartPositionEndPositionReq) returns(QuireBySetOutTimeStartPositionEndPositionResp);
 }

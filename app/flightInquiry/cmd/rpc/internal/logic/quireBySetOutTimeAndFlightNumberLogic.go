@@ -23,8 +23,8 @@ func NewQuireBySetOutTimeAndFlightNumberLogic(ctx context.Context, svcCtx *svc.S
 	}
 }
 
+// QuireBySetOutTimeAndFlightNumber 通过给定日期、航班号进行航班查询请求
 func (l *QuireBySetOutTimeAndFlightNumberLogic) QuireBySetOutTimeAndFlightNumber(in *pb.QuireBySetOutTimeAndFlightNumberReq) (*pb.QuireBySetOutTimeAndFlightNumberResp, error) {
-	// todo: add your logic here and delete this line
 
 	return &pb.QuireBySetOutTimeAndFlightNumberResp{}, nil
 }

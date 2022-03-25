@@ -389,3 +389,51 @@ func (m *defaultFlightInfosModel) queryPrimary(conn sqlx.SqlConn, v, primary int
 }
 
 //!!!!! 其他自定义方法，从此处开始写,此处上方不要写自定义方法!!!!!
+
+// FindListByNumber 根据航班号查询数据
+func (m *defaultFlightInfosModel) FindListByNumber(rowBuilder squirrel.SelectBuilder, number string) ([]*FlightInfos, error) {
+
+	if len(number) > 0 {
+		rowBuilder = rowBuilder.Where(" flight_number = ? ", number)
+	} else {
+		return nil, ErrNotFound
+	}
+
+	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*FlightInfos
+	err = m.QueryRowsNoCache(&resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+// FindListByNumberAndSetOutTime 根据航班号和出发日期查询数据
+func (m *defaultFlightInfosModel) FindListByNumberAndSetOutTime(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
+
+	if len(number) > 0 && !sot.IsZero() {
+		rowBuilder = rowBuilder.Where(" flight_number = ? ", number).Where(" set_out_date = ? ", sot.Format("2006-01-02 15:04:05"))
+	} else {
+		return nil, ErrNotFound
+	}
+
+	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*FlightInfos
+	err = m.QueryRowsNoCache(&resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}

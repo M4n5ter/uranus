@@ -23,6 +23,7 @@ func NewQuireBySetOutTimeStartPositionEndPositionLogic(ctx context.Context, svcC
 	}
 }
 
+// QuireBySetOutTimeStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
 func (l *QuireBySetOutTimeStartPositionEndPositionLogic) QuireBySetOutTimeStartPositionEndPosition(in *pb.QuireBySetOutTimeStartPositionEndPositionReq) (*pb.QuireBySetOutTimeStartPositionEndPositionResp, error) {
 	// todo: add your logic here and delete this line
 

@@ -1,11 +1,16 @@
 package main
 
 import (
-	gormModel2 "uranus/test/gormModel"
+	"fmt"
+	"time"
 )
 
 func main() {
-	gormModel2.GlobalDB.AutoMigrate(&gormModel2.FlightInfo{}, &gormModel2.Flight{}, &gormModel2.Space{}, &gormModel2.Ticket{}, &gormModel2.RefundAndChangeInfo{})
+	sot := time.Now()
+	t, _ := time.Parse("2006-01-02 15:04:05", "2022-03-22")
+	fmt.Println(t)
+	fmt.Println(sot.Format("2006-01-02"))
+	//gormModel2.GlobalDB.AutoMigrate(&gormModel2.FlightInfo{}, &gormModel2.Flight{}, &gormModel2.Space{}, &gormModel2.Ticket{}, &gormModel2.RefundAndChangeInfo{})
 	//model.GlobalDB.AutoMigrate(&model.Space{})
 	//s1 := model.Space{
 	//	IsFirstClass: true,

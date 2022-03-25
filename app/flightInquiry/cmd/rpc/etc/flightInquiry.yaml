@@ -7,10 +7,10 @@ Log:
   Level: error
 
 DB:
-  DataSource: "root:123456(host:port)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+  DataSource: "root:Flight_1(192.168.75.132:3306)/flight?charset=utf8mb4&parseTime=True&loc=Local"
 Cache:
   - Host: redis:6379
-    Pass: G62m50oigInC30sf
+    Pass: W53t27obgKnZ29gf
 
 #监控
 Prometheus:
@@ -20,7 +20,7 @@ Prometheus:
 
 #链路追踪
 Telemetry:
-  Name: order-rpc
+  Name: flightinquiry-rpc
   Endpoint:  http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
@@ -28,4 +28,4 @@ Telemetry:
 Redis:
   Host: redis:6379
   Type: node
-  Pass: G62m50oigInC30sf
+  Pass: W53t27obgKnZ29gf

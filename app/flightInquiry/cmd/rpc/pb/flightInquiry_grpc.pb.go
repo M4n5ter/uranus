@@ -22,7 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FlightInquiryClient interface {
+	// 通过给定日期、航班号进行航班查询请求
 	QuireBySetOutTimeAndFlightNumber(ctx context.Context, in *QuireBySetOutTimeAndFlightNumberReq, opts ...grpc.CallOption) (*QuireBySetOutTimeAndFlightNumberResp, error)
+	// 通过给定日期、出发地、目的地进行航班查询请求
 	QuireBySetOutTimeStartPositionEndPosition(ctx context.Context, in *QuireBySetOutTimeStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutTimeStartPositionEndPositionResp, error)
 }
 
@@ -56,7 +58,9 @@ func (c *flightInquiryClient) QuireBySetOutTimeStartPositionEndPosition(ctx cont
 // All implementations must embed UnimplementedFlightInquiryServer
 // for forward compatibility
 type FlightInquiryServer interface {
+	// 通过给定日期、航班号进行航班查询请求
 	QuireBySetOutTimeAndFlightNumber(context.Context, *QuireBySetOutTimeAndFlightNumberReq) (*QuireBySetOutTimeAndFlightNumberResp, error)
+	// 通过给定日期、出发地、目的地进行航班查询请求
 	QuireBySetOutTimeStartPositionEndPosition(context.Context, *QuireBySetOutTimeStartPositionEndPositionReq) (*QuireBySetOutTimeStartPositionEndPositionResp, error)
 	mustEmbedUnimplementedFlightInquiryServer()
 }
