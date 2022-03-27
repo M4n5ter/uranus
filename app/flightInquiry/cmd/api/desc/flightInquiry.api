@@ -1,9 +1,23 @@
 syntax = "v1"
 
 info(
-    title: "flightInquiry API"
-    desc: "航班查询接口"
-    author: "王勇涛"
-    email: "wangyongtao2000@qq.com"
-    version: "v1"
+	title: "flightInquiry API"
+	desc: "航班查询接口"
+	author: "王勇涛"
+	email: "wangyongtao2000@qq.com"
+	version: "v1"
 )
+
+import "types/types.api"
+
+@server(
+	group: flightInquiry
+	prefix: v1/flightInquiry
+)
+service flightInquiry {
+	@doc "航班查询"
+	@handler dateNumber
+	get /flight/quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns (QuireBySetOutDateAndFlightNumberResp)
+	@handler datePosition
+	get /flight/quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns (QuireBySetOutDateStartPositionEndPositionResp)
+}

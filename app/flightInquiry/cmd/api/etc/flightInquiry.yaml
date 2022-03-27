@@ -1,0 +1,8 @@
+Name: flightInquiry-api
+Host: 0.0.0.0
+Port: 8888
+Mode: dev
+
+Log:
+  ServiceName: flightInquiry-api
+  Level: error

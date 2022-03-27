@@ -63,6 +63,8 @@ type (
 		CountBuilder(field string) squirrel.SelectBuilder
 		// SumBuilder 暴露给logic，查询sum的builder
 		SumBuilder(field string) squirrel.SelectBuilder
+		// FindListByTicketID 按照id倒序分页查询数据，不支持排序
+		FindListByTicketID(rowBuilder squirrel.SelectBuilder, ticketID int64) ([]*RefundAndChangeInfos, error)
 	}
 
 	defaultRefundAndChangeInfosModel struct {
@@ -394,3 +396,25 @@ func (m *defaultRefundAndChangeInfosModel) queryPrimary(conn sqlx.SqlConn, v, pr
 }
 
 //!!!!! 其他自定义方法，从此处开始写,此处上方不要写自定义方法!!!!!
+
+// FindListByTicketID 按照id倒序分页查询数据，不支持排序
+func (m *defaultRefundAndChangeInfosModel) FindListByTicketID(rowBuilder squirrel.SelectBuilder, ticketID int64) ([]*RefundAndChangeInfos, error) {
+
+	if ticketID > 0 {
+		rowBuilder = rowBuilder.Where(" ticket_id = ? ", ticketID)
+	}
+
+	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*RefundAndChangeInfos
+	err = m.QueryRowsNoCache(&resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}

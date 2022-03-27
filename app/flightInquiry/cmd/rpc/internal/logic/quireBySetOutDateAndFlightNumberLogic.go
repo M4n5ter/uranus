@@ -16,6 +16,7 @@ import (
 var ERRGetInfos = xerr.NewErrMsg("暂无直飞航班")
 var ERRGetSpaces = xerr.NewErrMsg("暂无舱位信息")
 var ERRGetTickets = xerr.NewErrMsg("暂无票信息")
+var ERRRefundAndChangeInfos = xerr.NewErrMsg("暂无退改票信息")
 
 type QuireBySetOutDateAndFlightNumberLogic struct {
 	ctx    context.Context
@@ -70,6 +71,45 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 				return nil, errors.Wrapf(ERRGetTickets, "DBERR: when calling flightinquiry-rpc:l.svcCtx.TicketsModel.FindListBySpaceID : spaceID:%d", space.Id)
 			}
 			for _, ticket := range tickets {
+				//退改票信息
+				var refundInfo *pb.RefundInfo
+				var changeInfo *pb.ChangeInfo
+				rcis, err := l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID(l.svcCtx.RefundAndChangeInfosModel.RowBuilder(), ticket.Id)
+				if err != nil {
+					if err == model.ErrNotFound {
+						logx.WithContext(l.ctx).Infof("NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d", ticket.Id)
+					}
+					return nil, errors.Wrapf(ERRRefundAndChangeInfos, "DBERR: when calling flightinquiry-rpc:l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID : ticketID:%d", ticket.Id)
+				}
+				for _, rci := range rcis {
+					switch rci.IsRefund {
+					//如果是改票信息
+					case 0:
+						changeInfo.TimeFees = []*pb.TimeFee{
+							{Time: timestamppb.New(rci.Time1), Fee: uint64(rci.Fee1)},
+							{Time: timestamppb.New(rci.Time2), Fee: uint64(rci.Fee2)},
+							{Time: timestamppb.New(rci.Time3), Fee: uint64(rci.Fee3)},
+							{Time: timestamppb.New(rci.Time4), Fee: uint64(rci.Fee4)},
+						}
+						if rci.Time5.Valid && rci.Fee5.Valid {
+							changeInfo.TimeFees = append(changeInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(rci.Time5.Time), Fee: uint64(rci.Fee5.Int64)})
+						}
+					//如果是退票信息
+					case 1:
+						refundInfo.TimeFees = []*pb.TimeFee{
+							{Time: timestamppb.New(rci.Time1), Fee: uint64(rci.Fee1)},
+							{Time: timestamppb.New(rci.Time2), Fee: uint64(rci.Fee2)},
+							{Time: timestamppb.New(rci.Time3), Fee: uint64(rci.Fee3)},
+							{Time: timestamppb.New(rci.Time4), Fee: uint64(rci.Fee4)},
+						}
+						if rci.Time5.Valid && rci.Fee5.Valid {
+							changeInfo.TimeFees = append(changeInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(rci.Time5.Time), Fee: uint64(rci.Fee5.Int64)})
+						}
+					default:
+					}
+
+				}
+
 				// 添加对应信息
 				resp.FlightInfos = append(resp.FlightInfos, &pb.FlightInfo{
 					FlightNumber:   info.FlightNumber,
@@ -83,8 +123,8 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 					DepartTime:     timestamppb.New(info.DepartTime),
 					ArrivePosition: info.ArrivePosition,
 					ArriveTime:     timestamppb.New(info.ArriveTime),
-					RefundInfo:     nil,
-					ChangeInfo:     nil,
+					RefundInfo:     refundInfo,
+					ChangeInfo:     changeInfo,
 					Cba:            ticket.Cba,
 				})
 			}
