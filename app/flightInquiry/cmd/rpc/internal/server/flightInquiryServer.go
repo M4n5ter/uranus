@@ -22,14 +22,14 @@ func NewFlightInquiryServer(svcCtx *svc.ServiceContext) *FlightInquiryServer {
 	}
 }
 
-// QuireBySetOutTimeAndFlightNumber 通过给定日期、航班号进行航班查询请求
-func (s *FlightInquiryServer) QuireBySetOutTimeAndFlightNumber(ctx context.Context, in *pb.QuireBySetOutTimeAndFlightNumberReq) (*pb.QuireBySetOutTimeAndFlightNumberResp, error) {
-	l := logic.NewQuireBySetOutTimeAndFlightNumberLogic(ctx, s.svcCtx)
-	return l.QuireBySetOutTimeAndFlightNumber(in)
+// QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
+func (s *FlightInquiryServer) QuireBySetOutDateAndFlightNumber(ctx context.Context, in *pb.QuireBySetOutDateAndFlightNumberReq) (*pb.QuireBySetOutDateAndFlightNumberResp, error) {
+	l := logic.NewQuireBySetOutDateAndFlightNumberLogic(ctx, s.svcCtx)
+	return l.QuireBySetOutDateAndFlightNumber(in)
 }
 
-// QuireBySetOutTimeStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
-func (s *FlightInquiryServer) QuireBySetOutTimeStartPositionEndPosition(ctx context.Context, in *pb.QuireBySetOutTimeStartPositionEndPositionReq) (*pb.QuireBySetOutTimeStartPositionEndPositionResp, error) {
-	l := logic.NewQuireBySetOutTimeStartPositionEndPositionLogic(ctx, s.svcCtx)
-	return l.QuireBySetOutTimeStartPositionEndPosition(in)
+// QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
+func (s *FlightInquiryServer) QuireBySetOutDateStartPositionEndPosition(ctx context.Context, in *pb.QuireBySetOutDateStartPositionEndPositionReq) (*pb.QuireBySetOutDateStartPositionEndPositionResp, error) {
+	l := logic.NewQuireBySetOutDateStartPositionEndPositionLogic(ctx, s.svcCtx)
+	return l.QuireBySetOutDateStartPositionEndPosition(in)
 }

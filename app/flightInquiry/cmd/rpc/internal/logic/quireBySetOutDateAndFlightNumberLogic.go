@@ -17,30 +17,30 @@ var ERRGetInfos = xerr.NewErrMsg("暂无直飞航班")
 var ERRGetSpaces = xerr.NewErrMsg("暂无舱位信息")
 var ERRGetTickets = xerr.NewErrMsg("暂无票信息")
 
-type QuireBySetOutTimeAndFlightNumberLogic struct {
+type QuireBySetOutDateAndFlightNumberLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewQuireBySetOutTimeAndFlightNumberLogic(ctx context.Context, svcCtx *svc.ServiceContext) *QuireBySetOutTimeAndFlightNumberLogic {
-	return &QuireBySetOutTimeAndFlightNumberLogic{
+func NewQuireBySetOutDateAndFlightNumberLogic(ctx context.Context, svcCtx *svc.ServiceContext) *QuireBySetOutDateAndFlightNumberLogic {
+	return &QuireBySetOutDateAndFlightNumberLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-// QuireBySetOutTimeAndFlightNumber 通过给定日期、航班号进行航班查询请求
-func (l *QuireBySetOutTimeAndFlightNumberLogic) QuireBySetOutTimeAndFlightNumber(in *pb.QuireBySetOutTimeAndFlightNumberReq) (*pb.QuireBySetOutTimeAndFlightNumberResp, error) {
-	resp := pb.QuireBySetOutTimeAndFlightNumberResp{}
+// QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
+func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber(in *pb.QuireBySetOutDateAndFlightNumberReq) (*pb.QuireBySetOutDateAndFlightNumberResp, error) {
+	resp := pb.QuireBySetOutDateAndFlightNumberResp{}
 	//查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
-	flightInfos, err := l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutTime(l.svcCtx.FlightInfosModel.RowBuilder(), in.FlightNumber, in.SetOutTime.AsTime())
+	flightInfos, err := l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate(l.svcCtx.FlightInfosModel.RowBuilder(), in.FlightNumber, in.SetOutDate.AsTime())
 	if err != nil {
 		if err == model.ErrNotFound {
-			return nil, errors.Wrapf(ERRGetInfos, "NOT FOUND: can't found flight infos: number->%s setOutTime->%v, ERR: %v", in.FlightNumber, in.SetOutTime.AsTime(), err)
+			return nil, errors.Wrapf(ERRGetInfos, "NOT FOUND: can't found flight infos: number->%s setOutTime->%v, ERR: %v", in.FlightNumber, in.SetOutDate.AsTime(), err)
 		} else {
-			return nil, errors.Wrapf(ERRGetInfos, "DBERR: when calling flightinquiry-rpc:l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutTime : number->%s setOutTime->%v, ERR: %v", in.FlightNumber, in.SetOutTime.AsTime(), err)
+			return nil, errors.Wrapf(ERRGetInfos, "DBERR: when calling flightinquiry-rpc:l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate : number->%s setOutTime->%v, ERR: %v", in.FlightNumber, in.SetOutDate.AsTime(), err)
 		}
 	}
 

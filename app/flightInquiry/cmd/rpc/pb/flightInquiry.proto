@@ -51,39 +51,39 @@ message ChangeInfo {
   repeated TimeFee TimeFees = 1;
 }
 
-//QuireBySetOutTimeAndFlightNumberReq 通过给定日期、航班号进行航班查询请求
-message QuireBySetOutTimeAndFlightNumberReq {
+//QuireBySetOutDateAndFlightNumberReq 通过给定日期、航班号进行航班查询请求
+message QuireBySetOutDateAndFlightNumberReq {
   // 航班号，例如MU5735
   string                    FlightNumber  = 1;
   // 出发日期
-  google.protobuf.Timestamp SetOutTime    = 2;
+  google.protobuf.Timestamp SetOutDate    = 2;
 }
-//QuireBySetOutTimeAndFlightNumberResp 为 QuireBySetOutTimeAndFlightNumberReq 的响应
-message QuireBySetOutTimeAndFlightNumberResp {
+//QuireBySetOutDateAndFlightNumberResp 为 QuireBySetOutDateAndFlightNumberReq 的响应
+message QuireBySetOutDateAndFlightNumberResp {
   // 查询结果
   repeated FlightInfo FlightInfos = 1;
 }
 
 
 
-//QuireBySetOutTimeStartPositionEndPositionReq 通过给定日期、出发地、目的地进行航班查询请求
-message QuireBySetOutTimeStartPositionEndPositionReq {
+//QuireBySetOutDateStartPositionEndPositionReq 通过给定日期、出发地、目的地进行航班查询请求
+message QuireBySetOutDateStartPositionEndPositionReq {
   // 出发日期
-  google.protobuf.Timestamp SetOutTime    = 1;
+  google.protobuf.Timestamp SetOutDate    = 1;
   //起飞地点
   string                    DepartPosition = 2;
   //降落地点
   string                    ArrivePosition   = 3;
 }
-//QuireBySetOutTimeStartPositionEndPositionResp 为 QuireBySetOutTimeStartPositionEndPositionReq 的响应
-message QuireBySetOutTimeStartPositionEndPositionResp {
+//QuireBySetOutDateStartPositionEndPositionResp 为 QuireBySetOutTimeStartPositionEndPositionReq 的响应
+message QuireBySetOutDateStartPositionEndPositionResp {
   // 查询结果
   repeated FlightInfo FlightInfos = 1;
 }
 
 service flightInquiry {
-  //QuireBySetOutTimeAndFlightNumber 通过给定日期、航班号进行航班查询请求
-  rpc QuireBySetOutTimeAndFlightNumber(QuireBySetOutTimeAndFlightNumberReq) returns(QuireBySetOutTimeAndFlightNumberResp);
-  //QuireBySetOutTimeStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
-  rpc QuireBySetOutTimeStartPositionEndPosition(QuireBySetOutTimeStartPositionEndPositionReq) returns(QuireBySetOutTimeStartPositionEndPositionResp);
+  //QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
+  rpc QuireBySetOutDateAndFlightNumber(QuireBySetOutDateAndFlightNumberReq) returns(QuireBySetOutDateAndFlightNumberResp);
+  //QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
+  rpc QuireBySetOutDateStartPositionEndPosition(QuireBySetOutDateStartPositionEndPositionReq) returns(QuireBySetOutDateStartPositionEndPositionResp);
 }

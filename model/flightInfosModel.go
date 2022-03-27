@@ -65,8 +65,8 @@ type (
 		SumBuilder(field string) squirrel.SelectBuilder
 		// FindListByNumber 根据航班号查询数据
 		FindListByNumber(rowBuilder squirrel.SelectBuilder, number string) ([]*FlightInfos, error)
-		// FindListByNumberAndSetOutTime 根据航班号和出发日期查询数据
-		FindListByNumberAndSetOutTime(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error)
+		// FindListByNumberAndSetOutDate 根据航班号和出发日期查询数据
+		FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error)
 	}
 
 	defaultFlightInfosModel struct {
@@ -418,8 +418,8 @@ func (m *defaultFlightInfosModel) FindListByNumber(rowBuilder squirrel.SelectBui
 	}
 }
 
-// FindListByNumberAndSetOutTime 根据航班号和出发日期查询数据
-func (m *defaultFlightInfosModel) FindListByNumberAndSetOutTime(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
+// FindListByNumberAndSetOutDate 根据航班号和出发日期查询数据
+func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
 
 	if len(number) > 0 && !sot.IsZero() {
 		sot, _ = time.Parse("2006-01-02", sot.Format("2006-01-02"))
@@ -443,8 +443,8 @@ func (m *defaultFlightInfosModel) FindListByNumberAndSetOutTime(rowBuilder squir
 	}
 }
 
-// FindListBySetOutTimeAndPosition 通过给定日期、出发地、目的地进行航班查询 fixme
-func (m *defaultFlightInfosModel) FindListBySetOutTimeAndPosition(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
+// FindListBySetOutDateAndPosition 通过给定日期、出发地、目的地进行航班查询 fixme
+func (m *defaultFlightInfosModel) FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
 
 	if len(number) > 0 && !sot.IsZero() {
 		sot, _ = time.Parse("2006-01-02", sot.Format("2006-01-02"))

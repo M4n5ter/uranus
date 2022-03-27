@@ -1,0 +1,22 @@
+syntax = "v1"
+
+info(
+    title: "flightInquiry API"
+    desc: "航班查询接口"
+    author: "王勇涛"
+    email: "wangyongtao2000@qq.com"
+    version: "v1"
+)
+
+type (
+    //QuireBySetOutTimeAndFlightNumberReq 通过给定日期、航班号进行航班查询请求
+    QuireBySetOutTimeAndFlightNumberReq {
+        FlightNumber string
+
+    }
+    //QuireBySetOutTimeAndFlightNumberResp 为 QuireBySetOutTimeAndFlightNumberReq 的响应
+    QuireBySetOutTimeAndFlightNumberResp {
+
+    }
+
+)

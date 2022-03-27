@@ -22,10 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FlightInquiryClient interface {
-	// QuireBySetOutTimeAndFlightNumber 通过给定日期、航班号进行航班查询请求
-	QuireBySetOutTimeAndFlightNumber(ctx context.Context, in *QuireBySetOutTimeAndFlightNumberReq, opts ...grpc.CallOption) (*QuireBySetOutTimeAndFlightNumberResp, error)
-	// QuireBySetOutTimeStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
-	QuireBySetOutTimeStartPositionEndPosition(ctx context.Context, in *QuireBySetOutTimeStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutTimeStartPositionEndPositionResp, error)
+	//QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
+	QuireBySetOutDateAndFlightNumber(ctx context.Context, in *QuireBySetOutDateAndFlightNumberReq, opts ...grpc.CallOption) (*QuireBySetOutDateAndFlightNumberResp, error)
+	//QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
+	QuireBySetOutDateStartPositionEndPosition(ctx context.Context, in *QuireBySetOutDateStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutDateStartPositionEndPositionResp, error)
 }
 
 type flightInquiryClient struct {
@@ -36,18 +36,18 @@ func NewFlightInquiryClient(cc grpc.ClientConnInterface) FlightInquiryClient {
 	return &flightInquiryClient{cc}
 }
 
-func (c *flightInquiryClient) QuireBySetOutTimeAndFlightNumber(ctx context.Context, in *QuireBySetOutTimeAndFlightNumberReq, opts ...grpc.CallOption) (*QuireBySetOutTimeAndFlightNumberResp, error) {
-	out := new(QuireBySetOutTimeAndFlightNumberResp)
-	err := c.cc.Invoke(ctx, "/pb.flightInquiry/QuireBySetOutTimeAndFlightNumber", in, out, opts...)
+func (c *flightInquiryClient) QuireBySetOutDateAndFlightNumber(ctx context.Context, in *QuireBySetOutDateAndFlightNumberReq, opts ...grpc.CallOption) (*QuireBySetOutDateAndFlightNumberResp, error) {
+	out := new(QuireBySetOutDateAndFlightNumberResp)
+	err := c.cc.Invoke(ctx, "/pb.flightInquiry/QuireBySetOutDateAndFlightNumber", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *flightInquiryClient) QuireBySetOutTimeStartPositionEndPosition(ctx context.Context, in *QuireBySetOutTimeStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutTimeStartPositionEndPositionResp, error) {
-	out := new(QuireBySetOutTimeStartPositionEndPositionResp)
-	err := c.cc.Invoke(ctx, "/pb.flightInquiry/QuireBySetOutTimeStartPositionEndPosition", in, out, opts...)
+func (c *flightInquiryClient) QuireBySetOutDateStartPositionEndPosition(ctx context.Context, in *QuireBySetOutDateStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutDateStartPositionEndPositionResp, error) {
+	out := new(QuireBySetOutDateStartPositionEndPositionResp)
+	err := c.cc.Invoke(ctx, "/pb.flightInquiry/QuireBySetOutDateStartPositionEndPosition", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,10 +58,10 @@ func (c *flightInquiryClient) QuireBySetOutTimeStartPositionEndPosition(ctx cont
 // All implementations must embed UnimplementedFlightInquiryServer
 // for forward compatibility
 type FlightInquiryServer interface {
-	// QuireBySetOutTimeAndFlightNumber 通过给定日期、航班号进行航班查询请求
-	QuireBySetOutTimeAndFlightNumber(context.Context, *QuireBySetOutTimeAndFlightNumberReq) (*QuireBySetOutTimeAndFlightNumberResp, error)
-	// QuireBySetOutTimeStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
-	QuireBySetOutTimeStartPositionEndPosition(context.Context, *QuireBySetOutTimeStartPositionEndPositionReq) (*QuireBySetOutTimeStartPositionEndPositionResp, error)
+	//QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
+	QuireBySetOutDateAndFlightNumber(context.Context, *QuireBySetOutDateAndFlightNumberReq) (*QuireBySetOutDateAndFlightNumberResp, error)
+	//QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
+	QuireBySetOutDateStartPositionEndPosition(context.Context, *QuireBySetOutDateStartPositionEndPositionReq) (*QuireBySetOutDateStartPositionEndPositionResp, error)
 	mustEmbedUnimplementedFlightInquiryServer()
 }
 
@@ -69,11 +69,11 @@ type FlightInquiryServer interface {
 type UnimplementedFlightInquiryServer struct {
 }
 
-func (UnimplementedFlightInquiryServer) QuireBySetOutTimeAndFlightNumber(context.Context, *QuireBySetOutTimeAndFlightNumberReq) (*QuireBySetOutTimeAndFlightNumberResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QuireBySetOutTimeAndFlightNumber not implemented")
+func (UnimplementedFlightInquiryServer) QuireBySetOutDateAndFlightNumber(context.Context, *QuireBySetOutDateAndFlightNumberReq) (*QuireBySetOutDateAndFlightNumberResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QuireBySetOutDateAndFlightNumber not implemented")
 }
-func (UnimplementedFlightInquiryServer) QuireBySetOutTimeStartPositionEndPosition(context.Context, *QuireBySetOutTimeStartPositionEndPositionReq) (*QuireBySetOutTimeStartPositionEndPositionResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QuireBySetOutTimeStartPositionEndPosition not implemented")
+func (UnimplementedFlightInquiryServer) QuireBySetOutDateStartPositionEndPosition(context.Context, *QuireBySetOutDateStartPositionEndPositionReq) (*QuireBySetOutDateStartPositionEndPositionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QuireBySetOutDateStartPositionEndPosition not implemented")
 }
 func (UnimplementedFlightInquiryServer) mustEmbedUnimplementedFlightInquiryServer() {}
 
@@ -88,38 +88,38 @@ func RegisterFlightInquiryServer(s grpc.ServiceRegistrar, srv FlightInquiryServe
 	s.RegisterService(&FlightInquiry_ServiceDesc, srv)
 }
 
-func _FlightInquiry_QuireBySetOutTimeAndFlightNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QuireBySetOutTimeAndFlightNumberReq)
+func _FlightInquiry_QuireBySetOutDateAndFlightNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuireBySetOutDateAndFlightNumberReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FlightInquiryServer).QuireBySetOutTimeAndFlightNumber(ctx, in)
+		return srv.(FlightInquiryServer).QuireBySetOutDateAndFlightNumber(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.flightInquiry/QuireBySetOutTimeAndFlightNumber",
+		FullMethod: "/pb.flightInquiry/QuireBySetOutDateAndFlightNumber",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlightInquiryServer).QuireBySetOutTimeAndFlightNumber(ctx, req.(*QuireBySetOutTimeAndFlightNumberReq))
+		return srv.(FlightInquiryServer).QuireBySetOutDateAndFlightNumber(ctx, req.(*QuireBySetOutDateAndFlightNumberReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FlightInquiry_QuireBySetOutTimeStartPositionEndPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QuireBySetOutTimeStartPositionEndPositionReq)
+func _FlightInquiry_QuireBySetOutDateStartPositionEndPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuireBySetOutDateStartPositionEndPositionReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FlightInquiryServer).QuireBySetOutTimeStartPositionEndPosition(ctx, in)
+		return srv.(FlightInquiryServer).QuireBySetOutDateStartPositionEndPosition(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.flightInquiry/QuireBySetOutTimeStartPositionEndPosition",
+		FullMethod: "/pb.flightInquiry/QuireBySetOutDateStartPositionEndPosition",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlightInquiryServer).QuireBySetOutTimeStartPositionEndPosition(ctx, req.(*QuireBySetOutTimeStartPositionEndPositionReq))
+		return srv.(FlightInquiryServer).QuireBySetOutDateStartPositionEndPosition(ctx, req.(*QuireBySetOutDateStartPositionEndPositionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -132,12 +132,12 @@ var FlightInquiry_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FlightInquiryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "QuireBySetOutTimeAndFlightNumber",
-			Handler:    _FlightInquiry_QuireBySetOutTimeAndFlightNumber_Handler,
+			MethodName: "QuireBySetOutDateAndFlightNumber",
+			Handler:    _FlightInquiry_QuireBySetOutDateAndFlightNumber_Handler,
 		},
 		{
-			MethodName: "QuireBySetOutTimeStartPositionEndPosition",
-			Handler:    _FlightInquiry_QuireBySetOutTimeStartPositionEndPosition_Handler,
+			MethodName: "QuireBySetOutDateStartPositionEndPosition",
+			Handler:    _FlightInquiry_QuireBySetOutDateStartPositionEndPosition_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

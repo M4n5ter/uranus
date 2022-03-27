@@ -1,0 +1,9 @@
+syntax = "v1"
+
+info(
+    title: "flightInquiry API"
+    desc: "航班查询接口"
+    author: "王勇涛"
+    email: "wangyongtao2000@qq.com"
+    version: "v1"
+)
