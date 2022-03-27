@@ -63,6 +63,10 @@ type (
 		CountBuilder(field string) squirrel.SelectBuilder
 		// SumBuilder 暴露给logic，查询sum的builder
 		SumBuilder(field string) squirrel.SelectBuilder
+		// FindListByNumber 根据航班号查询数据
+		FindListByNumber(rowBuilder squirrel.SelectBuilder, number string) ([]*FlightInfos, error)
+		// FindListByNumberAndSetOutTime 根据航班号和出发日期查询数据
+		FindListByNumberAndSetOutTime(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error)
 	}
 
 	defaultFlightInfosModel struct {
@@ -418,7 +422,33 @@ func (m *defaultFlightInfosModel) FindListByNumber(rowBuilder squirrel.SelectBui
 func (m *defaultFlightInfosModel) FindListByNumberAndSetOutTime(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
 
 	if len(number) > 0 && !sot.IsZero() {
-		rowBuilder = rowBuilder.Where(" flight_number = ? ", number).Where(" set_out_date = ? ", sot.Format("2006-01-02 15:04:05"))
+		sot, _ = time.Parse("2006-01-02", sot.Format("2006-01-02"))
+		rowBuilder = rowBuilder.Where(" flight_number = ? AND set_out_date = ? ", number, sot.Format("2006-01-02 15:04:05"))
+	} else {
+		return nil, ErrNotFound
+	}
+
+	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*FlightInfos
+	err = m.QueryRowsNoCache(&resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+// FindListBySetOutTimeAndPosition 通过给定日期、出发地、目的地进行航班查询 fixme
+func (m *defaultFlightInfosModel) FindListBySetOutTimeAndPosition(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
+
+	if len(number) > 0 && !sot.IsZero() {
+		sot, _ = time.Parse("2006-01-02", sot.Format("2006-01-02"))
+		rowBuilder = rowBuilder.Where(" flight_number = ? AND set_out_date = ? ", number, sot.Format("2006-01-02 15:04:05"))
 	} else {
 		return nil, ErrNotFound
 	}

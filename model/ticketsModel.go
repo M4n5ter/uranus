@@ -63,6 +63,8 @@ type (
 		CountBuilder(field string) squirrel.SelectBuilder
 		// SumBuilder 暴露给logic，查询sum的builder
 		SumBuilder(field string) squirrel.SelectBuilder
+		// FindListBySpaceID 根据 spaceID 查询数据
+		FindListBySpaceID(rowBuilder squirrel.SelectBuilder, spaceID int64) ([]*Tickets, error)
 	}
 
 	defaultTicketsModel struct {
@@ -386,3 +388,25 @@ func (m *defaultTicketsModel) queryPrimary(conn sqlx.SqlConn, v, primary interfa
 }
 
 //!!!!! 其他自定义方法，从此处开始写,此处上方不要写自定义方法!!!!!
+
+// FindListBySpaceID 根据 spaceID 查询数据
+func (m *defaultTicketsModel) FindListBySpaceID(rowBuilder squirrel.SelectBuilder, spaceID int64) ([]*Tickets, error) {
+
+	if spaceID > 0 {
+		rowBuilder = rowBuilder.Where(" space_id = ? ", spaceID)
+	}
+
+	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*Tickets
+	err = m.QueryRowsNoCache(&resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
