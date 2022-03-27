@@ -16,8 +16,8 @@ import "types/types.api"
 )
 service flightInquiry {
 	@doc "航班查询"
-	@handler QuireBySetOutDateAndFlightNumberReq
+	@handler QuireBySetOutDateAndFlightNumber
 	get /flight/quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns (QuireBySetOutDateAndFlightNumberResp)
-	@handler QuireBySetOutDateStartPositionEndPositionReq
+	@handler QuireBySetOutDateStartPositionEndPosition
 	get /flight/quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns (QuireBySetOutDateStartPositionEndPositionResp)
 }
