@@ -11,7 +11,7 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func DatePositionHandler(ctx *svc.ServiceContext) http.HandlerFunc {
+func QuireBySetOutDateStartPositionEndPositionReqHandler(ctx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.QuireBySetOutDateStartPositionEndPositionReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -19,8 +19,8 @@ func DatePositionHandler(ctx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := flightInquiry.NewDatePositionLogic(r.Context(), ctx)
-		resp, err := l.DatePosition(&req)
+		l := flightInquiry.NewQuireBySetOutDateStartPositionEndPositionReqLogic(r.Context(), ctx)
+		resp, err := l.QuireBySetOutDateStartPositionEndPositionReq(&req)
 		result.HttpResult(r, w, resp, err)
 	}
 }

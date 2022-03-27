@@ -16,12 +16,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/flight/quiry/date-number",
-				Handler: flightInquiry.DateNumberHandler(serverCtx),
+				Handler: flightInquiry.QuireBySetOutDateAndFlightNumberReqHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/flight/quiry/date-position",
-				Handler: flightInquiry.DatePositionHandler(serverCtx),
+				Handler: flightInquiry.QuireBySetOutDateStartPositionEndPositionReqHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/v1/flightInquiry"),
