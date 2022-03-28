@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"strings"
 	"time"
 	"uranus/app/flightInquiry/cmd/rpc/flightinquiry"
 	"uranus/common/xerr"
@@ -77,7 +78,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 			})
 		}
 		resp.Flightinfos[i].FlightNumber = rpcResp.FlightInfos[i].FlightNumber
-		resp.Flightinfos[i].SetOutDate = rpcResp.FlightInfos[i].SetOutDate.AsTime().String()
+		resp.Flightinfos[i].SetOutDate = strings.Split(strings.Split(rpcResp.FlightInfos[i].SetOutDate.AsTime().String(), " +")[0], " ")[0]
 		resp.Flightinfos[i].ArriveTime = rpcResp.FlightInfos[i].ArriveTime.AsTime().String()
 		resp.Flightinfos[i].ArrivePosition = rpcResp.FlightInfos[i].ArrivePosition
 		resp.Flightinfos[i].DepartTime = rpcResp.FlightInfos[i].DepartTime.AsTime().String()

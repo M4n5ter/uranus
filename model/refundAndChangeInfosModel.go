@@ -397,7 +397,7 @@ func (m *defaultRefundAndChangeInfosModel) queryPrimary(conn sqlx.SqlConn, v, pr
 
 //!!!!! 其他自定义方法，从此处开始写,此处上方不要写自定义方法!!!!!
 
-// FindListByTicketID 按照id倒序分页查询数据，不支持排序
+// FindListByTicketID 按照ticket_id查询数据
 func (m *defaultRefundAndChangeInfosModel) FindListByTicketID(rowBuilder squirrel.SelectBuilder, ticketID int64) ([]*RefundAndChangeInfos, error) {
 
 	if ticketID > 0 {
