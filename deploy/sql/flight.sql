@@ -78,8 +78,8 @@ CREATE TABLE `refund_and_change_infos`  (
   `fee3` bigint(20) UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间3时需要的费用(￥/人)',
   `time4` datetime(6) NOT NULL COMMENT '时间4',
   `fee4` bigint(20) UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间4时需要的费用(￥/人)',
-  `time5` datetime(6) NOT NULL COMMENT '时间5',
-  `fee5` bigint(20) UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间5时需要的费用(￥/人)',
+  `time5` datetime(6) COMMENT '时间5',
+  `fee5` bigint(20) COMMENT '符合时间5时需要的费用(￥/人)',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_refund_and_change_infos_delete_time`(`delete_time`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
