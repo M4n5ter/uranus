@@ -2,30 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/jinzhu/copier"
+	"time"
 )
 
-type t1 struct {
-	Name   string
-	Number int64
-}
-
-type t2 struct {
-	Name   string
-	Number int64
-}
-
 func main() {
-	test2 := make([]*t2, 3)
-	test1 := []t1{
-		{Name: "wyt1", Number: 66666},
-		{Name: "wyt2", Number: 77777},
-		{Name: "wyt3", Number: 88888},
-	}
-	_ = copier.Copy(&test2, &test1)
-	for _, t := range test2 {
-		fmt.Println(*t)
-	}
+	t, err := time.Parse("2006-01-02", "2006-01-02 00:00:00")
+	fmt.Println(t.Format("2006-01-02 15:04:05"), err)
 	//gormModel2.GlobalDB.AutoMigrate(&gormModel2.FlightInfo{}, &gormModel2.Flight{}, &gormModel2.Space{}, &gormModel2.Ticket{}, &gormModel2.RefundAndChangeInfo{})
 	//model.GlobalDB.AutoMigrate(&model.Space{})
 	//s1 := model.Space{

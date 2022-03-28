@@ -6,3 +6,20 @@ Mode: dev
 Log:
   ServiceName: flightInquiry-api
   Level: error
+
+FlightInquiryConf:
+  Endpoints:
+  - 127.0.0.1:9001
+
+##监控
+#Prometheus:
+#  Host: 0.0.0.0
+#  Port: 9091
+#  Path: /metrics
+#
+##链路追踪
+#Telemetry:
+#  Name: auth-api
+#  Endpoint: http://jaeger:14268/api/traces
+#  Sampler: 1.0
+#  Batcher: jaeger

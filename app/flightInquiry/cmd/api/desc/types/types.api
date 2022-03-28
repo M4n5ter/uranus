@@ -9,31 +9,17 @@ info(
 )
 
 type (
+    TF {
+        Time string `json:"time"`
+        Fee  uint64 `json:"fee"`
+    }
     //退票信息
     RefundInfo {
-        Time1   string              `json:"time1"`
-        Fee1    uint64              `json:"fee1"`
-        Time2   string              `json:"time2"`
-        Fee2    uint64              `json:"fee2"`
-        Time3   string              `json:"time3"`
-        Fee3    uint64              `json:"fee3"`
-        Time4   string              `json:"time4"`
-        Fee4    uint64              `json:"fee4"`
-        Time5   string              `json:"time5,optional"`
-        Fee5    uint64              `json:"fee5,optional"`
+        TFs     []TF`json:"tFs"`
     }
     //改票信息
     ChangeInfo {
-        Time1   string              `json:"time1"`
-        Fee1    uint64              `json:"fee1"`
-        Time2   string              `json:"time2"`
-        Fee2    uint64              `json:"fee2"`
-        Time3   string              `json:"time3"`
-        Fee3    uint64              `json:"fee3"`
-        Time4   string              `json:"time4"`
-        Fee4    uint64              `json:"fee4"`
-        Time5   string              `json:"time5,optional"`
-        Fee5    uint64              `json:"fee5,optional"`
+        TFs     []TF`json:"tFs"`
     }
 
     //航班信息
@@ -61,9 +47,9 @@ type (
         //降落时间
         ArriveTime  string          `json:"arriveTime"`
         //退票信息
-        RefundInfo
+        RefundInfo  RefundInfo      `json:"refundInfo"`
         //改票信息
-        ChangeInfo
+        ChangeInfo  RefundInfo      `json:"changeInfo"`
     }
 )
 
@@ -78,7 +64,7 @@ type (
     }
     //QuireBySetOutDateAndFlightNumberResp 为 QuireBySetOutDateAndFlightNumberReq 的响应
     QuireBySetOutDateAndFlightNumberResp {
-        Flightinfo
+        Flightinfos     []*Flightinfo`json:"flightinfos"`
     }
 )
 
@@ -94,7 +80,7 @@ type (
     }
         //QuireBySetOutDateStartPositionEndPositionResp 为 QuireBySetOutTimeStartPositionEndPositionReq 的响应
     QuireBySetOutDateStartPositionEndPositionResp {
-        Flightinfo
+        Flightinfos     []*Flightinfo`json:"flightinfos"`
     }
 )
 
