@@ -7,11 +7,11 @@ type TF struct {
 }
 
 type RefundInfo struct {
-	TFs []TF `json:"tFs"`
+	TFs []TF `json:"tfs"`
 }
 
 type ChangeInfo struct {
-	TFs []TF `json:"tFs"`
+	TFs []TF `json:"tfs"`
 }
 
 type Flightinfo struct {

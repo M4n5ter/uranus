@@ -56,12 +56,12 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 	// 初始化resp，避免空指针
 	resp = &types.QuireBySetOutDateAndFlightNumberResp{}
 	resp.Flightinfos = make([]*types.Flightinfo, len(rpcResp.FlightInfos))
-	for i, _ := range resp.Flightinfos {
+	for i := range resp.Flightinfos {
 		//初始化FlightInfos以便下面进行赋值（避免空指针）
 		resp.Flightinfos[i] = &types.Flightinfo{}
 		//退票信息
 		for _, timeFee := range rpcResp.FlightInfos[i].RefundInfo.TimeFees {
-			t := timeFee.Time.AsTime().String()
+			t := strings.Split(timeFee.Time.AsTime().String(), " +")[0]
 			f := timeFee.Fee
 			resp.Flightinfos[i].RefundInfo.TFs = append(resp.Flightinfos[i].RefundInfo.TFs, types.TF{
 				Time: t,
@@ -70,7 +70,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 		}
 		//改票信息
 		for _, timeFee := range rpcResp.FlightInfos[i].ChangeInfo.TimeFees {
-			t := timeFee.Time.AsTime().String()
+			t := strings.Split(timeFee.Time.AsTime().String(), " +")[0]
 			f := timeFee.Fee
 			resp.Flightinfos[i].ChangeInfo.TFs = append(resp.Flightinfos[i].ChangeInfo.TFs, types.TF{
 				Time: t,
@@ -79,9 +79,9 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 		}
 		resp.Flightinfos[i].FlightNumber = rpcResp.FlightInfos[i].FlightNumber
 		resp.Flightinfos[i].SetOutDate = strings.Split(strings.Split(rpcResp.FlightInfos[i].SetOutDate.AsTime().String(), " +")[0], " ")[0]
-		resp.Flightinfos[i].ArriveTime = rpcResp.FlightInfos[i].ArriveTime.AsTime().String()
+		resp.Flightinfos[i].ArriveTime = strings.Split(rpcResp.FlightInfos[i].ArriveTime.AsTime().String(), " +")[0]
 		resp.Flightinfos[i].ArrivePosition = rpcResp.FlightInfos[i].ArrivePosition
-		resp.Flightinfos[i].DepartTime = rpcResp.FlightInfos[i].DepartTime.AsTime().String()
+		resp.Flightinfos[i].DepartTime = strings.Split(rpcResp.FlightInfos[i].DepartTime.AsTime().String(), " +")[0]
 		resp.Flightinfos[i].DepartPosition = rpcResp.FlightInfos[i].DepartPosition
 		resp.Flightinfos[i].Price = rpcResp.FlightInfos[i].Price
 		resp.Flightinfos[i].Surplus = rpcResp.FlightInfos[i].Surplus

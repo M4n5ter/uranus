@@ -15,11 +15,11 @@ type (
     }
     //退票信息
     RefundInfo {
-        TFs     []TF`json:"tFs"`
+        TFs     []TF`json:"tfs"`
     }
     //改票信息
     ChangeInfo {
-        TFs     []TF`json:"tFs"`
+        TFs     []TF`json:"tfs"`
     }
 
     //航班信息
