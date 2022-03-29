@@ -35,9 +35,9 @@ type (
 		Insert(session sqlx.Session, data *UserAuth) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*UserAuth, error)
-		// FindOneBy 根据唯一索引查询一条数据，走缓存
+		// FindOneByAuthTypeAuthKey 根据唯一索引查询一条数据，走缓存
 		FindOneByAuthTypeAuthKey(authType string, authKey string) (*UserAuth, error)
-		// FindOneBy 根据唯一索引查询一条数据，走缓存
+		// FindOneByUserIdAuthType 根据唯一索引查询一条数据，走缓存
 		FindOneByUserIdAuthType(userId int64, authType string) (*UserAuth, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -135,7 +135,7 @@ func (m *defaultUserAuthModel) FindOne(id int64) (*UserAuth, error) {
 	}
 }
 
-// FindOneBy 根据唯一索引查询一条数据，走缓存
+// FindOneByAuthTypeAuthKey 根据唯一索引查询一条数据，走缓存
 func (m *defaultUserAuthModel) FindOneByAuthTypeAuthKey(authType string, authKey string) (*UserAuth, error) {
 	userAuthAuthTypeAuthKeyKey := fmt.Sprintf("%s%v:%v", cacheUserAuthAuthTypeAuthKeyPrefix, authType, authKey)
 	var resp UserAuth
@@ -159,7 +159,7 @@ func (m *defaultUserAuthModel) FindOneByAuthTypeAuthKey(authType string, authKey
 	}
 }
 
-// FindOneBy 根据唯一索引查询一条数据，走缓存
+// FindOneByUserIdAuthType 根据唯一索引查询一条数据，走缓存
 func (m *defaultUserAuthModel) FindOneByUserIdAuthType(userId int64, authType string) (*UserAuth, error) {
 	userAuthUserIdAuthTypeKey := fmt.Sprintf("%s%v:%v", cacheUserAuthUserIdAuthTypePrefix, userId, authType)
 	var resp UserAuth

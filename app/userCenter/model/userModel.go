@@ -34,7 +34,7 @@ type (
 		Insert(session sqlx.Session, data *User) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*User, error)
-		// FindOneBy 根据唯一索引查询一条数据，走缓存
+		// FindOneByMobile 根据唯一索引查询一条数据，走缓存
 		FindOneByMobile(mobile string) (*User, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -134,7 +134,7 @@ func (m *defaultUserModel) FindOne(id int64) (*User, error) {
 	}
 }
 
-// FindOneBy 根据唯一索引查询一条数据，走缓存
+// FindOneByMobile 根据唯一索引查询一条数据，走缓存
 func (m *defaultUserModel) FindOneByMobile(mobile string) (*User, error) {
 	userMobileKey := fmt.Sprintf("%s%v", cacheUserMobilePrefix, mobile)
 	var resp User
