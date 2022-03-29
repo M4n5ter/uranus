@@ -15,6 +15,7 @@ import (
 
 var ERRGetInfos = xerr.NewErrMsg("暂无直飞航班")
 var ERRGetSpaces = xerr.NewErrMsg("暂无舱位信息")
+var ERRGetFltType = xerr.NewErrMsg("找不到对应航班机型")
 var ERRGetTickets = xerr.NewErrMsg("暂无票信息")
 var ERRRefundAndChangeInfos = xerr.NewErrMsg("暂无退改票信息")
 
@@ -45,8 +46,15 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 		}
 	}
 
-	//查询 IsFirstClass Surplus
+	//查询 IsFirstClass Surplus FlightTypes
 	for _, info := range flightInfos {
+		flt, err := l.svcCtx.Flights.FindOneByNumber(info.FlightNumber)
+		if err != nil {
+			if err == model.ErrNotFound {
+				logx.WithContext(l.ctx).Infof("NOT FOUND: There is no corresponding flight information for number in this flightInfo.FlightNumber:%s", info.FlightNumber)
+			}
+			return nil, errors.Wrapf(ERRGetFltType, "DBERR: when calling flightinquiry-rpc:l.svcCtx.Flights.FindOneByNumber : FlightNumber:%s, err: %v", info.FlightNumber, err)
+		}
 		spaces, err := l.svcCtx.SpacesModel.FindListByFlightInfoID(l.svcCtx.SpacesModel.RowBuilder(), info.Id)
 		if err != nil {
 			if err == model.ErrNotFound {
@@ -129,6 +137,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 					RefundInfo:     refundInfo,
 					ChangeInfo:     changeInfo,
 					Cba:            ticket.Cba,
+					FlightType:     flt.FltType,
 				})
 			}
 

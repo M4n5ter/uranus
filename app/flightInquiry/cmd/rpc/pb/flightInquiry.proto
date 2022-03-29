@@ -35,6 +35,8 @@ message FlightInfo {
   ChangeInfo                ChangeInfo     = 13;
   //托运行李额(KG)
   int64                     Cba            = 14;
+  //机型
+  string                    FlightType     = 15;
 }
 
 //时间-费用

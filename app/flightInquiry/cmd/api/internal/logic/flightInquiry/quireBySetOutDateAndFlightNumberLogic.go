@@ -78,6 +78,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 			})
 		}
 		resp.Flightinfos[i].FlightNumber = rpcResp.FlightInfos[i].FlightNumber
+		resp.Flightinfos[i].FlightType = rpcResp.FlightInfos[i].FlightType
 		resp.Flightinfos[i].SetOutDate = strings.Split(strings.Split(rpcResp.FlightInfos[i].SetOutDate.AsTime().String(), " +")[0], " ")[0]
 		resp.Flightinfos[i].ArriveTime = strings.Split(rpcResp.FlightInfos[i].ArriveTime.AsTime().String(), " +")[0]
 		resp.Flightinfos[i].ArrivePosition = rpcResp.FlightInfos[i].ArrivePosition

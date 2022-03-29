@@ -26,6 +26,8 @@ type (
     Flightinfo {
         //航班号，例如MU5735
         FlightNumber    string      `json:"flightNumber"`
+        //机型
+        FlightType      string      `json:"flightType"`
         //出发日期
         SetOutDate      string      `json:"setOutDate"`
         //是否为头等舱/商务舱

@@ -16,6 +16,7 @@ type ChangeInfo struct {
 
 type Flightinfo struct {
 	FlightNumber   string     `json:"flightNumber"`
+	FlightType     string     `json:"flightType"`
 	SetOutDate     string     `json:"setOutDate"`
 	IsFirstClass   bool       `json:"isFirstClass"`
 	Price          uint64     `json:"price"`
