@@ -18,7 +18,7 @@ func GetEnforcer(conf Conf) (enforcer *casbin.CachedEnforcer, err error) {
 	}
 	m, err := model.NewModelFromString(conf.Model)
 	if err != nil {
-		return nil, errors.Wrapf(ErrCasbinErr, "create casbinTools model err: %v", err)
+		return nil, errors.Wrapf(ErrCasbinErr, "create casbinTools commonModel err: %v", err)
 	}
 	enforcer, err = casbin.NewCachedEnforcer(m, a)
 	if err != nil {

@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"github.com/pkg/errors"
-	"uranus/model"
+	"uranus/commonModel"
 
 	"uranus/app/flightInquiry/cmd/rpc/internal/svc"
 	"uranus/app/flightInquiry/cmd/rpc/pb"
@@ -31,7 +31,7 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 	//查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
 	flightInfos, err := l.svcCtx.FlightInfosModel.FindListBySetOutDateAndPosition(l.svcCtx.FlightInfosModel.RowBuilder(), in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition)
 	if err != nil {
-		if err == model.ErrNotFound {
+		if err == commonModel.ErrNotFound {
 			return nil, errors.Wrapf(ERRGetInfos, "NOT FOUND: can't found flight infos: SetOutTime->%v, DepartPosition->%s, ArrivePosition->%s, ERR: %v\n", in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition, err)
 		} else {
 			return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate : SetOutTime->%v, DepartPosition->%s, ArrivePosition->%s, ERR: %v\n", in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition, err)

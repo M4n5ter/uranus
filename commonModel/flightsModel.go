@@ -1,4 +1,4 @@
-package model
+package commonModel
 
 import (
 	"database/sql"

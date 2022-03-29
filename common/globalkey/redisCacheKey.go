@@ -1,8 +1,8 @@
 package globalkey
 
 /**
-redis key except "model cache key"  in here,
-but "model cache key" in model
+redis key except "commonModel cache key"  in here,
+but "commonModel cache key" in commonModel
 */
 
 // CacheUserTokenKey /** 用户登陆的token

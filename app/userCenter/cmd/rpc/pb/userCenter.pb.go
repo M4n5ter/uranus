@@ -20,7 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 用于获取 UserInfo 的 model，不含 password
+// 用于获取 UserInfo 的 commonModel，不含 password
 type User struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -108,7 +108,7 @@ func (x *User) GetInfo() string {
 	return ""
 }
 
-// 用于获取 UserAuthInfo 的 model，不含 password
+// 用于获取 UserAuthInfo 的 commonModel，不含 password
 type UserAuth struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

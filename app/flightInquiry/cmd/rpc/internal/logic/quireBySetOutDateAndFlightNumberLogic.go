@@ -6,7 +6,7 @@ import (
 	"google.golang.org/protobuf/runtime/protoimpl"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"uranus/common/xerr"
-	"uranus/model"
+	"uranus/commonModel"
 
 	"uranus/app/flightInquiry/cmd/rpc/internal/svc"
 	"uranus/app/flightInquiry/cmd/rpc/pb"
@@ -55,7 +55,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 	//查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
 	flightInfos, err := l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate(l.svcCtx.FlightInfosModel.RowBuilder(), in.FlightNumber, in.SetOutDate.AsTime())
 	if err != nil {
-		if err == model.ErrNotFound {
+		if err == commonModel.ErrNotFound {
 			return nil, errors.Wrapf(ERRGetInfos, "NOT FOUND: can't found flight infos: number->%s setOutTime->%v, ERR: %v\n", in.FlightNumber, in.SetOutDate.AsTime(), err)
 		} else {
 			return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate : number->%s setOutTime->%v, ERR: %v\n", in.FlightNumber, in.SetOutDate.AsTime(), err)
@@ -70,13 +70,13 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 }
 
 // combineAllInfos respType 为 true 时，将 resp 转化为 *pb.QuireBySetOutDateAndFlightNumberResp,否则转化为 *pb.QuireBySetOutDateStartPositionEndPositionResp
-func (l *FlightQuirer) combineAllInfos(flightInfos []*model.FlightInfos, resp any, respType bool) (any, error) {
+func (l *FlightQuirer) combineAllInfos(flightInfos []*commonModel.FlightInfos, resp any, respType bool) (any, error) {
 	//查询 IsFirstClass Surplus FlightTypes
 	for _, info := range flightInfos {
 		flt, err := l.svcCtx.Flights.FindOneByNumber(info.FlightNumber)
 		if err != nil {
-			if err == model.ErrNotFound {
-				flt = &model.Flights{FltType: "unknown"}
+			if err == commonModel.ErrNotFound {
+				flt = &commonModel.Flights{FltType: "unknown"}
 				logx.WithContext(l.ctx).Infof("NOT FOUND: There is no corresponding flight information for number in this flightInfo.FlightNumber:%s\n", info.FlightNumber)
 			} else {
 				return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.Flights.FindOneByNumber : FlightNumber:%s, err: %v\n", info.FlightNumber, err)
@@ -84,7 +84,7 @@ func (l *FlightQuirer) combineAllInfos(flightInfos []*model.FlightInfos, resp an
 		}
 		spaces, err := l.svcCtx.SpacesModel.FindListByFlightInfoID(l.svcCtx.SpacesModel.RowBuilder(), info.Id)
 		if err != nil {
-			if err == model.ErrNotFound {
+			if err == commonModel.ErrNotFound {
 				logx.WithContext(l.ctx).Infof("NOT FOUND: There is no corresponding space information for this flightInfo.FlightInfoID:%d\n", info.Id)
 				return nil, errors.Wrapf(ERRGetSpaces, "NOT FOUND: There is no corresponding space information for this flightInfo.FlightInfoID:%d\n", info.Id)
 			} else {
@@ -102,7 +102,7 @@ func (l *FlightQuirer) combineAllInfos(flightInfos []*model.FlightInfos, resp an
 			// 查询 Price RefundInfo ChangeInfo
 			tickets, err := l.svcCtx.TicketsModel.FindListBySpaceID(l.svcCtx.TicketsModel.RowBuilder(), space.Id)
 			if err != nil {
-				if err == model.ErrNotFound {
+				if err == commonModel.ErrNotFound {
 					logx.WithContext(l.ctx).Infof("NOT FOUND: There is no ticket information for the corresponding space.spaceID:%d\n", space.Id)
 					return nil, errors.Wrapf(ERRGetTickets, "NOT FOUND: There is no ticket information for the corresponding space.spaceID:%d\n", space.Id)
 				} else {
@@ -115,7 +115,7 @@ func (l *FlightQuirer) combineAllInfos(flightInfos []*model.FlightInfos, resp an
 				changeInfo := &pb.ChangeInfo{}
 				rcis, err := l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID(l.svcCtx.RefundAndChangeInfosModel.RowBuilder(), ticket.Id)
 				if err != nil {
-					if err == model.ErrNotFound {
+					if err == commonModel.ErrNotFound {
 						logx.WithContext(l.ctx).Infof("NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
 						return nil, errors.Wrapf(ERRRefundAndChangeInfos, "NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
 					} else {

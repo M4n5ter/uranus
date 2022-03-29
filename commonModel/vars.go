@@ -1,4 +1,4 @@
-package model
+package commonModel
 
 import "github.com/zeromicro/go-zero/core/stores/sqlx"
 

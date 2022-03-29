@@ -9,12 +9,12 @@ func main() {
 	t, err := time.Parse("2006-01-02", "2006-01-02 00:00:00")
 	fmt.Println(t.Format("2006-01-02 15:04:05"), err)
 	//gormModel2.GlobalDB.AutoMigrate(&gormModel2.FlightInfo{}, &gormModel2.Flight{}, &gormModel2.Space{}, &gormModel2.Ticket{}, &gormModel2.RefundAndChangeInfo{})
-	//model.GlobalDB.AutoMigrate(&model.Space{})
-	//s1 := model.Space{
+	//commonModel.GlobalDB.AutoMigrate(&commonModel.Space{})
+	//s1 := commonModel.Space{
 	//	IsFirstClass: true,
 	//	Price:        999,
 	//}
-	//fi1 := model.FlightInfo{
+	//fi1 := commonModel.FlightInfo{
 	//	Space:         s1,
 	//	SetOutDate:    time.Date(2022, time.March, 22, 0, 0, 0, 0, time.Local),
 	//	//	StartTime:     time.Now(),
@@ -24,11 +24,11 @@ func main() {
 	//	//	Punctuality:   97,
 	//	//	FlightNumber:  "HG1099",
 	//	//}
-	//	f2 := model.Flight{
+	//	f2 := commonModel.Flight{
 	//		FltTypeJmp: "320",
 	//		Number:     "HG1099",
 	//	}
-	//	model.GlobalDB.Create(&f2)
-	//	//model.GlobalDB.Create(&fi1)
-	//	//model.GlobalDB.First(&model.Flight{}).Where("number = ?", fi1.FlightNumber).Association("FlightInfos").Append(&fi1)
+	//	commonModel.GlobalDB.Create(&f2)
+	//	//commonModel.GlobalDB.Create(&fi1)
+	//	//commonModel.GlobalDB.First(&commonModel.Flight{}).Where("number = ?", fi1.FlightNumber).Association("FlightInfos").Append(&fi1)
 }
