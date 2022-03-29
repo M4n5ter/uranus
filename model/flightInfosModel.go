@@ -67,6 +67,8 @@ type (
 		FindListByNumber(rowBuilder squirrel.SelectBuilder, number string) ([]*FlightInfos, error)
 		// FindListByNumberAndSetOutDate 根据航班号和出发日期查询数据
 		FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error)
+		// FindListBySetOutDateAndPosition 通过给定日期、出发地、目的地进行航班查询
+		FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, sod time.Time, depart, arrive string) ([]*FlightInfos, error)
 	}
 
 	defaultFlightInfosModel struct {
@@ -419,11 +421,11 @@ func (m *defaultFlightInfosModel) FindListByNumber(rowBuilder squirrel.SelectBui
 }
 
 // FindListByNumberAndSetOutDate 根据航班号和出发日期查询数据
-func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
+func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sod time.Time) ([]*FlightInfos, error) {
 
-	if len(number) > 0 && !sot.IsZero() {
-		sot, _ = time.Parse("2006-01-02", sot.Format("2006-01-02"))
-		rowBuilder = rowBuilder.Where(" flight_number = ? AND set_out_date = ? ", number, sot.Format("2006-01-02 15:04:05"))
+	if len(number) > 0 && !sod.IsZero() {
+		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
+		rowBuilder = rowBuilder.Where(" flight_number = ? AND set_out_date = ? ", number, sod.Format("2006-01-02 15:04:05"))
 	} else {
 		return nil, ErrNotFound
 	}
@@ -443,12 +445,12 @@ func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squir
 	}
 }
 
-// FindListBySetOutDateAndPosition 通过给定日期、出发地、目的地进行航班查询 fixme
-func (m *defaultFlightInfosModel) FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error) {
+// FindListBySetOutDateAndPosition 通过给定日期、出发地、目的地进行航班查询
+func (m *defaultFlightInfosModel) FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, sod time.Time, depart, arrive string) ([]*FlightInfos, error) {
 
-	if len(number) > 0 && !sot.IsZero() {
-		sot, _ = time.Parse("2006-01-02", sot.Format("2006-01-02"))
-		rowBuilder = rowBuilder.Where(" flight_number = ? AND set_out_date = ? ", number, sot.Format("2006-01-02 15:04:05"))
+	if len(depart) > 0 && len(arrive) > 0 && !sod.IsZero() {
+		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
+		rowBuilder = rowBuilder.Where(" depart_position = ? AND arrive_position = ? AND set_out_date = ? ", depart, arrive, sod.Format("2006-01-02 15:04:05"))
 	} else {
 		return nil, ErrNotFound
 	}

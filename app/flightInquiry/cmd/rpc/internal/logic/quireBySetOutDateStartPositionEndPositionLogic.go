@@ -2,6 +2,8 @@ package logic
 
 import (
 	"context"
+	"github.com/pkg/errors"
+	"uranus/model"
 
 	"uranus/app/flightInquiry/cmd/rpc/internal/svc"
 	"uranus/app/flightInquiry/cmd/rpc/pb"
@@ -25,7 +27,20 @@ func NewQuireBySetOutDateStartPositionEndPositionLogic(ctx context.Context, svcC
 
 // QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
 func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartPositionEndPosition(in *pb.QuireBySetOutDateStartPositionEndPositionReq) (*pb.QuireBySetOutDateStartPositionEndPositionResp, error) {
-	// todo: add your logic here and delete this line
-
-	return &pb.QuireBySetOutDateStartPositionEndPositionResp{}, nil
+	resp := &pb.QuireBySetOutDateStartPositionEndPositionResp{}
+	//查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
+	flightInfos, err := l.svcCtx.FlightInfosModel.FindListBySetOutDateAndPosition(l.svcCtx.FlightInfosModel.RowBuilder(), in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition)
+	if err != nil {
+		if err == model.ErrNotFound {
+			return nil, errors.Wrapf(ERRGetInfos, "NOT FOUND: can't found flight infos: SetOutTime->%v, DepartPosition->%s, ArrivePosition->%s, ERR: %v\n", in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition, err)
+		} else {
+			return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate : SetOutTime->%v, DepartPosition->%s, ArrivePosition->%s, ERR: %v\n", in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition, err)
+		}
+	}
+	v, err := (*FlightQuirer)(l).combineAllInfos(flightInfos, resp, false)
+	resp, ok := v.(*pb.QuireBySetOutDateStartPositionEndPositionResp)
+	if !ok {
+		return &pb.QuireBySetOutDateStartPositionEndPositionResp{}, nil
+	}
+	return resp, err
 }
