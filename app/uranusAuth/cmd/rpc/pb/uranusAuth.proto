@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+package pb;
+
+// 生成 Token
+message GenerateTokenReq {
+  int64 userId = 1;
+}
+message GenerateTokenResp {
+  string accessToken  = 1;
+  int64  accessExpire = 2;
+  int64  refreshAfter = 3;
+}
+
+// 清除 Token
+message ClearTokenReq {
+  int64 userId = 1;
+}
+message ClearTokenResp {
+  bool ok = 1;
+}
+
+// 确认 Token
+message ValidateTokenReq {
+  int64   userId = 1;
+  string  token = 2;
+}
+message ValidateTokenResp {
+  bool ok = 1;
+}
+
+service auth {
+  // 生成 Token 服务只对 userCenter 开放
+  rpc GenerateToken(GenerateTokenReq) returns(GenerateTokenResp);
+  // 清除 Token 服务只对 userCenter 开放
+  rpc ClearToken(ClearTokenReq) returns(ClearTokenResp);
+  // ValidateToken 只对 userCenter 和 uranusAuth api 开放
+  rpc ValidateToken(ValidateTokenReq) returns(ValidateTokenResp);
+}

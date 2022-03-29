@@ -1,0 +1,75 @@
+syntax = "v1"
+
+info(
+    title: "user"
+    desc: "用户实例"
+    author: "王勇涛 <wangyongtao2000@qq.com>"
+)
+
+type User {
+    Id          int64       `json:"id"`
+    Mobile      string      `json:"mobile"`
+    Nickname    string      `json:"nickname"`
+    Sex         int64       `json:"sex"`
+    Avatar      string      `json:"avatar"`
+    Info        string      `json:"info"`
+}
+
+type (
+    RegisterReq {
+        Mobile      string  `json:"mobile"`
+        Password    string  `json:"password"`
+        Sex         int64   `json:"sex"`
+        Nickname    string  `json:"nickname"`
+    }
+    RegisterResp {
+        AccessToken     string  `json:"accessToken"`
+        AccessExpire    string  `json:"accessExpire"`
+        RefreshAfter    string  `json:"refreshAfter"`
+    }
+)
+
+type (
+    LoginReq {
+        AuthType    string  `json:"authType"`
+        Mobile      string  `json:"mobile"`
+        Password    string  `json:"password"`
+    }
+    LoginResp {
+        AccessToken     string  `json:"accessToken"`
+        AccessExpire    string  `json:"accessExpire"`
+        RefreshAfter    string  `json:"refreshAfter"`
+    }
+)
+
+type (
+    WXMiniAuthReq {
+        Code          string `json:"code"`
+        IV            string `json:"iv"`
+        EncryptedData string `json:"encryptedData"`
+    }
+    WXMiniAuthResp {
+        AccessToken  string `json:"accessToken"`
+        AccessExpire int64  `json:"accessExpire"`
+        RefreshAfter int64  `json:"refreshAfter"`
+    }
+)
+
+type (
+    UserInfoReq {
+    }
+    UserInfoResp {
+        UserInfo User `json:"userInfo"`
+    }
+)
+
+type (
+    SearchUserInfoReq {
+        UserId  int64 `json:"userId"`
+    }
+    // 为保护隐私，Resp 中不应包含 Mobile
+    SearchUserInfoResp {
+        UserInfo User `json:"userInfo"`
+    }
+)
+

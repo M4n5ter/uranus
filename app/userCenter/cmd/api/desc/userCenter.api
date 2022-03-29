@@ -1,9 +1,36 @@
 syntax = "v1"
 
 info(
-    title: "userCenter API"
-    desc: "用户中心 API"
-    author: "王勇涛"
-    email: "wangyongtao2000@qq.com"
-    version: "v1"
+	title: "userCenter"
+	desc: "用户中心服务"
+	author: "王勇涛 <wangyongtao2000@qq.com>"
+	version: "v1"
 )
+
+import "user/user.api"
+
+@server(
+	prefix: v1/userCenter
+	group:  user
+)
+service userCenter {
+	@doc "注册"
+	@handler register
+	post /user/register   (RegisterReq) returns (RegisterResp)
+	
+	@doc "登录"
+	@handler login
+	post /user/login      (LoginReq) returns (LoginResp)
+	
+	@doc "获取用户信息"
+	@handler detail
+	post /user/detail     (UserInfoReq) returns (UserInfoResp)
+	
+	@doc "查询用户信息"
+	@handler searchUserInfo
+	post /user/searchUserInfo     (SearchUserInfoReq) returns (SearchUserInfoResp)
+	
+	@doc "微信小程序授权"
+	@handler wxMiniAuth
+	post /user/wxMiniAuth (WXMiniAuthReq) returns (WXMiniAuthResp)
+}

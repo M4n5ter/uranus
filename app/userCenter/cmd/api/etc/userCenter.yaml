@@ -1,0 +1,45 @@
+Name: userCenter-api
+Host: 0.0.0.0
+Port: 8002
+
+
+
+#WxMiniConf
+WxMiniConf:
+  AppId: wx2add729fadddddd
+  Secret: 20365395b3de9b2a9351ddddddd
+
+UserCenterRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: userCenter-rpc
+
+AuthRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: auth-rpc
+
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 9091
+  Path: /metrics
+
+#链路追踪
+Telemetry:
+  Name: auth-rpc
+  Endpoint: http://jaeger:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+Log:
+  ServiceName: userCenter-api
+  Level: error
+
+CasbinConf:
+  DB:
+    DataSourceWithoutDBName: root:PXDN93VRKUm8TeE7@tcp(mysql:3306)/
+    DBName: tooqueCasbinRule
+  Model: ''
