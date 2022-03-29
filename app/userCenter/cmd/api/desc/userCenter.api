@@ -1,0 +1,9 @@
+syntax = "v1"
+
+info(
+    title: "userCenter API"
+    desc: "用户中心 API"
+    author: "王勇涛"
+    email: "wangyongtao2000@qq.com"
+    version: "v1"
+)

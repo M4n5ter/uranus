@@ -1,0 +1,9 @@
+syntax = "v1"
+
+info(
+    title: "flightReservation API"
+    desc: "航班预定 API"
+    author: "王勇涛"
+    email: "wangyontao2000@qq.com"
+    version: "v1"
+)
