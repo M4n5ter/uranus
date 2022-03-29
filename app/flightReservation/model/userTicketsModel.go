@@ -100,9 +100,9 @@ func (m *defaultUserTicketsModel) Insert(session sqlx.Session, data *UserTickets
 
 	data.DeleteTime = time.Unix(0, 0)
 
+	userTicketsIdKey := fmt.Sprintf("%s%v", cacheUserTicketsIdPrefix, data.Id)
 	userTicketsAuthKeyKey := fmt.Sprintf("%s%v", cacheUserTicketsAuthKeyPrefix, data.AuthKey)
 	userTicketsAuthKeyTicketIdKey := fmt.Sprintf("%s%v:%v", cacheUserTicketsAuthKeyTicketIdPrefix, data.AuthKey, data.TicketId)
-	userTicketsIdKey := fmt.Sprintf("%s%v", cacheUserTicketsIdPrefix, data.Id)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, userTicketsRowsExpectAutoSet)
 		if session != nil {
@@ -193,7 +193,7 @@ func (m *defaultUserTicketsModel) Update(session sqlx.Session, data *UserTickets
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.TicketId, data.Id)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.TicketId, data.Id)
-	}, userTicketsAuthKeyKey, userTicketsAuthKeyTicketIdKey, userTicketsIdKey)
+	}, userTicketsIdKey, userTicketsAuthKeyKey, userTicketsAuthKeyTicketIdKey)
 }
 
 // UpdateWithVersion 乐观锁修改数据 ,推荐使用
@@ -214,7 +214,7 @@ func (m *defaultUserTicketsModel) UpdateWithVersion(session sqlx.Session, data *
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.TicketId, data.Id, oldVersion)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.TicketId, data.Id, oldVersion)
-	}, userTicketsAuthKeyKey, userTicketsAuthKeyTicketIdKey, userTicketsIdKey)
+	}, userTicketsIdKey, userTicketsAuthKeyKey, userTicketsAuthKeyTicketIdKey)
 	if err != nil {
 		return err
 	}
@@ -405,9 +405,9 @@ func (m *defaultUserTicketsModel) Delete(session sqlx.Session, id int64) error {
 		return err
 	}
 
+	userTicketsAuthKeyTicketIdKey := fmt.Sprintf("%s%v:%v", cacheUserTicketsAuthKeyTicketIdPrefix, data.AuthKey, data.TicketId)
 	userTicketsIdKey := fmt.Sprintf("%s%v", cacheUserTicketsIdPrefix, id)
 	userTicketsAuthKeyKey := fmt.Sprintf("%s%v", cacheUserTicketsAuthKeyPrefix, data.AuthKey)
-	userTicketsAuthKeyTicketIdKey := fmt.Sprintf("%s%v:%v", cacheUserTicketsAuthKeyTicketIdPrefix, data.AuthKey, data.TicketId)
 	_, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		if session != nil {
