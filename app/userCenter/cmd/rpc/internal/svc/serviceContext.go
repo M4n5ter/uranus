@@ -4,8 +4,8 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"
 	"uranus/app/uranusAuth/cmd/rpc/auth"
+	"uranus/app/userCenter/model"
 	"uranus/app/usercenter/cmd/rpc/internal/config"
-	"uranus/app/usercenter/model"
 )
 
 type ServiceContext struct {

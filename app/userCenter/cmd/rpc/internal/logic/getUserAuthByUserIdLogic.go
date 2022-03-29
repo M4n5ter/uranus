@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"github.com/pkg/errors"
-	"uranus/app/usercenter/model"
+	"uranus/app/userCenter/model"
 	"uranus/common/xerr"
 
 	"uranus/app/usercenter/cmd/rpc/internal/svc"

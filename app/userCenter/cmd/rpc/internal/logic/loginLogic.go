@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"uranus/app/uranusAuth/cmd/rpc/auth"
-	"uranus/app/usercenter/model"
+	"uranus/app/userCenter/model"
 	"uranus/common/xerr"
 
 	"uranus/app/usercenter/cmd/rpc/internal/svc"

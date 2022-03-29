@@ -4,10 +4,10 @@ import (
 	"context"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
+	"uranus/app/userCenter/model"
 	"uranus/app/usercenter/cmd/api/internal/svc"
 	"uranus/app/usercenter/cmd/api/internal/types"
 	"uranus/app/usercenter/cmd/rpc/pb"
-	"uranus/app/usercenter/model"
 	"uranus/common/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"

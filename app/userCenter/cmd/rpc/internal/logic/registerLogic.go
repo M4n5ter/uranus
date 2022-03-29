@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"uranus/app/uranusAuth/cmd/rpc/auth"
-	"uranus/app/usercenter/model"
+	"uranus/app/userCenter/model"
 	"uranus/common/tool"
 	"uranus/common/xerr"
 
