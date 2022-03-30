@@ -7,20 +7,22 @@ import "google/protobuf/timestamp.proto";
 
 //预定机票请求
 message BookAirTicketsReq {
+  //用户的平台唯一id
+  string                     Auth_key      = 1;
   //航班号，例如MU5735
-  string                    FlightNumber   = 1;
+  string                    FlightNumber   = 2;
   //出发日期
-  google.protobuf.Timestamp SetOutDate     = 2;
+  google.protobuf.Timestamp SetOutDate     = 3;
   //是否为头等舱/商务舱
-  bool                      IsFirstClass   = 3;
+  bool                      IsFirstClass   = 4;
   //起飞地点
-  string                    DepartPosition = 4;
+  string                    DepartPosition = 5;
   //起飞时间
-  google.protobuf.Timestamp DepartTime     = 5;
+  google.protobuf.Timestamp DepartTime     = 6;
   //降落地点
-  string                    ArrivePosition = 6;
+  string                    ArrivePosition = 7;
   //降落时间
-  google.protobuf.Timestamp ArriveTime     = 7;
+  google.protobuf.Timestamp ArriveTime     = 8;
 }
 //预定机票响应
 message BookAirTicketsResp {
@@ -54,7 +56,7 @@ message ChangeAirTicketsResp {
 }
 
 service flightReservation {
-  //BookAirTickets 给定：航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
+  //BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
   rpc BookAirTickets(BookAirTicketsReq) returns(BookAirTicketsResp);
   //RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
   rpc RefundAirTickets(RefundAirTicketsReq) returns(RefundAirTicketsResp);

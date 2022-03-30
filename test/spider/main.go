@@ -13,7 +13,7 @@ package main
 //	"strconv"
 //	"strings"
 //	"time"
-//	"uranus/test/model"
+//	"uranus/test/payment"
 //)
 //
 //var CNFlightNames = `北京首都国际机场 PEK 北京
@@ -124,8 +124,8 @@ package main
 //}
 //
 //func spider(url string) (cancel context.CancelFunc, err error) {
-//	var Flights = make([]model.Flight, 1)
-//	var FlightInfos = make([]model.FlightInfo, 1)
+//	var Flights = make([]payment.Flight, 1)
+//	var FlightInfos = make([]payment.FlightInfo, 1)
 //	options := []chromedp.ExecAllocatorOption{
 //		chromedp.Flag("headless", false),
 //		chromedp.Flag("blink-settings", "imagesEnabled=false"),
@@ -165,14 +165,14 @@ package main
 //	doc.Find(`#flt1 > tr`).Each(func(i int, selection *goquery.Selection) {
 //		//爬flight
 //		if len(Flights) < i+1 {
-//			Flights = append(Flights, model.Flight{})
+//			Flights = append(Flights, payment.Flight{})
 //		}
 //		Flights[i].FltTypeJmp = selection.Find(`tr > td.flight_logo > span > span`).Text()
 //		num := selection.Find(`a`).Text()
 //		Flights[i].Number = num
 //		//爬flightInfo
 //		if len(FlightInfos) < i+1 {
-//			FlightInfos = append(FlightInfos, model.FlightInfo{})
+//			FlightInfos = append(FlightInfos, payment.FlightInfo{})
 //		}
 //		FlightInfos[i].FlightNumber = num
 //		p, _ := strconv.Atoi(strings.TrimRight(selection.Find(`td.punctuality`).Text(), "%"))
@@ -233,8 +233,8 @@ package main
 //			info.EndTime,
 //			info.SetOutDate)
 //	}
-//	model.GlobalDB.Create(&Flights)
-//	model.GlobalDB.Create(&FlightInfos)
+//	payment.GlobalDB.Create(&Flights)
+//	payment.GlobalDB.Create(&FlightInfos)
 //	runtime.GC()
 //	return
 //}

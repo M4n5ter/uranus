@@ -22,7 +22,7 @@ func NewFlightReservationServer(svcCtx *svc.ServiceContext) *FlightReservationSe
 	}
 }
 
-// BookAirTickets 给定：航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
+// BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
 func (s *FlightReservationServer) BookAirTickets(ctx context.Context, in *pb.BookAirTicketsReq) (*pb.BookAirTicketsResp, error) {
 	l := logic.NewBookAirTicketsLogic(ctx, s.svcCtx)
 	return l.BookAirTickets(in)

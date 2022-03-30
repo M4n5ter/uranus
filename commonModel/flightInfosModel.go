@@ -69,6 +69,8 @@ type (
 		FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error)
 		// FindListBySetOutDateAndPosition 通过给定日期、出发地、目的地进行航班查询
 		FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, sod time.Time, depart, arrive string) ([]*FlightInfos, error)
+		// FindOneByByNumberAndSetOutDateAndPosition 根据 航班号 出发日期 始末时间地点 锁定一条航班信息
+		FindOneByByNumberAndSetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, number string, sod time.Time, depart string, departTime time.Time, arrive string, arriveTime time.Time) (*FlightInfos, error)
 	}
 
 	defaultFlightInfosModel struct {
@@ -424,6 +426,7 @@ func (m *defaultFlightInfosModel) FindListByNumber(rowBuilder squirrel.SelectBui
 func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sod time.Time) ([]*FlightInfos, error) {
 
 	if len(number) > 0 && !sod.IsZero() {
+		sod = sod.Local()
 		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
 		rowBuilder = rowBuilder.Where(" flight_number = ? AND set_out_date = ? ", number, sod.Format("2006-01-02 15:04:05"))
 	} else {
@@ -449,6 +452,7 @@ func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squir
 func (m *defaultFlightInfosModel) FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, sod time.Time, depart, arrive string) ([]*FlightInfos, error) {
 
 	if len(depart) > 0 && len(arrive) > 0 && !sod.IsZero() {
+		sod = sod.Local()
 		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
 		rowBuilder = rowBuilder.Where(" depart_position = ? AND arrive_position = ? AND set_out_date = ? ", depart, arrive, sod.Format("2006-01-02 15:04:05"))
 	} else {
@@ -461,6 +465,34 @@ func (m *defaultFlightInfosModel) FindListBySetOutDateAndPosition(rowBuilder squ
 	}
 
 	var resp []*FlightInfos
+	err = m.QueryRowsNoCache(&resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+// FindOneByByNumberAndSetOutDateAndPosition 根据 航班号 出发日期 始末时间地点 锁定一条航班信息
+func (m *defaultFlightInfosModel) FindOneByByNumberAndSetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, number string, sod time.Time, depart string, departTime time.Time, arrive string, arriveTime time.Time) (*FlightInfos, error) {
+
+	if len(number) == 0 || sod.IsZero() || len(depart) == 0 || departTime.IsZero() || len(arrive) == 0 || arriveTime.IsZero() {
+		return nil, ErrNotFound
+	} else {
+		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
+		sodString := sod.Format("2006-01-02 15:04:05")
+		departTimeString := strings.Split(departTime.Local().String(), " +")[0]
+		arriveTimeString := strings.Split(arriveTime.Local().String(), " +")[0]
+		rowBuilder = rowBuilder.Where("flight_number = ? AND set_out_date = ? AND depart_position = ? AND depart_time = ? AND arrive_position = ? AND arrive_time = ?", number, sodString, depart, departTimeString, arrive, arriveTimeString)
+	}
+
+	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *FlightInfos
 	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:

@@ -24,7 +24,8 @@ var (
 	spacesRowsExpectAutoSet   = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
 	spacesRowsWithPlaceHolder = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
 
-	cacheSpacesIdPrefix = "cache:spaces:id:"
+	cacheSpacesIdPrefix                       = "cache:spaces:id:"
+	cacheSpacesFlightInfoIdIsFirstClassPrefix = "cache:spaces:flightInfoId:isFirstClass:"
 )
 
 type (
@@ -33,6 +34,8 @@ type (
 		Insert(session sqlx.Session, data *Spaces) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*Spaces, error)
+		// FindOneByFlightInfoIdIsFirstClass 根据唯一索引查询一条数据，走缓存
+		FindOneByFlightInfoIdIsFirstClass(flightInfoId int64, isFirstClass int64) (*Spaces, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
 		// DeleteSoft 软删除数据
@@ -99,13 +102,14 @@ func (m *defaultSpacesModel) Insert(session sqlx.Session, data *Spaces) (sql.Res
 	data.DeleteTime = time.Unix(0, 0)
 
 	spacesIdKey := fmt.Sprintf("%s%v", cacheSpacesIdPrefix, data.Id)
+	spacesFlightInfoIdIsFirstClassKey := fmt.Sprintf("%s%v:%v", cacheSpacesFlightInfoIdIsFirstClassPrefix, data.FlightInfoId, data.IsFirstClass)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, spacesRowsExpectAutoSet)
 		if session != nil {
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightInfoId, data.IsFirstClass, data.Total, data.Surplus)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightInfoId, data.IsFirstClass, data.Total, data.Surplus)
-	}, spacesIdKey)
+	}, spacesFlightInfoIdIsFirstClassKey, spacesIdKey)
 
 }
 
@@ -130,16 +134,41 @@ func (m *defaultSpacesModel) FindOne(id int64) (*Spaces, error) {
 	}
 }
 
+// FindOneByFlightInfoIdIsFirstClass 根据唯一索引查询一条数据，走缓存
+func (m *defaultSpacesModel) FindOneByFlightInfoIdIsFirstClass(flightInfoId int64, isFirstClass int64) (*Spaces, error) {
+	spacesFlightInfoIdIsFirstClassKey := fmt.Sprintf("%s%v:%v", cacheSpacesFlightInfoIdIsFirstClassPrefix, flightInfoId, isFirstClass)
+	var resp Spaces
+	err := m.QueryRowIndex(&resp, spacesFlightInfoIdIsFirstClassKey, m.formatPrimary, func(conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `flight_info_id` = ? and `is_first_class` = ? and del_state = ?  limit 1", spacesRows, m.table)
+		if err := conn.QueryRow(&resp, query, flightInfoId, isFirstClass, globalkey.DelStateNo); err != nil {
+			return nil, err
+		}
+		return resp.Id, nil
+	}, m.queryPrimary)
+	switch err {
+	case nil:
+		if resp.DelState == globalkey.DelStateYes {
+			return nil, ErrNotFound
+		}
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
 // Update 修改数据 ,推荐优先使用乐观锁更新
 func (m *defaultSpacesModel) Update(session sqlx.Session, data *Spaces) (sql.Result, error) {
 	spacesIdKey := fmt.Sprintf("%s%v", cacheSpacesIdPrefix, data.Id)
+	spacesFlightInfoIdIsFirstClassKey := fmt.Sprintf("%s%v:%v", cacheSpacesFlightInfoIdIsFirstClassPrefix, data.FlightInfoId, data.IsFirstClass)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, spacesRowsWithPlaceHolder)
 		if session != nil {
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightInfoId, data.IsFirstClass, data.Total, data.Surplus, data.Id)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightInfoId, data.IsFirstClass, data.Total, data.Surplus, data.Id)
-	}, spacesIdKey)
+	}, spacesIdKey, spacesFlightInfoIdIsFirstClassKey)
 }
 
 // UpdateWithVersion 乐观锁修改数据 ,推荐使用
@@ -152,13 +181,14 @@ func (m *defaultSpacesModel) UpdateWithVersion(session sqlx.Session, data *Space
 	var err error
 
 	spacesIdKey := fmt.Sprintf("%s%v", cacheSpacesIdPrefix, data.Id)
+	spacesFlightInfoIdIsFirstClassKey := fmt.Sprintf("%s%v:%v", cacheSpacesFlightInfoIdIsFirstClassPrefix, data.FlightInfoId, data.IsFirstClass)
 	sqlResult, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, spacesRowsWithPlaceHolder)
 		if session != nil {
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightInfoId, data.IsFirstClass, data.Total, data.Surplus, data.Id, oldVersion)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.FlightInfoId, data.IsFirstClass, data.Total, data.Surplus, data.Id, oldVersion)
-	}, spacesIdKey)
+	}, spacesIdKey, spacesFlightInfoIdIsFirstClassKey)
 	if err != nil {
 		return err
 	}
@@ -344,15 +374,20 @@ func (m *defaultSpacesModel) SumBuilder(field string) squirrel.SelectBuilder {
 
 // Delete 删除数据
 func (m *defaultSpacesModel) Delete(session sqlx.Session, id int64) error {
+	data, err := m.FindOne(id)
+	if err != nil {
+		return err
+	}
 
 	spacesIdKey := fmt.Sprintf("%s%v", cacheSpacesIdPrefix, id)
-	_, err := m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+	spacesFlightInfoIdIsFirstClassKey := fmt.Sprintf("%s%v:%v", cacheSpacesFlightInfoIdIsFirstClassPrefix, data.FlightInfoId, data.IsFirstClass)
+	_, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		if session != nil {
 			return session.Exec(query, id)
 		}
 		return conn.Exec(query, id)
-	}, spacesIdKey)
+	}, spacesIdKey, spacesFlightInfoIdIsFirstClassKey)
 	return err
 }
 

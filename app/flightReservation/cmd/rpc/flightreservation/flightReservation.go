@@ -21,7 +21,7 @@ type (
 	RefundAirTicketsResp = pb.RefundAirTicketsResp
 
 	FlightReservation interface {
-		// BookAirTickets 给定：航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
+		// BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
 		BookAirTickets(ctx context.Context, in *BookAirTicketsReq, opts ...grpc.CallOption) (*BookAirTicketsResp, error)
 		// RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
 		RefundAirTickets(ctx context.Context, in *RefundAirTicketsReq, opts ...grpc.CallOption) (*RefundAirTicketsResp, error)
@@ -40,7 +40,7 @@ func NewFlightReservation(cli zrpc.Client) FlightReservation {
 	}
 }
 
-// BookAirTickets 给定：航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
+// BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
 func (m *defaultFlightReservation) BookAirTickets(ctx context.Context, in *BookAirTicketsReq, opts ...grpc.CallOption) (*BookAirTicketsResp, error) {
 	client := pb.NewFlightReservationClient(m.cli.Conn())
 	return client.BookAirTickets(ctx, in, opts...)
