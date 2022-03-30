@@ -43,7 +43,7 @@ func main() {
 		s.Stop()
 
 		//关闭asynq客户端
-		ctx.AsynqClient.Close()
+		_ = ctx.AsynqClient.Close()
 	}()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
