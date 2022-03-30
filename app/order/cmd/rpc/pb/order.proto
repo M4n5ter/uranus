@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+//req 、resp
+
+
+message FlightOrder {
+  int64  id = 1;
+  string sn = 2;
+  int64  userId = 3;
+  int64  ticketId = 4;
+  string departPosition = 5;
+  google.protobuf.Timestamp departTime = 6;
+  string arrivePosition = 7;
+  google.protobuf.Timestamp arriveTime = 8;
+  int64 ticketPrice = 9;
+  int64 discount = 10;
+  int64 tradeState = 11;
+  string tradeCode = 12;
+  int64 orderTotalPrice = 13;
+}
+
+message CreateFlightOrderReq {
+  int64  ticketId = 1;
+  int64  userId = 2;
+}
+message CreateFlightOrderResp {
+  string sn = 1;
+}
+
+
+message  FlightOrderDetailReq{
+  string sn = 1;
+}
+message  FlightOrderDetailResp{
+  FlightOrder flightOrder= 1;
+}
+
+message  UpdateFlightOrderTradeStateReq{
+  string sn = 1;
+  int64  tradeState = 2;  //-1: 已取消 0:待支付 1:未使用 2:已使用  3:已过关闭
+}
+message  UpdateFlightOrderTradeStateResp{
+  int64  id = 1;
+  int64  userId = 2;
+  string sn = 3;
+  string tradeCode = 4;
+  int64  orderTotalPrice = 5;
+}
+
+
+message UserFlightOrderListReq {
+  int64           lastId = 1;
+  int64           pageSize = 2;
+  int64           userId = 3;
+  int64           traderState = 4;
+}
+message UserFlightOrderListResp {
+  repeated FlightOrder list = 1;
+}
+
+//service
+service order {
+  //机票下订单
+  rpc CreateFlightOrder(CreateFlightOrderReq)returns(CreateFlightOrderResp);
+
+  //机票订单详情
+  rpc FlightOrderDetail(FlightOrderDetailReq)returns(FlightOrderDetailResp);
+
+  //更新机票订单状态
+  rpc UpdateFlightOrderTradeState(UpdateFlightOrderTradeStateReq)returns(UpdateFlightOrderTradeStateResp);
+
+  //用户机票订单
+  rpc UserFlightOrderList(UserFlightOrderListReq)returns(UserFlightOrderListResp);
+}
