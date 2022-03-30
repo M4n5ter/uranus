@@ -52,7 +52,7 @@ func NewQuireBySetOutDateAndFlightNumberLogic(ctx context.Context, svcCtx *svc.S
 // QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
 func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber(in *pb.QuireBySetOutDateAndFlightNumberReq) (*pb.QuireBySetOutDateAndFlightNumberResp, error) {
 	resp := &pb.QuireBySetOutDateAndFlightNumberResp{}
-	//查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
+	// 不走缓存查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
 	flightInfos, err := l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate(l.svcCtx.FlightInfosModel.RowBuilder(), in.FlightNumber, in.SetOutDate.AsTime())
 	if err != nil {
 		if err == commonModel.ErrNotFound {
@@ -71,7 +71,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 
 // combineAllInfos respType 为 true 时，将 resp 转化为 *pb.QuireBySetOutDateAndFlightNumberResp,否则转化为 *pb.QuireBySetOutDateStartPositionEndPositionResp
 func (l *FlightQuirer) combineAllInfos(flightInfos []*commonModel.FlightInfos, resp any, respType bool) (any, error) {
-	//查询 IsFirstClass Surplus FlightTypes
+	// 查询 IsFirstClass Surplus FlightTypes
 	for _, info := range flightInfos {
 		flt, err := l.svcCtx.Flights.FindOneByNumber(info.FlightNumber)
 		if err != nil {
@@ -82,6 +82,7 @@ func (l *FlightQuirer) combineAllInfos(flightInfos []*commonModel.FlightInfos, r
 				return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.Flights.FindOneByNumber : FlightNumber:%s, err: %v\n", info.FlightNumber, err)
 			}
 		}
+		// 此处查询不走缓存，直接打到DB上
 		spaces, err := l.svcCtx.SpacesModel.FindListByFlightInfoID(l.svcCtx.SpacesModel.RowBuilder(), info.Id)
 		if err != nil {
 			if err == commonModel.ErrNotFound {
@@ -100,7 +101,7 @@ func (l *FlightQuirer) combineAllInfos(flightInfos []*commonModel.FlightInfos, r
 				ifc = true
 			}
 			// 查询 Price RefundInfo ChangeInfo
-			tickets, err := l.svcCtx.TicketsModel.FindListBySpaceID(l.svcCtx.TicketsModel.RowBuilder(), space.Id)
+			ticket, err := l.svcCtx.TicketsModel.FindOneBySpaceId(space.Id)
 			if err != nil {
 				if err == commonModel.ErrNotFound {
 					logx.WithContext(l.ctx).Infof("NOT FOUND: There is no ticket information for the corresponding space.spaceID:%d\n", space.Id)
@@ -109,91 +110,86 @@ func (l *FlightQuirer) combineAllInfos(flightInfos []*commonModel.FlightInfos, r
 					return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.TicketsModel.FindListBySpaceID : spaceID:%d\n", space.Id)
 				}
 			}
-			for _, ticket := range tickets {
-				//退改票信息
-				refundInfo := &pb.RefundInfo{}
-				changeInfo := &pb.ChangeInfo{}
-				rcis, err := l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID(l.svcCtx.RefundAndChangeInfosModel.RowBuilder(), ticket.Id)
-				if err != nil {
-					if err == commonModel.ErrNotFound {
-						logx.WithContext(l.ctx).Infof("NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
-						return nil, errors.Wrapf(ERRRefundAndChangeInfos, "NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
-					} else {
-						return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID : ticketID:%d\n", ticket.Id)
-					}
-				}
-				if rcis != nil {
-					for _, rci := range rcis {
-						switch rci.IsRefund {
-						//如果是改票信息
-						case 0:
-							changeInfo.TimeFees = append(changeInfo.TimeFees,
-								&pb.TimeFee{Time: timestamppb.New(rci.Time1), Fee: uint64(rci.Fee1)},
-								&pb.TimeFee{Time: timestamppb.New(rci.Time2), Fee: uint64(rci.Fee2)},
-								&pb.TimeFee{Time: timestamppb.New(rci.Time3), Fee: uint64(rci.Fee3)},
-								&pb.TimeFee{Time: timestamppb.New(rci.Time4), Fee: uint64(rci.Fee4)},
-							)
-							if rci.Time5.Valid && rci.Fee5.Valid {
-								changeInfo.TimeFees = append(changeInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(rci.Time5.Time), Fee: uint64(rci.Fee5.Int64)})
-							}
-						//如果是退票信息
-						case 1:
-							refundInfo.TimeFees = append(refundInfo.TimeFees,
-								&pb.TimeFee{Time: timestamppb.New(rci.Time1), Fee: uint64(rci.Fee1)},
-								&pb.TimeFee{Time: timestamppb.New(rci.Time2), Fee: uint64(rci.Fee2)},
-								&pb.TimeFee{Time: timestamppb.New(rci.Time3), Fee: uint64(rci.Fee3)},
-								&pb.TimeFee{Time: timestamppb.New(rci.Time4), Fee: uint64(rci.Fee4)},
-							)
-							if rci.Time5.Valid && rci.Fee5.Valid {
-								refundInfo.TimeFees = append(refundInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(rci.Time5.Time), Fee: uint64(rci.Fee5.Int64)})
-							}
-						default:
-						}
 
-					}
-
-				}
-				// 添加对应信息
-				if respType {
-					resp.(*pb.QuireBySetOutDateAndFlightNumberResp).FlightInfos = append(resp.(*pb.QuireBySetOutDateAndFlightNumberResp).FlightInfos, &pb.FlightInfo{
-						FlightNumber:   info.FlightNumber,
-						SetOutDate:     timestamppb.New(info.SetOutDate),
-						IsFirstClass:   ifc,
-						Price:          uint64(ticket.Price),
-						Discount:       ticket.Discount,
-						Surplus:        space.Surplus,
-						Punctuality:    uint32(info.Punctuality),
-						DepartPosition: info.DepartPosition,
-						DepartTime:     timestamppb.New(info.DepartTime),
-						ArrivePosition: info.ArrivePosition,
-						ArriveTime:     timestamppb.New(info.ArriveTime),
-						RefundInfo:     refundInfo,
-						ChangeInfo:     changeInfo,
-						Cba:            ticket.Cba,
-						FlightType:     flt.FltType,
-					})
-					return resp.(*pb.QuireBySetOutDateAndFlightNumberResp), nil
+			// 退改票信息
+			refundInfo := &pb.RefundInfo{}
+			changeInfo := &pb.ChangeInfo{}
+			rci, err := l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketId(ticket.Id)
+			if err != nil {
+				if err == commonModel.ErrNotFound {
+					logx.WithContext(l.ctx).Infof("NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
+					return nil, errors.Wrapf(ERRRefundAndChangeInfos, "NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
 				} else {
-					resp.(*pb.QuireBySetOutDateStartPositionEndPositionResp).FlightInfos = append(resp.(*pb.QuireBySetOutDateStartPositionEndPositionResp).FlightInfos, &pb.FlightInfo{
-						FlightNumber:   info.FlightNumber,
-						SetOutDate:     timestamppb.New(info.SetOutDate),
-						IsFirstClass:   ifc,
-						Price:          uint64(ticket.Price),
-						Discount:       ticket.Discount,
-						Surplus:        space.Surplus,
-						Punctuality:    uint32(info.Punctuality),
-						DepartPosition: info.DepartPosition,
-						DepartTime:     timestamppb.New(info.DepartTime),
-						ArrivePosition: info.ArrivePosition,
-						ArriveTime:     timestamppb.New(info.ArriveTime),
-						RefundInfo:     refundInfo,
-						ChangeInfo:     changeInfo,
-						Cba:            ticket.Cba,
-						FlightType:     flt.FltType,
-					})
-					return resp.(*pb.QuireBySetOutDateStartPositionEndPositionResp), nil
+					return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID : ticketID:%d\n", ticket.Id)
+				}
+			}
+			if rci != nil {
+				switch rci.IsRefund {
+				// 如果是改票信息
+				case 0:
+					changeInfo.TimeFees = append(changeInfo.TimeFees,
+						&pb.TimeFee{Time: timestamppb.New(rci.Time1), Fee: uint64(rci.Fee1)},
+						&pb.TimeFee{Time: timestamppb.New(rci.Time2), Fee: uint64(rci.Fee2)},
+						&pb.TimeFee{Time: timestamppb.New(rci.Time3), Fee: uint64(rci.Fee3)},
+						&pb.TimeFee{Time: timestamppb.New(rci.Time4), Fee: uint64(rci.Fee4)},
+					)
+					if !rci.Time5.IsZero() && rci.Fee5 > 0 {
+						changeInfo.TimeFees = append(changeInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(rci.Time5), Fee: uint64(rci.Fee5)})
+					}
+				// 如果是退票信息
+				case 1:
+					refundInfo.TimeFees = append(refundInfo.TimeFees,
+						&pb.TimeFee{Time: timestamppb.New(rci.Time1), Fee: uint64(rci.Fee1)},
+						&pb.TimeFee{Time: timestamppb.New(rci.Time2), Fee: uint64(rci.Fee2)},
+						&pb.TimeFee{Time: timestamppb.New(rci.Time3), Fee: uint64(rci.Fee3)},
+						&pb.TimeFee{Time: timestamppb.New(rci.Time4), Fee: uint64(rci.Fee4)},
+					)
+					if !rci.Time5.IsZero() && rci.Fee5 > 0 {
+						refundInfo.TimeFees = append(refundInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(rci.Time5), Fee: uint64(rci.Fee5)})
+					}
+				default:
 				}
 
+			}
+			// 添加对应信息
+			if respType {
+				resp.(*pb.QuireBySetOutDateAndFlightNumberResp).FlightInfos = append(resp.(*pb.QuireBySetOutDateAndFlightNumberResp).FlightInfos, &pb.FlightInfo{
+					FlightNumber:   info.FlightNumber,
+					SetOutDate:     timestamppb.New(info.SetOutDate),
+					IsFirstClass:   ifc,
+					Price:          uint64(ticket.Price),
+					Discount:       ticket.Discount,
+					Surplus:        space.Surplus,
+					Punctuality:    uint32(info.Punctuality),
+					DepartPosition: info.DepartPosition,
+					DepartTime:     timestamppb.New(info.DepartTime),
+					ArrivePosition: info.ArrivePosition,
+					ArriveTime:     timestamppb.New(info.ArriveTime),
+					RefundInfo:     refundInfo,
+					ChangeInfo:     changeInfo,
+					Cba:            ticket.Cba,
+					FlightType:     flt.FltType,
+				})
+				return resp.(*pb.QuireBySetOutDateAndFlightNumberResp), nil
+			} else {
+				resp.(*pb.QuireBySetOutDateStartPositionEndPositionResp).FlightInfos = append(resp.(*pb.QuireBySetOutDateStartPositionEndPositionResp).FlightInfos, &pb.FlightInfo{
+					FlightNumber:   info.FlightNumber,
+					SetOutDate:     timestamppb.New(info.SetOutDate),
+					IsFirstClass:   ifc,
+					Price:          uint64(ticket.Price),
+					Discount:       ticket.Discount,
+					Surplus:        space.Surplus,
+					Punctuality:    uint32(info.Punctuality),
+					DepartPosition: info.DepartPosition,
+					DepartTime:     timestamppb.New(info.DepartTime),
+					ArrivePosition: info.ArrivePosition,
+					ArriveTime:     timestamppb.New(info.ArriveTime),
+					RefundInfo:     refundInfo,
+					ChangeInfo:     changeInfo,
+					Cba:            ticket.Cba,
+					FlightType:     flt.FltType,
+				})
+				return resp.(*pb.QuireBySetOutDateStartPositionEndPositionResp), nil
 			}
 
 		}
