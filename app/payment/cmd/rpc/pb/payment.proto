@@ -16,7 +16,7 @@ message CreatePaymentReq {
   string serviceType = 5;
 }
 message CreatePaymentResp {
-  string sn = 1; //流水记录单号
+  string sn = 1; // 流水记录单号
 }
 
 
@@ -34,8 +34,8 @@ message PaymentDetail{
   string serviceType = 11;  // 业务类型
   google.protobuf.Timestamp  createTime = 12;
   google.protobuf.Timestamp  updateTime = 13;
-  int64  payStatus = 14; //平台内交易状态  0:未支付 1:支付成功 2:已退款 -1:支付失败
-  google.protobuf.Timestamp  payTime = 15; //支付成功时间
+  int64  payStatus = 14; // 平台内交易状态  0:未支付 1:支付成功 2:已退款 -1:支付失败
+  google.protobuf.Timestamp  payTime = 15; // 支付成功时间
 }
 
 message GetPaymentBySnReq {
@@ -52,7 +52,7 @@ message GetPaymentSuccessRefundByOrderSnResp {
   PaymentDetail paymentDetail = 1;
 }
 
-//更新交易状态
+//  更新交易状态
 message UpdateTradeStateReq {
   string   sn = 1;
   string   tradeState = 2;
@@ -67,18 +67,18 @@ message UpdateTradeStateResp {
 
 
 
-//service
+// service
 service payment {
-  //创建微信支付预处理订单
+  // CreatePayment 创建微信支付预处理订单
   rpc CreatePayment(CreatePaymentReq) returns(CreatePaymentResp);
 
-  //根据sn查询流水记录
+  // GetPaymentBySn 根据sn查询流水记录
   rpc GetPaymentBySn(GetPaymentBySnReq) returns(GetPaymentBySnResp);
 
-  //更新交易状态
+  // UpdateTradeState 更新交易状态
   rpc UpdateTradeState(UpdateTradeStateReq) returns(UpdateTradeStateResp);
 
-  //根据订单sn查询流水记录
+  // GetPaymentSuccessRefundByOrderSn 根据订单sn查询流水记录
   rpc GetPaymentSuccessRefundByOrderSn(GetPaymentSuccessRefundByOrderSnReq) returns(GetPaymentSuccessRefundByOrderSnResp);
 
 }
