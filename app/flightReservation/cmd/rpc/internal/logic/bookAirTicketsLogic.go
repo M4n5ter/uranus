@@ -14,7 +14,7 @@ import (
 )
 
 var ERRNotFound = xerr.NewErrMsg("找不到对应机票信息")
-var ERRDBERR = xerr.NewErrMsg("数据库繁忙")
+var ERRDBERR = xerr.NewErrCode(xerr.DB_ERROR)
 var ERRNotEnough = xerr.NewErrMsg("票库存不足")
 
 type BookAirTicketsLogic struct {

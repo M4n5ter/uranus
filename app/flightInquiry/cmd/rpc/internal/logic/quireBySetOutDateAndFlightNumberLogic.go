@@ -18,7 +18,7 @@ var ERRGetInfos = xerr.NewErrMsg("暂无直飞航班")
 var ERRGetSpaces = xerr.NewErrMsg("暂无舱位信息")
 var ERRGetTickets = xerr.NewErrMsg("暂无票信息")
 var ERRRefundAndChangeInfos = xerr.NewErrMsg("暂无退改票信息")
-var ERRDBERR = xerr.NewErrCodeMsg(500, "服务器繁忙")
+var ERRDBERR = xerr.NewErrCode(xerr.DB_ERROR)
 
 //var ERRGetFltType = xerr.NewErrMsg("找不到对应航班机型")
 

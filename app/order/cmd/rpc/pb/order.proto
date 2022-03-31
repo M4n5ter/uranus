@@ -23,6 +23,7 @@ message FlightOrder {
   int64 tradeState = 11;
   string tradeCode = 12;
   int64 orderTotalPrice = 13;
+  google.protobuf.Timestamp createTime = 14;
 }
 
 message CreateFlightOrderReq {

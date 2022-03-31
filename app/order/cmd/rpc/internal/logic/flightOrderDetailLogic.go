@@ -2,6 +2,11 @@ package logic
 
 import (
 	"context"
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"uranus/app/order/model"
+	"uranus/common/xerr"
 
 	"uranus/app/order/cmd/rpc/internal/svc"
 	"uranus/app/order/cmd/rpc/pb"
@@ -23,9 +28,24 @@ func NewFlightOrderDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 	}
 }
 
-// 机票订单详情
+// FlightOrderDetail 机票订单详情
 func (l *FlightOrderDetailLogic) FlightOrderDetail(in *pb.FlightOrderDetailReq) (*pb.FlightOrderDetailResp, error) {
-	// todo: add your logic here and delete this line
+	if len(in.Sn) == 0 {
+		return nil, errors.Wrapf(xerr.NewErrMsg("订单号不能为空"), "ERR: empty Sn!")
+	}
 
-	return &pb.FlightOrderDetailResp{}, nil
+	flightOrder, err := l.svcCtx.OrderModel.FindOneBySn(in.Sn)
+	if err != nil && err != model.ErrNotFound {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "flightOrderModel  FindOne err : %v , sn : %s", err, in.Sn)
+	}
+
+	var resp pb.FlightOrder
+	if flightOrder != nil {
+		_ = copier.Copy(&resp, flightOrder)
+		resp.CreateTime = timestamppb.New(flightOrder.CreateTime)
+		resp.DepartTime = timestamppb.New(flightOrder.DepartTime)
+		resp.ArriveTime = timestamppb.New(flightOrder.ArriveTime)
+	}
+
+	return &pb.FlightOrderDetailResp{FlightOrder: &resp}, nil
 }

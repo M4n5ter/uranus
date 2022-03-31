@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"github.com/pkg/errors"
+	"uranus/common/xerr"
 )
 
 func main() {
-	t, err := time.Parse("2006-01-02", "2006-01-02 00:00:00")
-	fmt.Println(t.Format("2006-01-02 15:04:05"), err)
+	e := errors.Wrapf(xerr.NewErrMsg("不支持更改此状态,不支持更改为待支付状态"), "hi")
+	err := errors.WithMessagef(e, "hello")
+	fmt.Println(e)
+	fmt.Println(err)
+	//t, err := time.Parse("2006-01-02", "2006-01-02 00:00:00")
+	//fmt.Println(t.Format("2006-01-02 15:04:05"), err)
 	//gormModel2.GlobalDB.AutoMigrate(&gormModel2.FlightInfo{}, &gormModel2.Flight{}, &gormModel2.Space{}, &gormModel2.Ticket{}, &gormModel2.RefundAndChangeInfo{})
 	//commonModel.GlobalDB.AutoMigrate(&commonModel.Space{})
 	//s1 := commonModel.Space{
