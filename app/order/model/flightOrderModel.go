@@ -12,6 +12,7 @@ import (
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/builder"
+	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
@@ -22,6 +23,9 @@ var (
 	flightOrderRows                = strings.Join(flightOrderFieldNames, ",")
 	flightOrderRowsExpectAutoSet   = strings.Join(stringx.Remove(flightOrderFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
 	flightOrderRowsWithPlaceHolder = strings.Join(stringx.Remove(flightOrderFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+
+	cacheFlightOrderIdPrefix = "cache:flightOrder:id:"
+	cacheFlightOrderSnPrefix = "cache:flightOrder:sn:"
 )
 
 type (
@@ -30,7 +34,7 @@ type (
 		Insert(session sqlx.Session, data *FlightOrder) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*FlightOrder, error)
-		// FindOneBySn 根据唯一索引查询一条数据，走缓存
+		// FindOneBy 根据唯一索引查询一条数据，走缓存
 		FindOneBySn(sn string) (*FlightOrder, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -65,7 +69,7 @@ type (
 	}
 
 	defaultFlightOrderModel struct {
-		conn  sqlx.SqlConn
+		sqlc.CachedConn
 		table string
 	}
 
@@ -91,10 +95,10 @@ type (
 	}
 )
 
-func NewFlightOrderModel(conn sqlx.SqlConn) FlightOrderModel {
+func NewFlightOrderModel(conn sqlx.SqlConn, c cache.CacheConf) FlightOrderModel {
 	return &defaultFlightOrderModel{
-		conn:  conn,
-		table: "`flight_order`",
+		CachedConn: sqlc.NewConn(conn, c),
+		table:      "`flight_order`",
 	}
 }
 
@@ -103,19 +107,26 @@ func (m *defaultFlightOrderModel) Insert(session sqlx.Session, data *FlightOrder
 
 	data.DeleteTime = time.Unix(0, 0)
 
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, flightOrderRowsExpectAutoSet)
-	if session != nil {
-		return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice)
-	}
-	return m.conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice)
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
+	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, data.Sn)
+	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, flightOrderRowsExpectAutoSet)
+		if session != nil {
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice)
+		}
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice)
+	}, flightOrderIdKey, flightOrderSnKey)
 
 }
 
 // FindOne 根据主键查询一条数据，走缓存
 func (m *defaultFlightOrderModel) FindOne(id int64) (*FlightOrder, error) {
-	query := fmt.Sprintf("select %s from %s where `id` = ?  and del_state = ? limit 1", flightOrderRows, m.table)
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, id)
 	var resp FlightOrder
-	err := m.conn.QueryRow(&resp, query, id, globalkey.DelStateNo)
+	err := m.QueryRow(&resp, flightOrderIdKey, func(conn sqlx.SqlConn, v interface{}) error {
+		query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", flightOrderRows, m.table)
+		return conn.QueryRow(v, query, id, globalkey.DelStateNo)
+	})
 	switch err {
 	case nil:
 		if resp.DelState == globalkey.DelStateYes {
@@ -129,11 +140,17 @@ func (m *defaultFlightOrderModel) FindOne(id int64) (*FlightOrder, error) {
 	}
 }
 
-// FindOneBySn 根据唯一索引查询一条数据，走缓存
+// FindOneBy 根据唯一索引查询一条数据，走缓存
 func (m *defaultFlightOrderModel) FindOneBySn(sn string) (*FlightOrder, error) {
+	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, sn)
 	var resp FlightOrder
-	query := fmt.Sprintf("select %s from %s where `sn` = ? and del_state = ? limit 1", flightOrderRows, m.table)
-	err := m.conn.QueryRow(&resp, query, sn, globalkey.DelStateNo)
+	err := m.QueryRowIndex(&resp, flightOrderSnKey, m.formatPrimary, func(conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `sn` = ? and del_state = ?  limit 1", flightOrderRows, m.table)
+		if err := conn.QueryRow(&resp, query, sn, globalkey.DelStateNo); err != nil {
+			return nil, err
+		}
+		return resp.Id, nil
+	}, m.queryPrimary)
 	switch err {
 	case nil:
 		if resp.DelState == globalkey.DelStateYes {
@@ -149,13 +166,15 @@ func (m *defaultFlightOrderModel) FindOneBySn(sn string) (*FlightOrder, error) {
 
 // Update 修改数据 ,推荐优先使用乐观锁更新
 func (m *defaultFlightOrderModel) Update(session sqlx.Session, data *FlightOrder) (sql.Result, error) {
-	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, flightOrderRowsWithPlaceHolder)
-	if session != nil {
-		return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice, data.Id)
-	} else {
-		return m.conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice, data.Id)
-	}
-
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
+	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, data.Sn)
+	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, flightOrderRowsWithPlaceHolder)
+		if session != nil {
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice, data.Id)
+		}
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice, data.Id)
+	}, flightOrderIdKey, flightOrderSnKey)
 }
 
 // UpdateWithVersion 乐观锁修改数据 ,推荐使用
@@ -167,13 +186,15 @@ func (m *defaultFlightOrderModel) UpdateWithVersion(session sqlx.Session, data *
 	var sqlResult sql.Result
 	var err error
 
-	query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, flightOrderRowsWithPlaceHolder)
-	if session != nil {
-		sqlResult, err = session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice, data.Id, oldVersion)
-	} else {
-		sqlResult, err = m.conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice, data.Id, oldVersion)
-	}
-
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
+	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, data.Sn)
+	sqlResult, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, flightOrderRowsWithPlaceHolder)
+		if session != nil {
+			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice, data.Id, oldVersion)
+		}
+		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.Sn, data.UserId, data.TicketId, data.DepartPosition, data.DepartTime, data.ArrivePosition, data.ArriveTime, data.TicketPrice, data.Discount, data.TradeState, data.TradeCode, data.OrderTotalPrice, data.Id, oldVersion)
+	}, flightOrderIdKey, flightOrderSnKey)
 	if err != nil {
 		return err
 	}
@@ -200,9 +221,7 @@ func (m *defaultFlightOrderModel) FindOneByQuery(rowBuilder squirrel.SelectBuild
 	}
 
 	var resp FlightOrder
-
-	err = m.conn.QueryRow(&resp, query, values...)
-
+	err = m.QueryRowNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -220,9 +239,7 @@ func (m *defaultFlightOrderModel) FindSum(sumBuilder squirrel.SelectBuilder) (fl
 	}
 
 	var resp float64
-
-	err = m.conn.QueryRow(&resp, query, values...)
-
+	err = m.QueryRowNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -240,9 +257,7 @@ func (m *defaultFlightOrderModel) FindCount(countBuilder squirrel.SelectBuilder)
 	}
 
 	var resp int64
-
-	err = m.conn.QueryRow(&resp, query, values...)
-
+	err = m.QueryRowNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -266,9 +281,7 @@ func (m *defaultFlightOrderModel) FindAll(rowBuilder squirrel.SelectBuilder, ord
 	}
 
 	var resp []*FlightOrder
-
-	err = m.conn.QueryRows(&resp, query, values...)
-
+	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -297,9 +310,7 @@ func (m *defaultFlightOrderModel) FindPageListByPage(rowBuilder squirrel.SelectB
 	}
 
 	var resp []*FlightOrder
-
-	err = m.conn.QueryRows(&resp, query, values...)
-
+	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -321,9 +332,7 @@ func (m *defaultFlightOrderModel) FindPageListByIdDESC(rowBuilder squirrel.Selec
 	}
 
 	var resp []*FlightOrder
-
-	err = m.conn.QueryRows(&resp, query, values...)
-
+	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -345,9 +354,7 @@ func (m *defaultFlightOrderModel) FindPageListByIdASC(rowBuilder squirrel.Select
 	}
 
 	var resp []*FlightOrder
-
-	err = m.conn.QueryRows(&resp, query, values...)
-
+	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -373,12 +380,20 @@ func (m *defaultFlightOrderModel) SumBuilder(field string) squirrel.SelectBuilde
 
 // Delete 删除数据
 func (m *defaultFlightOrderModel) Delete(session sqlx.Session, id int64) error {
-	query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
-	if session != nil {
-		_, err := session.Exec(query, id)
+	data, err := m.FindOne(id)
+	if err != nil {
 		return err
 	}
-	_, err := m.conn.Exec(query, id)
+
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, id)
+	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, data.Sn)
+	_, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		if session != nil {
+			return session.Exec(query, id)
+		}
+		return conn.Exec(query, id)
+	}, flightOrderIdKey, flightOrderSnKey)
 	return err
 }
 
@@ -395,9 +410,22 @@ func (m *defaultFlightOrderModel) DeleteSoft(session sqlx.Session, data *FlightO
 // Trans 暴露给logic开启事务
 func (m *defaultFlightOrderModel) Trans(fn func(session sqlx.Session) error) error {
 
-	err := m.conn.Transact(func(session sqlx.Session) error {
+	err := m.Transact(func(session sqlx.Session) error {
 		return fn(session)
 	})
 	return err
 
 }
+
+// formatPrimary 格式化缓存key
+func (m *defaultFlightOrderModel) formatPrimary(primary interface{}) string {
+	return fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, primary)
+}
+
+// queryPrimary 根据主键去db查询一条数据
+func (m *defaultFlightOrderModel) queryPrimary(conn sqlx.SqlConn, v, primary interface{}) error {
+	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", flightOrderRows, m.table)
+	return conn.QueryRow(v, query, primary, globalkey.DelStateNo)
+}
+
+//!!!!! 其他自定义方法，从此处开始写,此处上方不要写自定义方法!!!!!

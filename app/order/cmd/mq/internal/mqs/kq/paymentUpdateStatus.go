@@ -62,7 +62,7 @@ func (l *PaymentUpdateStatusMq) execService(message kqueue.PaymentUpdatePayStatu
 	orderTradeState := l.getOrderTradeStateByPaymentTradeState(message.PayStatus)
 	if orderTradeState != -99 {
 		//更新订单状态
-		resp, err := l.svcCtx.OrderRpc.UpdateFlightOrderTradeState(l.ctx, &order.UpdateFlightOrderTradeStateReq{
+		resp, err := l.svcCtx.OrderClient.UpdateFlightOrderTradeState(l.ctx, &order.UpdateFlightOrderTradeStateReq{
 			Sn:         message.OrderSn,
 			TradeState: orderTradeState,
 		})
@@ -95,7 +95,7 @@ func (l *PaymentUpdateStatusMq) getOrderTradeStateByPaymentTradeState(paymentPay
 //发送小程序模版消息通知用户
 func (l *PaymentUpdateStatusMq) notifyUser(sn, code, departPosition, arrivePosition string, orderTotalPrice, userId int64, departTime, arriveTime time.Time) {
 
-	userCenterResp, err := l.svcCtx.UserCenterRpc.GetUserAuthByUserId(l.ctx, &usercenter.GetUserAuthByUserIdReq{
+	userCenterResp, err := l.svcCtx.UserCenterClient.GetUserAuthByUserId(l.ctx, &usercenter.GetUserAuthByUserIdReq{
 		UserId:   userId,
 		AuthType: userCenterModel.UserAuthTypeSmallWX,
 	})
@@ -117,7 +117,7 @@ func (l *PaymentUpdateStatusMq) notifyUser(sn, code, departPosition, arrivePosit
 		ArrivePosition: arrivePosition,
 		ArriveTime:     arriveTime.Local().Format("2006-01-02 15:04:05"),
 	}
-	if _, err = l.svcCtx.MqueueRpc.SendWxMiniSubMessage(l.ctx, &mqueue.SendWxMiniSubMessageReq{
+	if _, err = l.svcCtx.MqueueClient.SendWxMiniSubMessage(l.ctx, &mqueue.SendWxMiniSubMessageReq{
 		TemplateID: wxminisub.OrderPaySuccessTemplateID,
 		Openid:     openId,
 		Data:       wxminisub.OrderPaySuccessData(orderPaySuccessDataParam),

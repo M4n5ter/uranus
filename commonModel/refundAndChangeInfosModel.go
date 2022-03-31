@@ -24,8 +24,8 @@ var (
 	refundAndChangeInfosRowsExpectAutoSet   = strings.Join(stringx.Remove(refundAndChangeInfosFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
 	refundAndChangeInfosRowsWithPlaceHolder = strings.Join(stringx.Remove(refundAndChangeInfosFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
 
-	cacheRefundAndChangeInfosIdPrefix       = "cache:refundAndChangeInfos:id:"
-	cacheRefundAndChangeInfosTicketIdPrefix = "cache:refundAndChangeInfos:ticketId:"
+	cacheRefundAndChangeInfosIdPrefix               = "cache:refundAndChangeInfos:id:"
+	cacheRefundAndChangeInfosTicketIdIsRefundPrefix = "cache:refundAndChangeInfos:ticketId:isRefund:"
 )
 
 type (
@@ -34,8 +34,8 @@ type (
 		Insert(session sqlx.Session, data *RefundAndChangeInfos) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*RefundAndChangeInfos, error)
-		// FindOneByTicketId 根据唯一索引查询一条数据，走缓存
-		FindOneByTicketId(ticketId int64) (*RefundAndChangeInfos, error)
+		// FindOneByTicketIdIsRefund 根据唯一索引查询一条数据，走缓存
+		FindOneByTicketIdIsRefund(ticketId int64, isRefund int64) (*RefundAndChangeInfos, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
 		// DeleteSoft 软删除数据
@@ -108,14 +108,14 @@ func (m *defaultRefundAndChangeInfosModel) Insert(session sqlx.Session, data *Re
 	data.DeleteTime = time.Unix(0, 0)
 
 	refundAndChangeInfosIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosIdPrefix, data.Id)
-	refundAndChangeInfosTicketIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosTicketIdPrefix, data.TicketId)
+	refundAndChangeInfosTicketIdIsRefundKey := fmt.Sprintf("%s%v:%v", cacheRefundAndChangeInfosTicketIdIsRefundPrefix, data.TicketId, data.IsRefund)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, refundAndChangeInfosRowsExpectAutoSet)
 		if session != nil {
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.TicketId, data.IsRefund, data.Time1, data.Fee1, data.Time2, data.Fee2, data.Time3, data.Fee3, data.Time4, data.Fee4, data.Time5, data.Fee5)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.TicketId, data.IsRefund, data.Time1, data.Fee1, data.Time2, data.Fee2, data.Time3, data.Fee3, data.Time4, data.Fee4, data.Time5, data.Fee5)
-	}, refundAndChangeInfosIdKey, refundAndChangeInfosTicketIdKey)
+	}, refundAndChangeInfosTicketIdIsRefundKey, refundAndChangeInfosIdKey)
 
 }
 
@@ -140,13 +140,13 @@ func (m *defaultRefundAndChangeInfosModel) FindOne(id int64) (*RefundAndChangeIn
 	}
 }
 
-// FindOneByTicketId 根据唯一索引查询一条数据，走缓存
-func (m *defaultRefundAndChangeInfosModel) FindOneByTicketId(ticketId int64) (*RefundAndChangeInfos, error) {
-	refundAndChangeInfosTicketIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosTicketIdPrefix, ticketId)
+// FindOneByTicketIdIsRefund 根据唯一索引查询一条数据，走缓存
+func (m *defaultRefundAndChangeInfosModel) FindOneByTicketIdIsRefund(ticketId int64, isRefund int64) (*RefundAndChangeInfos, error) {
+	refundAndChangeInfosTicketIdIsRefundKey := fmt.Sprintf("%s%v:%v", cacheRefundAndChangeInfosTicketIdIsRefundPrefix, ticketId, isRefund)
 	var resp RefundAndChangeInfos
-	err := m.QueryRowIndex(&resp, refundAndChangeInfosTicketIdKey, m.formatPrimary, func(conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
-		query := fmt.Sprintf("select %s from %s where `ticket_id` = ? and del_state = ?  limit 1", refundAndChangeInfosRows, m.table)
-		if err := conn.QueryRow(&resp, query, ticketId, globalkey.DelStateNo); err != nil {
+	err := m.QueryRowIndex(&resp, refundAndChangeInfosTicketIdIsRefundKey, m.formatPrimary, func(conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `ticket_id` = ? and `is_refund` = ? and del_state = ?  limit 1", refundAndChangeInfosRows, m.table)
+		if err := conn.QueryRow(&resp, query, ticketId, isRefund, globalkey.DelStateNo); err != nil {
 			return nil, err
 		}
 		return resp.Id, nil
@@ -167,14 +167,14 @@ func (m *defaultRefundAndChangeInfosModel) FindOneByTicketId(ticketId int64) (*R
 // Update 修改数据 ,推荐优先使用乐观锁更新
 func (m *defaultRefundAndChangeInfosModel) Update(session sqlx.Session, data *RefundAndChangeInfos) (sql.Result, error) {
 	refundAndChangeInfosIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosIdPrefix, data.Id)
-	refundAndChangeInfosTicketIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosTicketIdPrefix, data.TicketId)
+	refundAndChangeInfosTicketIdIsRefundKey := fmt.Sprintf("%s%v:%v", cacheRefundAndChangeInfosTicketIdIsRefundPrefix, data.TicketId, data.IsRefund)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, refundAndChangeInfosRowsWithPlaceHolder)
 		if session != nil {
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.TicketId, data.IsRefund, data.Time1, data.Fee1, data.Time2, data.Fee2, data.Time3, data.Fee3, data.Time4, data.Fee4, data.Time5, data.Fee5, data.Id)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.TicketId, data.IsRefund, data.Time1, data.Fee1, data.Time2, data.Fee2, data.Time3, data.Fee3, data.Time4, data.Fee4, data.Time5, data.Fee5, data.Id)
-	}, refundAndChangeInfosIdKey, refundAndChangeInfosTicketIdKey)
+	}, refundAndChangeInfosIdKey, refundAndChangeInfosTicketIdIsRefundKey)
 }
 
 // UpdateWithVersion 乐观锁修改数据 ,推荐使用
@@ -187,14 +187,14 @@ func (m *defaultRefundAndChangeInfosModel) UpdateWithVersion(session sqlx.Sessio
 	var err error
 
 	refundAndChangeInfosIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosIdPrefix, data.Id)
-	refundAndChangeInfosTicketIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosTicketIdPrefix, data.TicketId)
+	refundAndChangeInfosTicketIdIsRefundKey := fmt.Sprintf("%s%v:%v", cacheRefundAndChangeInfosTicketIdIsRefundPrefix, data.TicketId, data.IsRefund)
 	sqlResult, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, refundAndChangeInfosRowsWithPlaceHolder)
 		if session != nil {
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.TicketId, data.IsRefund, data.Time1, data.Fee1, data.Time2, data.Fee2, data.Time3, data.Fee3, data.Time4, data.Fee4, data.Time5, data.Fee5, data.Id, oldVersion)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.TicketId, data.IsRefund, data.Time1, data.Fee1, data.Time2, data.Fee2, data.Time3, data.Fee3, data.Time4, data.Fee4, data.Time5, data.Fee5, data.Id, oldVersion)
-	}, refundAndChangeInfosIdKey, refundAndChangeInfosTicketIdKey)
+	}, refundAndChangeInfosIdKey, refundAndChangeInfosTicketIdIsRefundKey)
 	if err != nil {
 		return err
 	}
@@ -386,14 +386,14 @@ func (m *defaultRefundAndChangeInfosModel) Delete(session sqlx.Session, id int64
 	}
 
 	refundAndChangeInfosIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosIdPrefix, id)
-	refundAndChangeInfosTicketIdKey := fmt.Sprintf("%s%v", cacheRefundAndChangeInfosTicketIdPrefix, data.TicketId)
+	refundAndChangeInfosTicketIdIsRefundKey := fmt.Sprintf("%s%v:%v", cacheRefundAndChangeInfosTicketIdIsRefundPrefix, data.TicketId, data.IsRefund)
 	_, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		if session != nil {
 			return session.Exec(query, id)
 		}
 		return conn.Exec(query, id)
-	}, refundAndChangeInfosIdKey, refundAndChangeInfosTicketIdKey)
+	}, refundAndChangeInfosIdKey, refundAndChangeInfosTicketIdIsRefundKey)
 	return err
 }
 

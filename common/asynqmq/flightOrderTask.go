@@ -20,7 +20,7 @@ type FlightOrderCloseTaskPayload struct {
 func NewFlightOrderCloseTask(sn string) (*asynq.Task, error) {
 	payload, err := json.Marshal(FlightOrderCloseTaskPayload{Sn: sn})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("创建延迟关闭民宿订单task到asynq失败"), "【addAsynqTaskMarshaError】err : %v , sn : %s", err, sn)
+		return nil, errors.Wrapf(xerr.NewErrMsg("创建延迟关闭机票订单task到asynq失败"), "【addAsynqTaskMarshaError】err : %v , sn : %s", err, sn)
 	}
 	return asynq.NewTask(TypeFlightOrderCloseDelivery, payload), nil
 }

@@ -12,17 +12,17 @@ import (
 type ServiceContext struct {
 	Config config.Config
 
-	OrderRpc      order.Order
-	MqueueRpc     mqueue.Mqueue
-	UserCenterRpc usercenter.Usercenter
+	OrderClient      order.Order
+	MqueueClient     mqueue.Mqueue
+	UserCenterClient usercenter.Usercenter
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config: c,
 
-		OrderRpc:      order.NewOrder(zrpc.MustNewClient(c.OrderRpcConf)),
-		MqueueRpc:     mqueue.NewMqueue(zrpc.MustNewClient(c.MqueueRpcConf)),
-		UserCenterRpc: usercenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpcConf)),
+		OrderClient:      order.NewOrder(zrpc.MustNewClient(c.OrderRpcConf)),
+		MqueueClient:     mqueue.NewMqueue(zrpc.MustNewClient(c.MqueueRpcConf)),
+		UserCenterClient: usercenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpcConf)),
 	}
 }

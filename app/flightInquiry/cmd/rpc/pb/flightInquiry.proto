@@ -7,6 +7,8 @@ import "google/protobuf/timestamp.proto";
 
 // 航班信息
 message FlightInfo {
+  // 航班信息id
+  int64                     FlightInfoID  = 16;
   // 航班号，例如MU5735
   string                    FlightNumber  = 1;
   // 出发日期
@@ -53,6 +55,10 @@ message ChangeInfo {
   repeated TimeFee TimeFees = 1;
 }
 
+
+
+// req/resp
+
 // QuireBySetOutDateAndFlightNumberReq 通过给定日期、航班号进行航班查询请求
 message QuireBySetOutDateAndFlightNumberReq {
   // 航班号，例如MU5735
@@ -83,10 +89,27 @@ message QuireBySetOutDateStartPositionEndPositionResp {
   repeated FlightInfo FlightInfos = 1;
 }
 
+
+
+// FlightDetailReq 仅对其它 rpc 开放
+message FlightDetailReq {
+  // 票id
+  int64 ticketID = 1;
+}
+// FlightDetailResp FlightDetailReq 响应
+message FlightDetailResp {
+  FlightInfo FlightInfo = 3;
+}
+
+// req/resp
+
 service flightInquiry {
-  // QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
+  //QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
   rpc QuireBySetOutDateAndFlightNumber(QuireBySetOutDateAndFlightNumberReq) returns(QuireBySetOutDateAndFlightNumberResp);
 
-  // QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
+  //QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
   rpc QuireBySetOutDateStartPositionEndPosition(QuireBySetOutDateStartPositionEndPositionReq) returns(QuireBySetOutDateStartPositionEndPositionResp);
+
+  //FlightDetail 通过给定 票id 来获取航班详情
+  rpc FlightDetail(FlightDetailReq) returns(FlightDetailResp);
 }

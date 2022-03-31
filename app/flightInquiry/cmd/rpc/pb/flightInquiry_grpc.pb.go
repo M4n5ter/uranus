@@ -26,6 +26,8 @@ type FlightInquiryClient interface {
 	QuireBySetOutDateAndFlightNumber(ctx context.Context, in *QuireBySetOutDateAndFlightNumberReq, opts ...grpc.CallOption) (*QuireBySetOutDateAndFlightNumberResp, error)
 	//QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
 	QuireBySetOutDateStartPositionEndPosition(ctx context.Context, in *QuireBySetOutDateStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutDateStartPositionEndPositionResp, error)
+	//FlightDetail 通过给定 票id 来获取航班详情
+	FlightDetail(ctx context.Context, in *FlightDetailReq, opts ...grpc.CallOption) (*FlightDetailResp, error)
 }
 
 type flightInquiryClient struct {
@@ -54,6 +56,15 @@ func (c *flightInquiryClient) QuireBySetOutDateStartPositionEndPosition(ctx cont
 	return out, nil
 }
 
+func (c *flightInquiryClient) FlightDetail(ctx context.Context, in *FlightDetailReq, opts ...grpc.CallOption) (*FlightDetailResp, error) {
+	out := new(FlightDetailResp)
+	err := c.cc.Invoke(ctx, "/pb.flightInquiry/FlightDetail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FlightInquiryServer is the server API for FlightInquiry service.
 // All implementations must embed UnimplementedFlightInquiryServer
 // for forward compatibility
@@ -62,6 +73,8 @@ type FlightInquiryServer interface {
 	QuireBySetOutDateAndFlightNumber(context.Context, *QuireBySetOutDateAndFlightNumberReq) (*QuireBySetOutDateAndFlightNumberResp, error)
 	//QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
 	QuireBySetOutDateStartPositionEndPosition(context.Context, *QuireBySetOutDateStartPositionEndPositionReq) (*QuireBySetOutDateStartPositionEndPositionResp, error)
+	//FlightDetail 通过给定 票id 来获取航班详情
+	FlightDetail(context.Context, *FlightDetailReq) (*FlightDetailResp, error)
 	mustEmbedUnimplementedFlightInquiryServer()
 }
 
@@ -74,6 +87,9 @@ func (UnimplementedFlightInquiryServer) QuireBySetOutDateAndFlightNumber(context
 }
 func (UnimplementedFlightInquiryServer) QuireBySetOutDateStartPositionEndPosition(context.Context, *QuireBySetOutDateStartPositionEndPositionReq) (*QuireBySetOutDateStartPositionEndPositionResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QuireBySetOutDateStartPositionEndPosition not implemented")
+}
+func (UnimplementedFlightInquiryServer) FlightDetail(context.Context, *FlightDetailReq) (*FlightDetailResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FlightDetail not implemented")
 }
 func (UnimplementedFlightInquiryServer) mustEmbedUnimplementedFlightInquiryServer() {}
 
@@ -124,6 +140,24 @@ func _FlightInquiry_QuireBySetOutDateStartPositionEndPosition_Handler(srv interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FlightInquiry_FlightDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FlightDetailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlightInquiryServer).FlightDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.flightInquiry/FlightDetail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlightInquiryServer).FlightDetail(ctx, req.(*FlightDetailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FlightInquiry_ServiceDesc is the grpc.ServiceDesc for FlightInquiry service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -138,6 +172,10 @@ var FlightInquiry_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QuireBySetOutDateStartPositionEndPosition",
 			Handler:    _FlightInquiry_QuireBySetOutDateStartPositionEndPosition_Handler,
+		},
+		{
+			MethodName: "FlightDetail",
+			Handler:    _FlightInquiry_FlightDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

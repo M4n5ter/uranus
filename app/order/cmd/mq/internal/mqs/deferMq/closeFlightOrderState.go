@@ -19,15 +19,15 @@ func (l *AsynqTask) closeFlightOrderStateMqHandler(ctx context.Context, t *asynq
 		return errors.Wrapf(xerr.NewErrMsg("解析asynq task payload err"), "closeFlightOrderStateMqHandler payload err:%v, payLoad:%+v", err, t.Payload())
 	}
 
-	resp, err := l.svcCtx.OrderRpc.FlightOrderDetail(ctx, &order.FlightOrderDetailReq{
+	resp, err := l.svcCtx.OrderClient.FlightOrderDetail(ctx, &order.FlightOrderDetailReq{
 		Sn: p.Sn,
 	})
 	if err != nil || resp.FlightOrder == nil {
-		return errors.Wrapf(xerr.NewErrMsg("获取订单失败"), "closeFlightOrderStateMqHandler 获取订单失败 or 订单不存在 err:%v, sn:%s ,HomestayOrder : %+v", err, p.Sn, resp.FlightOrder)
+		return errors.Wrapf(xerr.NewErrMsg("获取订单失败"), "closeFlightOrderStateMqHandler 获取订单失败 or 订单不存在 err:%v, sn:%s ,FlightOrder : %+v", err, p.Sn, resp.FlightOrder)
 	}
 
 	if resp.FlightOrder.TradeState == model.FlightOrderTradeStateWaitPay {
-		_, err := l.svcCtx.OrderRpc.UpdateFlightOrderTradeState(ctx, &order.UpdateFlightOrderTradeStateReq{
+		_, err := l.svcCtx.OrderClient.UpdateFlightOrderTradeState(ctx, &order.UpdateFlightOrderTradeStateReq{
 			Sn:         p.Sn,
 			TradeState: model.FlightOrderTradeStateCancel,
 		})

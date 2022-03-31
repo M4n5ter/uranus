@@ -14,6 +14,8 @@ import (
 
 type (
 	ChangeInfo                                    = pb.ChangeInfo
+	FlightDetailReq                               = pb.FlightDetailReq
+	FlightDetailResp                              = pb.FlightDetailResp
 	FlightInfo                                    = pb.FlightInfo
 	QuireBySetOutDateAndFlightNumberReq           = pb.QuireBySetOutDateAndFlightNumberReq
 	QuireBySetOutDateAndFlightNumberResp          = pb.QuireBySetOutDateAndFlightNumberResp
@@ -27,6 +29,8 @@ type (
 		QuireBySetOutDateAndFlightNumber(ctx context.Context, in *QuireBySetOutDateAndFlightNumberReq, opts ...grpc.CallOption) (*QuireBySetOutDateAndFlightNumberResp, error)
 		// QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
 		QuireBySetOutDateStartPositionEndPosition(ctx context.Context, in *QuireBySetOutDateStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutDateStartPositionEndPositionResp, error)
+		// FlightDetail 通过给定 票id 来获取航班详情
+		FlightDetail(ctx context.Context, in *FlightDetailReq, opts ...grpc.CallOption) (*FlightDetailResp, error)
 	}
 
 	defaultFlightInquiry struct {
@@ -50,4 +54,10 @@ func (m *defaultFlightInquiry) QuireBySetOutDateAndFlightNumber(ctx context.Cont
 func (m *defaultFlightInquiry) QuireBySetOutDateStartPositionEndPosition(ctx context.Context, in *QuireBySetOutDateStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutDateStartPositionEndPositionResp, error) {
 	client := pb.NewFlightInquiryClient(m.cli.Conn())
 	return client.QuireBySetOutDateStartPositionEndPosition(ctx, in, opts...)
+}
+
+// FlightDetail 通过给定 票id 来获取航班详情
+func (m *defaultFlightInquiry) FlightDetail(ctx context.Context, in *FlightDetailReq, opts ...grpc.CallOption) (*FlightDetailResp, error) {
+	client := pb.NewFlightInquiryClient(m.cli.Conn())
+	return client.FlightDetail(ctx, in, opts...)
 }

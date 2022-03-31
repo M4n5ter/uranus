@@ -33,3 +33,9 @@ func (s *FlightInquiryServer) QuireBySetOutDateStartPositionEndPosition(ctx cont
 	l := logic.NewQuireBySetOutDateStartPositionEndPositionLogic(ctx, s.svcCtx)
 	return l.QuireBySetOutDateStartPositionEndPosition(in)
 }
+
+// FlightDetail 通过给定 票id 来获取航班详情
+func (s *FlightInquiryServer) FlightDetail(ctx context.Context, in *pb.FlightDetailReq) (*pb.FlightDetailResp, error) {
+	l := logic.NewFlightDetailLogic(ctx, s.svcCtx)
+	return l.FlightDetail(in)
+}

@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 30/03/2022 09:30:51
+ Date: 31/03/2022 14:25:12
 */
 
 SET NAMES utf8mb4;
@@ -71,18 +71,18 @@ CREATE TABLE `refund_and_change_infos`  (
   `ticket_id` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '对应的票ID',
   `is_refund` tinyint(1) NOT NULL COMMENT '1为退订，0为改票',
   `time1` datetime(6) NOT NULL COMMENT '时间1',
-  `fee1` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间1时需要的费用(￥/人)',
+  `fee1` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间1时需要的费用(分/人)',
   `time2` datetime(6) NOT NULL COMMENT '时间2',
-  `fee2` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间2时需要的费用(￥/人)',
+  `fee2` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间2时需要的费用(分/人)',
   `time3` datetime(6) NOT NULL COMMENT '时间3',
-  `fee3` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间3时需要的费用(￥/人)',
+  `fee3` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间3时需要的费用(分/人)',
   `time4` datetime(6) NOT NULL COMMENT '时间4',
-  `fee4` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间4时需要的费用(￥/人)',
+  `fee4` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间4时需要的费用(分/人)',
   `time5` datetime(6) NOT NULL COMMENT '时间5',
-  `fee5` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间5时需要的费用(￥/人)',
+  `fee5` bigint UNSIGNED NOT NULL DEFAULT 99999 COMMENT '符合时间5时需要的费用(分/人)',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_refund_and_change_infos_delete_time`(`delete_time`) USING BTREE,
-  UNIQUE INDEX `idx_refund_and_change_ticketid`(`ticket_id`) USING BTREE
+  UNIQUE INDEX `idx_refund_and_change_ticketid_is_refund`(`ticket_id`, `is_refund`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -117,7 +117,7 @@ CREATE TABLE `tickets`  (
   `del_state` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已经删除',
   `version` bigint NOT NULL DEFAULT 0 COMMENT '版本号',
   `space_id` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '对应舱位ID',
-  `price` bigint UNSIGNED NOT NULL DEFAULT 999999 COMMENT '价格(￥)',
+  `price` bigint UNSIGNED NOT NULL DEFAULT 999999 COMMENT '价格(分)',
   `discount` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '折扣(-n%)',
   `cba` tinyint UNSIGNED NOT NULL DEFAULT 20 COMMENT '托运行李额(KG)',
   PRIMARY KEY (`id`) USING BTREE,
