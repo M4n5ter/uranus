@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"github.com/pkg/errors"
+	"uranus/app/mqueue/cmd/rpc/mqueue"
 	"uranus/app/payment/model"
 	"uranus/common/xerr"
 
@@ -63,7 +64,17 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 	payment.TradeType = in.TradeType
 	payment.PayStatus = in.PayStatus
 	payment.PayTime = in.PayTime.AsTime()
-
+	err = l.svcCtx.PaymentModel.UpdateWithVersion(nil, payment)
+	if err != nil {
+		return nil, errors.Wrapf(ERRDBERR, "更新支付流水失败: payment: %+v", payment)
+	}
 	//4、通知其他服务
+	_, err = l.svcCtx.MqueueClient.KqPaymentStatusUpdate(l.ctx, &mqueue.KqPaymentStatusUpdateReq{
+		OrderSn:   payment.OrderSn,
+		PayStatus: payment.PayStatus,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("支付流水状态变更发送到kq失败"), "支付流水状态变更发送到kq失败")
+	}
 	return &pb.UpdateTradeStateResp{}, nil
 }

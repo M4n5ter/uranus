@@ -54,7 +54,7 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req *types.WXMiniAuthReq) (resp *types.WXMi
 	var userId int64
 	rpcResp, err := l.svcCtx.UsercenterRpcClient.GetUserAuthByAuthKey(l.ctx, &usercenter.GetUserAuthByAuthKeyReq{
 		AuthKey:  authResult.OpenID,
-		AuthType: model.UserAuthTypeWxMini,
+		AuthType: model.UserAuthTypeSmallWX,
 	})
 	if err != nil {
 		return nil, errors.Wrapf(ErrMiniAuthFailedErr, "UsercenterRpc.GetUserAuthByAuthKey err: %v, authResult : %+v", err, authResult)
@@ -69,7 +69,7 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req *types.WXMiniAuthReq) (resp *types.WXMi
 			Nickname: nickname,
 			Sex:      model.Unknown,
 			AuthKey:  authResult.OpenID,
-			AuthType: model.UserAuthTypeWxMini,
+			AuthType: model.UserAuthTypeSmallWX,
 		})
 		if err != nil {
 			return nil, errors.Wrapf(ErrMiniAuthFailedErr, "UsercenterRpc.Register err :%v, authResult : %+v", err, authResult)

@@ -30,7 +30,7 @@ func NewCreateFlightOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 	}
 }
 
-// 机票下订单
+// CreateFlightOrder 机票下订单
 func (l *CreateFlightOrderLogic) CreateFlightOrder(in *pb.CreateFlightOrderReq) (*pb.CreateFlightOrderResp, error) {
 	if in.UserId < 1 || in.TicketId < 1 {
 		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input: userID: %d, ticketID: %d", in.UserId, in.TicketId)
