@@ -29,7 +29,7 @@ func NewKqPaymentStatusUpdateLogic(ctx context.Context, svcCtx *svc.ServiceConte
 
 // KqPaymentStatusUpdate 支付流水状态变更发送到kq
 func (l *KqPaymentStatusUpdateLogic) KqPaymentStatusUpdate(in *pb.KqPaymentStatusUpdateReq) (*pb.KqPaymentStatusUpdateResp, error) {
-	m := kqueue.ThirdPaymentUpdatePayStatusNotifyMessage{
+	m := kqueue.PaymentUpdatePayStatusNotifyMessage{
 		OrderSn:   in.OrderSn,
 		PayStatus: in.PayStatus,
 	}

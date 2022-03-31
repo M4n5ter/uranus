@@ -83,7 +83,7 @@ type (
 		Mobile     string    `db:"mobile"`
 		Password   string    `db:"password"`
 		Nickname   string    `db:"nickname"`
-		Sex        int64     `db:"sex"` // 性别 0:男 1:女
+		Sex        int64     `db:"sex"` // 性别 0:男 1:女 -1:未知
 		Avatar     string    `db:"avatar"`
 		Info       string    `db:"info"`
 	}

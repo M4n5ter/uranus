@@ -51,6 +51,10 @@ message  UpdateFlightOrderTradeStateResp{
   string sn = 3;
   string tradeCode = 4;
   int64  orderTotalPrice = 5;
+  string departPosition = 6;
+  google.protobuf.Timestamp departTime = 7;
+  string arrivePosition = 8;
+  google.protobuf.Timestamp arriveTime = 9;
 }
 
 
