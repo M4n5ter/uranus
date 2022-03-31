@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	"github.com/pkg/errors"
+	"uranus/app/payment/model"
+	"uranus/common/xerr"
 
 	"uranus/app/payment/cmd/rpc/internal/svc"
 	"uranus/app/payment/cmd/rpc/pb"
@@ -25,7 +28,42 @@ func NewUpdateTradeStateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 // UpdateTradeState 更新交易状态
 func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*pb.UpdateTradeStateResp, error) {
-	// todo: add your logic here and delete this line
+	// 检查输入合法性
+	if len(in.TradeState) == 0 || len(in.TradeStateDesc) == 0 || len(in.TradeType) == 0 || len(in.Sn) == 0 || len(in.TransactionId) == 0 ||
+		in.PayStatus < -1 || in.PayStatus > 2 || !in.PayTime.IsValid() {
+		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input : %+v", in)
+	}
 
+	//1、流水记录确认.
+	payment, err := l.svcCtx.PaymentModel.FindOneBySn(in.Sn)
+	if err != nil && err != model.ErrNotFound {
+		return nil, errors.Wrapf(ERRDBERR, "DBERR: 确认流水记录失败, err: %v, Sn: %s", err, in.Sn)
+	}
+	if payment == nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("流水记录不存在"), "Not Found: Sn: %s", in.Sn)
+	}
+	//2、判断状态
+	if in.PayStatus == model.PaymentPayTradeStateFAIL || in.PayStatus == model.PaymentPayTradeStateSuccess {
+		// 想要修改为支付失败或者支付成功的情况
+		if payment.PayStatus != model.PaymentPayTradeStateWait {
+			return nil, errors.Wrapf(xerr.NewErrMsg("只有待支付的订单可以修改为支付失败状态或者支付成功状态"), "当前流水状态非待支付状态，不可修改为支付成功或失败, in: %+v", in)
+		} else if in.PayStatus == model.PaymentPayTradeStateRefund {
+			// 要修改为退款成功的情况
+			if payment.PayStatus != model.PaymentPayTradeStateSuccess {
+				return nil, errors.Wrapf(xerr.NewErrMsg("只有付款成功的订单才能退款"), "修改支付流水记录为退款失败，当前支付流水未支付成功无法退款 in : %+v", in)
+			}
+		} else {
+			return nil, errors.Wrapf(xerr.NewErrMsg("当前不支持该状态"), "不支持的支付流水状态: %+v", in)
+		}
+	}
+	//3、更新.
+	payment.TradeState = in.TradeState
+	payment.TransactionId = in.TransactionId
+	payment.TradeStateDesc = in.TradeStateDesc
+	payment.TradeType = in.TradeType
+	payment.PayStatus = in.PayStatus
+	payment.PayTime = in.PayTime.AsTime()
+
+	//4、通知其他服务
 	return &pb.UpdateTradeStateResp{}, nil
 }
