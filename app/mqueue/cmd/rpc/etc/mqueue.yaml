@@ -1,5 +1,5 @@
 Name: mqueue-rpc
-ListenOn: 0.0.0.0:9006
+ListenOn: 0.0.0.0:9004
 Mode: dev
 
 #监控
@@ -20,9 +20,9 @@ Log:
   Level: error
 
 Redis:
-  Host: redis:6379
+  Host: 192.168.75.132:6379
   Type: node
-  Pass: G62m50oigInC30sf
+  Pass: W53t27obgKnZ29gf
 
 #支付成功回调通知
 KqPaymentUpdatePayStatusConf:

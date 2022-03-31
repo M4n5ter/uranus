@@ -13,17 +13,17 @@ Cache:
     Pass: W53t27obgKnZ29gf
 
 ##监控
-#Prometheus:
-#  Host: 0.0.0.0
-#  Port: 3003
-#  Path: /metrics
-#
-##链路追踪
-#Telemetry:
-#  Name: flightinquiry-rpc
-#  Endpoint:  http://jaeger:14268/api/traces
-#  Sampler: 1.0
-#  Batcher: jaeger
+Prometheus:
+  Host: 0.0.0.0
+  Port: 3003
+  Path: /metrics
+
+#链路追踪
+Telemetry:
+  Name: flightinquiry-rpc
+  Endpoint:  http://jaeger:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
 
 Redis:
   Host: 192.168.75.132:6379

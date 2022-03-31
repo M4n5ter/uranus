@@ -12,6 +12,7 @@ import (
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/builder"
+	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
@@ -22,6 +23,9 @@ var (
 	paymentRows                = strings.Join(paymentFieldNames, ",")
 	paymentRowsExpectAutoSet   = strings.Join(stringx.Remove(paymentFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
 	paymentRowsWithPlaceHolder = strings.Join(stringx.Remove(paymentFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+
+	cachePaymentIdPrefix = "cache:payment:id:"
+	cachePaymentSnPrefix = "cache:payment:sn:"
 )
 
 type (
@@ -30,7 +34,7 @@ type (
 		Insert(session sqlx.Session, data *Payment) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*Payment, error)
-		// FindOneBySn 根据唯一索引查询一条数据，走缓存
+		// FindOneBy 根据唯一索引查询一条数据，走缓存
 		FindOneBySn(sn string) (*Payment, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -65,7 +69,7 @@ type (
 	}
 
 	defaultPaymentModel struct {
-		conn  sqlx.SqlConn
+		sqlc.CachedConn
 		table string
 	}
 
@@ -77,7 +81,7 @@ type (
 		DeleteTime     time.Time `db:"delete_time"`
 		DelState       int64     `db:"del_state"`
 		Version        int64     `db:"version"`          // 乐观锁版本号
-		AuthKey        int64     `db:"auth_key"`         // 用户唯一id
+		AuthKey        string    `db:"auth_key"`         // 用户唯一id
 		PayMode        string    `db:"pay_mode"`         // 支付方式 1:微信支付 2:支付宝 3:钱包余额
 		TradeType      string    `db:"trade_type"`       // 第三方支付类型
 		TradeState     string    `db:"trade_state"`      // 第三方交易状态
@@ -85,16 +89,15 @@ type (
 		TransactionId  string    `db:"transaction_id"`   // 第三方支付单号
 		TradeStateDesc string    `db:"trade_state_desc"` // 支付状态描述
 		OrderSn        string    `db:"order_sn"`         // 业务单号
-		ServiceType    string    `db:"service_type"`     // 业务类型
 		PayStatus      int64     `db:"pay_status"`       // 平台内交易状态   -1:支付失败 0:未支付 1:支付成功 2:已退款
 		PayTime        time.Time `db:"pay_time"`         // 支付成功时间
 	}
 )
 
-func NewPaymentModel(conn sqlx.SqlConn) PaymentModel {
+func NewPaymentModel(conn sqlx.SqlConn, c cache.CacheConf) PaymentModel {
 	return &defaultPaymentModel{
-		conn:  conn,
-		table: "`payment`",
+		CachedConn: sqlc.NewConn(conn, c),
+		table:      "`payment`",
 	}
 }
 
@@ -103,19 +106,26 @@ func (m *defaultPaymentModel) Insert(session sqlx.Session, data *Payment) (sql.R
 
 	data.DeleteTime = time.Unix(0, 0)
 
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, paymentRowsExpectAutoSet)
-	if session != nil {
-		return session.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.ServiceType, data.PayStatus, data.PayTime)
-	}
-	return m.conn.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.ServiceType, data.PayStatus, data.PayTime)
+	paymentIdKey := fmt.Sprintf("%s%v", cachePaymentIdPrefix, data.Id)
+	paymentSnKey := fmt.Sprintf("%s%v", cachePaymentSnPrefix, data.Sn)
+	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, paymentRowsExpectAutoSet)
+		if session != nil {
+			return session.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.PayStatus, data.PayTime)
+		}
+		return conn.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.PayStatus, data.PayTime)
+	}, paymentSnKey, paymentIdKey)
 
 }
 
 // FindOne 根据主键查询一条数据，走缓存
 func (m *defaultPaymentModel) FindOne(id int64) (*Payment, error) {
-	query := fmt.Sprintf("select %s from %s where `id` = ?  and del_state = ? limit 1", paymentRows, m.table)
+	paymentIdKey := fmt.Sprintf("%s%v", cachePaymentIdPrefix, id)
 	var resp Payment
-	err := m.conn.QueryRow(&resp, query, id, globalkey.DelStateNo)
+	err := m.QueryRow(&resp, paymentIdKey, func(conn sqlx.SqlConn, v interface{}) error {
+		query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", paymentRows, m.table)
+		return conn.QueryRow(v, query, id, globalkey.DelStateNo)
+	})
 	switch err {
 	case nil:
 		if resp.DelState == globalkey.DelStateYes {
@@ -129,11 +139,17 @@ func (m *defaultPaymentModel) FindOne(id int64) (*Payment, error) {
 	}
 }
 
-// FindOneBySn 根据唯一索引查询一条数据，走缓存
+// FindOneBy 根据唯一索引查询一条数据，走缓存
 func (m *defaultPaymentModel) FindOneBySn(sn string) (*Payment, error) {
+	paymentSnKey := fmt.Sprintf("%s%v", cachePaymentSnPrefix, sn)
 	var resp Payment
-	query := fmt.Sprintf("select %s from %s where `sn` = ? and del_state = ? limit 1", paymentRows, m.table)
-	err := m.conn.QueryRow(&resp, query, sn, globalkey.DelStateNo)
+	err := m.QueryRowIndex(&resp, paymentSnKey, m.formatPrimary, func(conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `sn` = ? and del_state = ?  limit 1", paymentRows, m.table)
+		if err := conn.QueryRow(&resp, query, sn, globalkey.DelStateNo); err != nil {
+			return nil, err
+		}
+		return resp.Id, nil
+	}, m.queryPrimary)
 	switch err {
 	case nil:
 		if resp.DelState == globalkey.DelStateYes {
@@ -149,13 +165,15 @@ func (m *defaultPaymentModel) FindOneBySn(sn string) (*Payment, error) {
 
 // Update 修改数据 ,推荐优先使用乐观锁更新
 func (m *defaultPaymentModel) Update(session sqlx.Session, data *Payment) (sql.Result, error) {
-	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, paymentRowsWithPlaceHolder)
-	if session != nil {
-		return session.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.ServiceType, data.PayStatus, data.PayTime, data.Id)
-	} else {
-		return m.conn.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.ServiceType, data.PayStatus, data.PayTime, data.Id)
-	}
-
+	paymentIdKey := fmt.Sprintf("%s%v", cachePaymentIdPrefix, data.Id)
+	paymentSnKey := fmt.Sprintf("%s%v", cachePaymentSnPrefix, data.Sn)
+	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, paymentRowsWithPlaceHolder)
+		if session != nil {
+			return session.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.PayStatus, data.PayTime, data.Id)
+		}
+		return conn.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.PayStatus, data.PayTime, data.Id)
+	}, paymentIdKey, paymentSnKey)
 }
 
 // UpdateWithVersion 乐观锁修改数据 ,推荐使用
@@ -167,13 +185,15 @@ func (m *defaultPaymentModel) UpdateWithVersion(session sqlx.Session, data *Paym
 	var sqlResult sql.Result
 	var err error
 
-	query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, paymentRowsWithPlaceHolder)
-	if session != nil {
-		sqlResult, err = session.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.ServiceType, data.PayStatus, data.PayTime, data.Id, oldVersion)
-	} else {
-		sqlResult, err = m.conn.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.ServiceType, data.PayStatus, data.PayTime, data.Id, oldVersion)
-	}
-
+	paymentIdKey := fmt.Sprintf("%s%v", cachePaymentIdPrefix, data.Id)
+	paymentSnKey := fmt.Sprintf("%s%v", cachePaymentSnPrefix, data.Sn)
+	sqlResult, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, paymentRowsWithPlaceHolder)
+		if session != nil {
+			return session.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.PayStatus, data.PayTime, data.Id, oldVersion)
+		}
+		return conn.Exec(query, data.Sn, data.DeleteTime, data.DelState, data.Version, data.AuthKey, data.PayMode, data.TradeType, data.TradeState, data.PayTotal, data.TransactionId, data.TradeStateDesc, data.OrderSn, data.PayStatus, data.PayTime, data.Id, oldVersion)
+	}, paymentIdKey, paymentSnKey)
 	if err != nil {
 		return err
 	}
@@ -200,9 +220,7 @@ func (m *defaultPaymentModel) FindOneByQuery(rowBuilder squirrel.SelectBuilder) 
 	}
 
 	var resp Payment
-
-	err = m.conn.QueryRow(&resp, query, values...)
-
+	err = m.QueryRowNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -220,9 +238,7 @@ func (m *defaultPaymentModel) FindSum(sumBuilder squirrel.SelectBuilder) (float6
 	}
 
 	var resp float64
-
-	err = m.conn.QueryRow(&resp, query, values...)
-
+	err = m.QueryRowNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -240,9 +256,7 @@ func (m *defaultPaymentModel) FindCount(countBuilder squirrel.SelectBuilder) (in
 	}
 
 	var resp int64
-
-	err = m.conn.QueryRow(&resp, query, values...)
-
+	err = m.QueryRowNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -266,9 +280,7 @@ func (m *defaultPaymentModel) FindAll(rowBuilder squirrel.SelectBuilder, orderBy
 	}
 
 	var resp []*Payment
-
-	err = m.conn.QueryRows(&resp, query, values...)
-
+	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -297,9 +309,7 @@ func (m *defaultPaymentModel) FindPageListByPage(rowBuilder squirrel.SelectBuild
 	}
 
 	var resp []*Payment
-
-	err = m.conn.QueryRows(&resp, query, values...)
-
+	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -321,9 +331,7 @@ func (m *defaultPaymentModel) FindPageListByIdDESC(rowBuilder squirrel.SelectBui
 	}
 
 	var resp []*Payment
-
-	err = m.conn.QueryRows(&resp, query, values...)
-
+	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -345,9 +353,7 @@ func (m *defaultPaymentModel) FindPageListByIdASC(rowBuilder squirrel.SelectBuil
 	}
 
 	var resp []*Payment
-
-	err = m.conn.QueryRows(&resp, query, values...)
-
+	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {
 	case nil:
 		return resp, nil
@@ -373,12 +379,20 @@ func (m *defaultPaymentModel) SumBuilder(field string) squirrel.SelectBuilder {
 
 // Delete 删除数据
 func (m *defaultPaymentModel) Delete(session sqlx.Session, id int64) error {
-	query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
-	if session != nil {
-		_, err := session.Exec(query, id)
+	data, err := m.FindOne(id)
+	if err != nil {
 		return err
 	}
-	_, err := m.conn.Exec(query, id)
+
+	paymentIdKey := fmt.Sprintf("%s%v", cachePaymentIdPrefix, id)
+	paymentSnKey := fmt.Sprintf("%s%v", cachePaymentSnPrefix, data.Sn)
+	_, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		if session != nil {
+			return session.Exec(query, id)
+		}
+		return conn.Exec(query, id)
+	}, paymentIdKey, paymentSnKey)
 	return err
 }
 
@@ -395,9 +409,22 @@ func (m *defaultPaymentModel) DeleteSoft(session sqlx.Session, data *Payment) er
 // Trans 暴露给logic开启事务
 func (m *defaultPaymentModel) Trans(fn func(session sqlx.Session) error) error {
 
-	err := m.conn.Transact(func(session sqlx.Session) error {
+	err := m.Transact(func(session sqlx.Session) error {
 		return fn(session)
 	})
 	return err
 
 }
+
+// formatPrimary 格式化缓存key
+func (m *defaultPaymentModel) formatPrimary(primary interface{}) string {
+	return fmt.Sprintf("%s%v", cachePaymentIdPrefix, primary)
+}
+
+// queryPrimary 根据主键去db查询一条数据
+func (m *defaultPaymentModel) queryPrimary(conn sqlx.SqlConn, v, primary interface{}) error {
+	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", paymentRows, m.table)
+	return conn.QueryRow(v, query, primary, globalkey.DelStateNo)
+}
+
+//!!!!! 其他自定义方法，从此处开始写,此处上方不要写自定义方法!!!!!

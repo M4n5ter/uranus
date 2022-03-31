@@ -1,0 +1,7 @@
+Name: payment-rpc
+ListenOn: 0.0.0.0:9001
+Mode: dev
+
+Log:
+  ServiceName: payment-rpc
+  Level: error

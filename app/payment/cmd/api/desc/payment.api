@@ -3,8 +3,8 @@ syntax = "v1"
 info(
 	title: "支付服务"
 	desc: "支付服务"
-	author: "Mikael"
-	email: "13247629622@163.com"
+	author: "王勇涛"
+	email: "wangyongtao2000@qq.com"
 	version: "v1"
 )
 
@@ -15,15 +15,15 @@ import(
 //支付服务v1版本的接口
 @server(
 	prefix: payment/v1
-	group: thirdPayment
+	group: payment
 )
 service payment {
 	
 	@doc "第三方支付：微信支付"
 	@handler thirdPaymentwxPay
-	post /thirdPayment/thirdPaymentWxPay (ThirdPaymentWxPayReq) returns (ThirdPaymentWxPayResp)
+	post /payment/paymentWxPay (ThirdPaymentWxPayReq) returns (ThirdPaymentWxPayResp)
 	
 	@doc "第三方：微信支付回调"
 	@handler thirdPaymentWxPayCallback
-	post /thirdPayment/thirdPaymentWxPayCallback (ThirdPaymentWxPayCallbackReq) returns (ThirdPaymentWxPayCallbackResp)
+	post /payment/paymentWxPayCallback (ThirdPaymentWxPayCallbackReq) returns (ThirdPaymentWxPayCallbackResp)
 }
