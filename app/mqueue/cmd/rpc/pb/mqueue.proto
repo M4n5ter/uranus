@@ -6,17 +6,17 @@ option go_package = "./pb";
 package pb;
 
 
-message AqDeferHomestayOrderCloseReq {
+message AqDeferFlightOrderCloseReq {
   string sn = 1;
 }
-message AqDeferHomestayOrderCloseResp {
+message AqDeferFlightOrderCloseResp {
 }
 
-message KqPaymenStatusUpdateReq {
+message KqPaymentStatusUpdateReq {
   string orderSn = 1;
   int64 payStatus = 2;
 }
-message KqPaymenStatusUpdateResp {
+message KqPaymentStatusUpdateResp {
 }
 
 message SendWxMiniSubMessageReq {
@@ -35,8 +35,8 @@ service mqueue {
     //asynq defer 
     //------------------------------
 
-    //添加民宿订单延迟关闭到asynq队列
-    rpc aqDeferHomestayOrderClose(AqDeferHomestayOrderCloseReq)returns(AqDeferHomestayOrderCloseResp);
+    //添加航班订单延迟关闭到asynq队列
+    rpc aqDeferFlightOrderClose(AqDeferFlightOrderCloseReq)returns(AqDeferFlightOrderCloseResp);
 
 
     //------------------------------
@@ -51,7 +51,7 @@ service mqueue {
     //------------------------------
 
     //支付流水状态变更发送到kq
-    rpc kqPaymenStatusUpdate(KqPaymenStatusUpdateReq)returns(KqPaymenStatusUpdateResp);
+    rpc kqPaymentStatusUpdate(KqPaymentStatusUpdateReq)returns(KqPaymentStatusUpdateResp);
 
     //发送微信小程序订阅消息
     rpc sendWxMiniSubMessage(SendWxMiniSubMessageReq)returns(SendWxMiniSubMessageResp);

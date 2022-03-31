@@ -13,6 +13,7 @@ import (
 
 type MqueueServer struct {
 	svcCtx *svc.ServiceContext
+	pb.UnimplementedMqueueServer
 }
 
 func NewMqueueServer(svcCtx *svc.ServiceContext) *MqueueServer {
@@ -21,16 +22,16 @@ func NewMqueueServer(svcCtx *svc.ServiceContext) *MqueueServer {
 	}
 }
 
-// 添加民宿订单延迟关闭到asynq队列
-func (s *MqueueServer) AqDeferHomestayOrderClose(ctx context.Context, in *pb.AqDeferHomestayOrderCloseReq) (*pb.AqDeferHomestayOrderCloseResp, error) {
-	l := logic.NewAqDeferHomestayOrderCloseLogic(ctx, s.svcCtx)
-	return l.AqDeferHomestayOrderClose(in)
+// 添加航班订单延迟关闭到asynq队列
+func (s *MqueueServer) AqDeferFlightOrderClose(ctx context.Context, in *pb.AqDeferFlightOrderCloseReq) (*pb.AqDeferFlightOrderCloseResp, error) {
+	l := logic.NewAqDeferFlightOrderCloseLogic(ctx, s.svcCtx)
+	return l.AqDeferFlightOrderClose(in)
 }
 
 // 支付流水状态变更发送到kq
-func (s *MqueueServer) KqPaymenStatusUpdate(ctx context.Context, in *pb.KqPaymenStatusUpdateReq) (*pb.KqPaymenStatusUpdateResp, error) {
-	l := logic.NewKqPaymenStatusUpdateLogic(ctx, s.svcCtx)
-	return l.KqPaymenStatusUpdate(in)
+func (s *MqueueServer) KqPaymentStatusUpdate(ctx context.Context, in *pb.KqPaymentStatusUpdateReq) (*pb.KqPaymentStatusUpdateResp, error) {
+	l := logic.NewKqPaymentStatusUpdateLogic(ctx, s.svcCtx)
+	return l.KqPaymentStatusUpdate(in)
 }
 
 // 发送微信小程序订阅消息

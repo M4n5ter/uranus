@@ -13,18 +13,18 @@ import (
 )
 
 type (
-	AqDeferHomestayOrderCloseReq  = pb.AqDeferHomestayOrderCloseReq
-	AqDeferHomestayOrderCloseResp = pb.AqDeferHomestayOrderCloseResp
-	KqPaymenStatusUpdateReq       = pb.KqPaymenStatusUpdateReq
-	KqPaymenStatusUpdateResp      = pb.KqPaymenStatusUpdateResp
-	SendWxMiniSubMessageReq       = pb.SendWxMiniSubMessageReq
-	SendWxMiniSubMessageResp      = pb.SendWxMiniSubMessageResp
+	AqDeferFlightOrderCloseReq  = pb.AqDeferFlightOrderCloseReq
+	AqDeferFlightOrderCloseResp = pb.AqDeferFlightOrderCloseResp
+	KqPaymentStatusUpdateReq    = pb.KqPaymentStatusUpdateReq
+	KqPaymentStatusUpdateResp   = pb.KqPaymentStatusUpdateResp
+	SendWxMiniSubMessageReq     = pb.SendWxMiniSubMessageReq
+	SendWxMiniSubMessageResp    = pb.SendWxMiniSubMessageResp
 
 	Mqueue interface {
-		// 添加民宿订单延迟关闭到asynq队列
-		AqDeferHomestayOrderClose(ctx context.Context, in *AqDeferHomestayOrderCloseReq, opts ...grpc.CallOption) (*AqDeferHomestayOrderCloseResp, error)
+		// 添加航班订单延迟关闭到asynq队列
+		AqDeferFlightOrderClose(ctx context.Context, in *AqDeferFlightOrderCloseReq, opts ...grpc.CallOption) (*AqDeferFlightOrderCloseResp, error)
 		// 支付流水状态变更发送到kq
-		KqPaymenStatusUpdate(ctx context.Context, in *KqPaymenStatusUpdateReq, opts ...grpc.CallOption) (*KqPaymenStatusUpdateResp, error)
+		KqPaymentStatusUpdate(ctx context.Context, in *KqPaymentStatusUpdateReq, opts ...grpc.CallOption) (*KqPaymentStatusUpdateResp, error)
 		// 发送微信小程序订阅消息
 		SendWxMiniSubMessage(ctx context.Context, in *SendWxMiniSubMessageReq, opts ...grpc.CallOption) (*SendWxMiniSubMessageResp, error)
 	}
@@ -40,16 +40,16 @@ func NewMqueue(cli zrpc.Client) Mqueue {
 	}
 }
 
-// 添加民宿订单延迟关闭到asynq队列
-func (m *defaultMqueue) AqDeferHomestayOrderClose(ctx context.Context, in *AqDeferHomestayOrderCloseReq, opts ...grpc.CallOption) (*AqDeferHomestayOrderCloseResp, error) {
+// 添加航班订单延迟关闭到asynq队列
+func (m *defaultMqueue) AqDeferFlightOrderClose(ctx context.Context, in *AqDeferFlightOrderCloseReq, opts ...grpc.CallOption) (*AqDeferFlightOrderCloseResp, error) {
 	client := pb.NewMqueueClient(m.cli.Conn())
-	return client.AqDeferHomestayOrderClose(ctx, in, opts...)
+	return client.AqDeferFlightOrderClose(ctx, in, opts...)
 }
 
 // 支付流水状态变更发送到kq
-func (m *defaultMqueue) KqPaymenStatusUpdate(ctx context.Context, in *KqPaymenStatusUpdateReq, opts ...grpc.CallOption) (*KqPaymenStatusUpdateResp, error) {
+func (m *defaultMqueue) KqPaymentStatusUpdate(ctx context.Context, in *KqPaymentStatusUpdateReq, opts ...grpc.CallOption) (*KqPaymentStatusUpdateResp, error) {
 	client := pb.NewMqueueClient(m.cli.Conn())
-	return client.KqPaymenStatusUpdate(ctx, in, opts...)
+	return client.KqPaymentStatusUpdate(ctx, in, opts...)
 }
 
 // 发送微信小程序订阅消息

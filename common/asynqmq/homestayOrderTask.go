@@ -9,18 +9,18 @@ import (
 )
 
 const (
-	TypeHomestayOrderCloseDelivery = "homestay:order:close"
+	TypeFlightOrderCloseDelivery = "flight:order:close"
 )
 
-// 延迟关闭民宿订单task
-type HomestayOrderCloseTaskPayload struct {
+// FlightOrderCloseTaskPayload 延迟关闭航班订单task
+type FlightOrderCloseTaskPayload struct {
 	Sn string
 }
 
-func NewHomestayOrderCloseTask(sn string) (*asynq.Task, error) {
-	payload, err := json.Marshal(HomestayOrderCloseTaskPayload{Sn: sn})
+func NewFlightOrderCloseTask(sn string) (*asynq.Task, error) {
+	payload, err := json.Marshal(FlightOrderCloseTaskPayload{Sn: sn})
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("创建延迟关闭民宿订单task到asynq失败"), "【addAsynqTaskMarshaError】err : %v , sn : %s", err, sn)
 	}
-	return asynq.NewTask(TypeHomestayOrderCloseDelivery, payload), nil
+	return asynq.NewTask(TypeFlightOrderCloseDelivery, payload), nil
 }
