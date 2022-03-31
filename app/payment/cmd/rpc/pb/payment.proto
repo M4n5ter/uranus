@@ -67,7 +67,7 @@ message UpdateTradeStateResp {
 
 // service
 service payment {
-  //CreatePayment 创建微信支付预处理订单
+  //CreatePayment 创建支付预处理订单
   rpc CreatePayment(CreatePaymentReq) returns(CreatePaymentResp);
 
   //GetPaymentBySn 根据sn查询流水记录

@@ -22,7 +22,7 @@ func NewPaymentServer(svcCtx *svc.ServiceContext) *PaymentServer {
 	}
 }
 
-// CreatePayment 创建微信支付预处理订单
+// CreatePayment 创建支付预处理订单
 func (s *PaymentServer) CreatePayment(ctx context.Context, in *pb.CreatePaymentReq) (*pb.CreatePaymentResp, error) {
 	l := logic.NewCreatePaymentLogic(ctx, s.svcCtx)
 	return l.CreatePayment(in)

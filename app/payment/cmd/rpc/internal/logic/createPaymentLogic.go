@@ -13,6 +13,8 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
+var ERRDBERR = xerr.NewErrCode(xerr.DB_ERROR)
+
 type CreatePaymentLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
@@ -27,7 +29,7 @@ func NewCreatePaymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 	}
 }
 
-// CreatePayment 创建微信支付预处理订单
+// CreatePayment 创建支付预处理订单
 func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreatePaymentResp, error) {
 	// 检查输入合法性
 	if len(in.AuthKey) == 0 || len(in.OrderSn) == 0 || len(in.PayModel) == 0 || in.PayTotal < 0 {
@@ -36,13 +38,16 @@ func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreateP
 
 	// 创建支付
 	data := &model.Payment{}
-	data.Sn			= uniqueid.GenSn(uniqueid.SN_PREFIX_THIRD_PAYMENT)
-	data.OrderSn	= in.OrderSn
-	data.AuthKey	= in.AuthKey
-	data.PayMode	= in.PayModel
-	data.PayTotal	= in.PayTotal
+	data.Sn = uniqueid.GenSn(uniqueid.SN_PREFIX_THIRD_PAYMENT)
+	data.OrderSn = in.OrderSn
+	data.AuthKey = in.AuthKey
+	data.PayMode = in.PayModel
+	data.PayTotal = in.PayTotal
 
-	_, err := l.svcCtx.
+	_, err := l.svcCtx.PaymentModel.Insert(nil, data)
+	if err != nil {
+		return nil, errors.Wrapf(ERRDBERR, "DBERR: 创建支付流水记录失败: err: %v, data: %+v", err, data)
+	}
 
-	return &pb.CreatePaymentResp{}, nil
+	return &pb.CreatePaymentResp{Sn: data.Sn}, nil
 }
