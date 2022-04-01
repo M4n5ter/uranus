@@ -22,19 +22,19 @@ func NewFlightReservationServer(svcCtx *svc.ServiceContext) *FlightReservationSe
 	}
 }
 
-// BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
+//  BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
 func (s *FlightReservationServer) BookAirTickets(ctx context.Context, in *pb.BookAirTicketsReq) (*pb.BookAirTicketsResp, error) {
 	l := logic.NewBookAirTicketsLogic(ctx, s.svcCtx)
 	return l.BookAirTickets(in)
 }
 
-// RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
+//  RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
 func (s *FlightReservationServer) RefundAirTickets(ctx context.Context, in *pb.RefundAirTicketsReq) (*pb.RefundAirTicketsResp, error) {
 	l := logic.NewRefundAirTicketsLogic(ctx, s.svcCtx)
 	return l.RefundAirTickets(in)
 }
 
-// ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
+//  ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
 func (s *FlightReservationServer) ChangeAirTickets(ctx context.Context, in *pb.ChangeAirTicketsReq) (*pb.ChangeAirTicketsResp, error) {
 	l := logic.NewChangeAirTicketsLogic(ctx, s.svcCtx)
 	return l.ChangeAirTickets(in)

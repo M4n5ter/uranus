@@ -22,11 +22,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FlightReservationClient interface {
-	//BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
+	// BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
 	BookAirTickets(ctx context.Context, in *BookAirTicketsReq, opts ...grpc.CallOption) (*BookAirTicketsResp, error)
-	//RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
+	// RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
 	RefundAirTickets(ctx context.Context, in *RefundAirTicketsReq, opts ...grpc.CallOption) (*RefundAirTicketsResp, error)
-	//ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
+	// ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
 	ChangeAirTickets(ctx context.Context, in *ChangeAirTicketsReq, opts ...grpc.CallOption) (*ChangeAirTicketsResp, error)
 }
 
@@ -69,11 +69,11 @@ func (c *flightReservationClient) ChangeAirTickets(ctx context.Context, in *Chan
 // All implementations must embed UnimplementedFlightReservationServer
 // for forward compatibility
 type FlightReservationServer interface {
-	//BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
+	// BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
 	BookAirTickets(context.Context, *BookAirTicketsReq) (*BookAirTicketsResp, error)
-	//RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
+	// RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
 	RefundAirTickets(context.Context, *RefundAirTicketsReq) (*RefundAirTicketsResp, error)
-	//ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
+	// ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
 	ChangeAirTickets(context.Context, *ChangeAirTicketsReq) (*ChangeAirTicketsResp, error)
 	mustEmbedUnimplementedFlightReservationServer()
 }

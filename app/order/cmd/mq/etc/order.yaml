@@ -21,9 +21,15 @@ Log:
   Level: error
 
 Redis:
-  Host: redis:6379
+  Host: 192.168.75.132:6379
   Type: node
-  Pass: G62m50oigInC30sf
+  Pass: W53t27obgKnZ29gf
+
+DB:
+  DataSource: "root:Flight_1@tcp(192.168.75.132:3306)/flight?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai"
+Cache:
+  - Host: 192.168.75.132:6379
+    Pass: W53t27obgKnZ29gf
 
 #kq
 PaymentUpdateStatusConf:

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"uranus/app/order/cmd/rpc/order"
 	"uranus/common/xerr"
 	"uranus/commonModel"
 
@@ -42,6 +43,7 @@ func (l *BookAirTicketsLogic) BookAirTickets(in *pb.BookAirTicketsReq) (*pb.Book
 		return nil, errors.Wrapf(ERRDBERR, "DBERR in flightreservation-rpc.BookAirTickets.l.svcCtx.FlightInfosModel.FindOneByByNumberAndSetOutDateAndPosition:number: %s, sod: %v,departPosition: %s, departTime: %v, arrivePosition: %s, arriveTime: %v, err: %v\n", in.FlightNumber, in.SetOutDate.AsTime(), in.DepartPosition, in.DepartTime.AsTime(), in.ArrivePosition, in.ArriveTime.AsTime(), err)
 	}
 	var isFirstClass int64
+	var resp string
 	// 开启事务操作库存等信息
 	err = l.svcCtx.SpacesModel.Trans(func(session sqlx.Session) error {
 		if in.IsFirstClass {
@@ -66,9 +68,22 @@ func (l *BookAirTicketsLogic) BookAirTickets(in *pb.BookAirTicketsReq) (*pb.Book
 				}
 				return errors.Wrapf(ERRDBERR, "DBERR in flightreservation-rpc.BookAirTickets.l.svcCtx.TicketsModel.FindOneBySpaceId: spaceID: %d, err: %v", space.Id, err)
 			}
-			// 调用支付系统rpc fixme
-			// 给用户唯一id绑定对应的票id fixme
-			// 再次查询票对应库存是否充足，充足则用乐观锁更新库存，不充足则说明该请求没有在竞争中胜出，需要返回错误 fixme
+
+			// 创建订单
+			orderResp, err := l.svcCtx.OrderRpcClient.CreateFlightOrder(l.ctx, &order.CreateFlightOrderReq{
+				TicketId: ticket.Id,
+				UserId:   in.UserID,
+			})
+			if err != nil {
+				return err
+			}
+			//更新库存,若超时未支付、支付失败或退款， 会在响应代码块将占用的库存释放
+			space.Surplus = space.Surplus - 1
+			err = l.svcCtx.SpacesModel.UpdateWithVersion(session, space)
+			if err != nil {
+				return err
+			}
+			resp = orderResp.Sn
 		} else {
 			// 库存不足
 			return errors.Wrapf(ERRNotEnough, "space.Surplus not enough,spaceid:%d,surplus:%d", space.Id, space.Surplus)
@@ -76,5 +91,5 @@ func (l *BookAirTicketsLogic) BookAirTickets(in *pb.BookAirTicketsReq) (*pb.Book
 		return nil
 	})
 
-	return &pb.BookAirTicketsResp{}, err
+	return &pb.BookAirTicketsResp{OrderSn: resp}, err
 }

@@ -7,8 +7,8 @@ import "google/protobuf/timestamp.proto";
 
 // 预定机票请求
 message BookAirTicketsReq {
-  // 用户的平台唯一id
-  string                     Auth_key      = 1;
+  // 用户的id
+  int64                     UserID         = 1;
   // 航班号，例如MU5735
   string                    FlightNumber   = 2;
   // 出发日期
@@ -26,25 +26,25 @@ message BookAirTicketsReq {
 }
 // 预定机票响应
 message BookAirTicketsResp {
-  bool                      IsSucceed      = 1;
+  string                    OrderSn        = 2;
 }
 
 // 退票请求
 message RefundAirTicketsReq {
-  // 用户的平台唯一id
-  string                    AuthKey        = 1;
+  // 用户的id
+  int64                     UserID         = 1;
   // 用户拥有的对应票id
   uint64                    TicketID       = 2;
 }
 // 退票响应
 message RefundAirTicketsResp {
-  bool                      IsSucceed      = 1;
+
 }
 
 // 改票请求
 message ChangeAirTicketsReq {
-  // 用户的平台唯一id
-  string                    AuthKey        = 1;
+  // 用户的id
+  int64                     UserID         = 1;
   // 用户拥有的对应票id
   uint64                    TicketID       = 2;
   // 目标舱位id
@@ -52,7 +52,7 @@ message ChangeAirTicketsReq {
 }
 // 改票响应
 message ChangeAirTicketsResp {
-  bool                      IsSucceed      = 1;
+
 }
 
 service flightReservation {
