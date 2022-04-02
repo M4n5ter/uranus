@@ -40,9 +40,24 @@ func (l *ThirdPaymentwxPayLogic) ThirdPaymentwxPay(req *types.ThirdPaymentWxPayR
 	if err != nil {
 		return nil, err
 	}
+	if orderDetail == nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("订单不存在"), "orderSn: %s", req.OrderSn)
+	}
+	totalPrice = orderDetail.FlightOrder.OrderTotalPrice
 
-	l.createWxPrePayOrder(req.OrderSn, totalPrice)
-
+	// 创建微信预支付订单
+	prePayResp, err := l.createWxPrePayOrder(req.OrderSn, totalPrice)
+	if err != nil {
+		return nil, err
+	}
+	resp = &types.ThirdPaymentWxPayResp{
+		Appid:     l.svcCtx.Config.WxMiniConf.AppId,
+		NonceStr:  *prePayResp.NonceStr,
+		PaySign:   *prePayResp.PaySign,
+		Package:   *prePayResp.Package,
+		Timestamp: *prePayResp.TimeStamp,
+		SignType:  *prePayResp.SignType,
+	}
 	return
 }
 
