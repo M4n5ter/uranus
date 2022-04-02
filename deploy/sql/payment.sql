@@ -29,7 +29,7 @@ CREATE TABLE `payment`  (
   `delete_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `del_state` tinyint(1) NOT NULL DEFAULT 0,
   `version` bigint NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
-  `auth_key` varchar(64) NOT NULL DEFAULT 0 COMMENT '用户唯一id',
+  `user_id` bigint NOT NULL DEFAULT 0 COMMENT '用户id',
   `pay_mode` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '支付方式 1:微信支付 2:支付宝 3:钱包余额',
   `trade_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '第三方支付类型',
   `trade_state` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '第三方交易状态',

@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 
 //req 、resp
 message CreatePaymentReq {
-  string authKey = 1;
+  int64 userID = 1;
   string payModel = 2;
   int64  payTotal = 3; //（分）
   string orderSn = 4;
@@ -22,7 +22,7 @@ message CreatePaymentResp {
 message PaymentDetail{
   int64  id = 1;
   string sn = 2;
-  string auth_key = 3;       // 用户唯一id
+  int64 userID = 3;       // 用户id
   string payMode = 4;      // 支付方式 WECHAT_PAY:微信支付
   string tradeType = 5;    // 第三方支付类型Jsapi\App等
   int64  tradeState = 6;   // 交易状态  0:未支付 1:支付成功 -1:支付失败

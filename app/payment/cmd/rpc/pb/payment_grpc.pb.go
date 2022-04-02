@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PaymentClient interface {
-	//CreatePayment 创建微信支付预处理订单
+	//CreatePayment 创建支付预处理订单
 	CreatePayment(ctx context.Context, in *CreatePaymentReq, opts ...grpc.CallOption) (*CreatePaymentResp, error)
 	//GetPaymentBySn 根据sn查询流水记录
 	GetPaymentBySn(ctx context.Context, in *GetPaymentBySnReq, opts ...grpc.CallOption) (*GetPaymentBySnResp, error)
@@ -80,7 +80,7 @@ func (c *paymentClient) GetPaymentSuccessRefundByOrderSn(ctx context.Context, in
 // All implementations must embed UnimplementedPaymentServer
 // for forward compatibility
 type PaymentServer interface {
-	//CreatePayment 创建微信支付预处理订单
+	//CreatePayment 创建支付预处理订单
 	CreatePayment(context.Context, *CreatePaymentReq) (*CreatePaymentResp, error)
 	//GetPaymentBySn 根据sn查询流水记录
 	GetPaymentBySn(context.Context, *GetPaymentBySnReq) (*GetPaymentBySnResp, error)

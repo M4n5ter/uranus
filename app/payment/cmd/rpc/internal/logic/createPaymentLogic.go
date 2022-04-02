@@ -32,7 +32,7 @@ func NewCreatePaymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 // CreatePayment 创建支付预处理订单
 func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreatePaymentResp, error) {
 	// 检查输入合法性
-	if len(in.AuthKey) == 0 || len(in.OrderSn) == 0 || len(in.PayModel) == 0 || in.PayTotal < 0 {
+	if in.UserID < 1 || len(in.OrderSn) == 0 || len(in.PayModel) == 0 || in.PayTotal < 0 {
 		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input %+v", in)
 	}
 
@@ -40,7 +40,7 @@ func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreateP
 	data := &model.Payment{}
 	data.Sn = uniqueid.GenSn(uniqueid.SN_PREFIX_THIRD_PAYMENT)
 	data.OrderSn = in.OrderSn
-	data.AuthKey = in.AuthKey
+	data.UserId = in.UserID
 	data.PayMode = in.PayModel
 	data.PayTotal = in.PayTotal
 

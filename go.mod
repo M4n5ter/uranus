@@ -14,6 +14,7 @@ require (
 	github.com/shopspring/decimal v1.3.1
 	github.com/silenceper/wechat/v2 v2.1.2
 	github.com/sony/sonyflake v1.0.0
+	github.com/wechatpay-apiv3/wechatpay-go v0.2.11
 	github.com/zeromicro/go-queue v1.1.3
 	github.com/zeromicro/go-zero v1.3.1
 	google.golang.org/grpc v1.45.0

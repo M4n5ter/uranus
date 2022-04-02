@@ -24,7 +24,7 @@ type (
 	UpdateTradeStateResp                 = pb.UpdateTradeStateResp
 
 	Payment interface {
-		// CreatePayment 创建微信支付预处理订单
+		// CreatePayment 创建支付预处理订单
 		CreatePayment(ctx context.Context, in *CreatePaymentReq, opts ...grpc.CallOption) (*CreatePaymentResp, error)
 		// GetPaymentBySn 根据sn查询流水记录
 		GetPaymentBySn(ctx context.Context, in *GetPaymentBySnReq, opts ...grpc.CallOption) (*GetPaymentBySnResp, error)
@@ -45,7 +45,7 @@ func NewPayment(cli zrpc.Client) Payment {
 	}
 }
 
-// CreatePayment 创建微信支付预处理订单
+// CreatePayment 创建支付预处理订单
 func (m *defaultPayment) CreatePayment(ctx context.Context, in *CreatePaymentReq, opts ...grpc.CallOption) (*CreatePaymentResp, error) {
 	client := pb.NewPaymentClient(m.cli.Conn())
 	return client.CreatePayment(ctx, in, opts...)
