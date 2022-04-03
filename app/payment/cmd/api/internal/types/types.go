@@ -20,3 +20,10 @@ type ThirdPaymentWxPayCallbackReq struct {
 type ThirdPaymentWxPayCallbackResp struct {
 	ReturnCode string `json:"return_code"`
 }
+
+type LocalPaymentReq struct {
+	OrderSn string `json:"orderSn"`
+}
+
+type LocalPaymentResp struct {
+}

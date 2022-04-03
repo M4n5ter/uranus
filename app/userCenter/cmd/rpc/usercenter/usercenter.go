@@ -19,10 +19,14 @@ type (
 	GetUserAuthByUserIdResp  = pb.GetUserAuthByUserIdResp
 	GetUserInfoReq           = pb.GetUserInfoReq
 	GetUserInfoResp          = pb.GetUserInfoResp
+	GetUserMoneyReq          = pb.GetUserMoneyReq
+	GetUserMoneyResp         = pb.GetUserMoneyResp
 	LoginReq                 = pb.LoginReq
 	LoginResp                = pb.LoginResp
 	RegisterReq              = pb.RegisterReq
 	RegisterResp             = pb.RegisterResp
+	UpdateUserWalletReq      = pb.UpdateUserWalletReq
+	UpdateUserWalletResp     = pb.UpdateUserWalletResp
 	User                     = pb.User
 	UserAuth                 = pb.UserAuth
 
@@ -32,6 +36,8 @@ type (
 		GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error)
 		GetUserAuthByUserId(ctx context.Context, in *GetUserAuthByUserIdReq, opts ...grpc.CallOption) (*GetUserAuthByUserIdResp, error)
 		GetUserAuthByAuthKey(ctx context.Context, in *GetUserAuthByAuthKeyReq, opts ...grpc.CallOption) (*GetUserAuthByAuthKeyResp, error)
+		GetUserMoney(ctx context.Context, in *GetUserMoneyReq, opts ...grpc.CallOption) (*GetUserMoneyResp, error)
+		UpdateUserWallet(ctx context.Context, in *UpdateUserWalletReq, opts ...grpc.CallOption) (*UpdateUserWalletResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -68,4 +74,14 @@ func (m *defaultUsercenter) GetUserAuthByUserId(ctx context.Context, in *GetUser
 func (m *defaultUsercenter) GetUserAuthByAuthKey(ctx context.Context, in *GetUserAuthByAuthKeyReq, opts ...grpc.CallOption) (*GetUserAuthByAuthKeyResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.GetUserAuthByAuthKey(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) GetUserMoney(ctx context.Context, in *GetUserMoneyReq, opts ...grpc.CallOption) (*GetUserMoneyResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.GetUserMoney(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) UpdateUserWallet(ctx context.Context, in *UpdateUserWalletReq, opts ...grpc.CallOption) (*UpdateUserWalletResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.UpdateUserWallet(ctx, in, opts...)
 }

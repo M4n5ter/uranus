@@ -85,12 +85,22 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 			if err != nil {
 				return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DB ERR when inserting userAuth: %+v , err: %v", userAuth, err)
 			}
+
+			// 为平台用户分配钱包(微信用户不需要)
+			wallet := new(model.Wallet)
+			wallet.UserId = userId
+			wallet.Money = 0
+			_, err = l.svcCtx.WalletModel.Insert(session, wallet)
+			if err != nil {
+				return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DB ERR when inserting userAuth: %+v , err: %v", userAuth, err)
+			}
+
 			return nil
 		}); err != nil {
 			return nil, err
 		}
 
-	} else if in.AuthType == model.UserAuthTypeWxMini {
+	} else if in.AuthType == model.UserAuthTypeSmallWX {
 
 		// 微信小程序
 		if err := l.svcCtx.UserModel.Trans(func(session sqlx.Session) error {
@@ -117,6 +127,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 			if err != nil {
 				return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DB ERR when inserting userAuth: %+v , err: %v", userAuth, err)
 			}
+
 			return nil
 		}); err != nil {
 			return nil, err

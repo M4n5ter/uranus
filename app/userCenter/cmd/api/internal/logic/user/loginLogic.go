@@ -33,7 +33,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) LoginLogic {
 
 // Login 是本地系统平台用户登录渠道，微信小程序登录渠道是 wxMiniAuth
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err error) {
-	if req.AuthType == model.UserAuthTypeWxMini {
+	if req.AuthType == model.UserAuthTypeSmallWX {
 		return nil, errors.Wrapf(ErrPlatformErr, "err platform: %v, req: %+v", req.AuthType, req)
 	}
 	if len(req.Mobile) == 0 {

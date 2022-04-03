@@ -1,0 +1,19 @@
+syntax = "v1"
+
+info(
+    title: "  本地钱包支付服务"
+    desc: "本地钱包支付服务"
+    author: "王勇涛"
+    email: "wangyongtao2000@qq.com"
+    version: "v1"
+)
+
+type (
+    LocalPaymentReq struct {
+        OrderSn string `json:"orderSn"`
+    }
+
+    LocalPaymentResp struct {
+
+    }
+)

@@ -13,6 +13,7 @@ type ServiceContext struct {
 	AuthRpcClient auth.Auth
 	UserModel     model.UserModel
 	UserAuthModel model.UserAuthModel
+	WalletModel   model.WalletModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -21,5 +22,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		AuthRpcClient: auth.NewAuth(zrpc.MustNewClient(c.AuthRpc)),
 		UserModel:     model.NewUserModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		UserAuthModel: model.NewUserAuthModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
+		WalletModel:   model.NewWalletModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 	}
 }

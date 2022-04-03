@@ -46,3 +46,13 @@ func (s *UsercenterServer) GetUserAuthByAuthKey(ctx context.Context, in *pb.GetU
 	l := logic.NewGetUserAuthByAuthKeyLogic(ctx, s.svcCtx)
 	return l.GetUserAuthByAuthKey(in)
 }
+
+func (s *UsercenterServer) GetUserMoney(ctx context.Context, in *pb.GetUserMoneyReq) (*pb.GetUserMoneyResp, error) {
+	l := logic.NewGetUserMoneyLogic(ctx, s.svcCtx)
+	return l.GetUserMoney(in)
+}
+
+func (s *UsercenterServer) UpdateUserWallet(ctx context.Context, in *pb.UpdateUserWalletReq) (*pb.UpdateUserWalletResp, error) {
+	l := logic.NewUpdateUserWalletLogic(ctx, s.svcCtx)
+	return l.UpdateUserWallet(in)
+}

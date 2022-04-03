@@ -15,6 +15,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/payment/localpayment",
+				Handler: payment.LocalPayHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/payment/paymentWxPay",
 				Handler: payment.ThirdPaymentwxPayHandler(serverCtx),
 			},

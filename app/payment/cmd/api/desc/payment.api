@@ -10,6 +10,7 @@ info(
 
 import(
 	"thirdPayment/thirdPayment.api"
+	"localPayment/localPayment.api"
 )
 
 //支付服务v1版本的接口
@@ -18,6 +19,10 @@ import(
 	group: payment
 )
 service payment {
+	
+	@doc "本地钱包支付"
+	@handler localPay
+	post /payment/localpayment (LocalPaymentReq) returns (LocalPaymentResp)
 	
 	@doc "第三方支付：微信支付"
 	@handler thirdPaymentwxPay
