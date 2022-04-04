@@ -3,12 +3,14 @@ package logic
 import (
 	"context"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"uranus/app/flightInquiry/cmd/rpc/flightinquiry"
 	"uranus/app/mqueue/cmd/rpc/mqueue"
 	"uranus/app/order/model"
 	"uranus/common/tool"
 	"uranus/common/uniqueid"
 	"uranus/common/xerr"
+	"uranus/commonModel"
 
 	"uranus/app/order/cmd/rpc/internal/svc"
 	"uranus/app/order/cmd/rpc/pb"
@@ -43,23 +45,50 @@ func (l *CreateFlightOrderLogic) CreateFlightOrder(in *pb.CreateFlightOrderReq) 
 	if flightDetailResp == nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("查询不到票所对应的航班信息"), "查询不到票所对应的航班信息, ticketID: %d", in.TicketId)
 	}
-	// 创建订单
+	// 创建订单 + 更新库存
 	order := new(model.FlightOrder)
-	order.Sn = uniqueid.GenSn(uniqueid.SN_PREFIX_FLIGHT_ORDER)
-	order.OrderTotalPrice = int64(flightDetailResp.FlightInfo.Price) - int64(float64(flightDetailResp.FlightInfo.Discount)/100*float64(flightDetailResp.FlightInfo.Price))
-	order.DepartPosition = flightDetailResp.FlightInfo.DepartPosition
-	order.DepartTime = flightDetailResp.FlightInfo.DepartTime.AsTime()
-	order.ArrivePosition = flightDetailResp.FlightInfo.ArrivePosition
-	order.ArriveTime = flightDetailResp.FlightInfo.ArriveTime.AsTime()
-	order.Discount = flightDetailResp.FlightInfo.Discount
-	order.TicketId = in.TicketId
-	order.UserId = in.UserId
-	order.TradeCode = tool.Krand(8, tool.KC_RAND_KIND_ALL)
-	order.TicketPrice = int64(flightDetailResp.FlightInfo.Price)
-	order.TradeState = model.FlightOrderTradeStateWaitPay
-	_, err = l.svcCtx.OrderModel.Insert(nil, order)
+	err = l.svcCtx.OrderModel.Trans(func(session sqlx.Session) error {
+		order.Sn = uniqueid.GenSn(uniqueid.SN_PREFIX_FLIGHT_ORDER)
+		order.OrderTotalPrice = int64(flightDetailResp.FlightInfo.Price) - int64(float64(flightDetailResp.FlightInfo.Discount)/100*float64(flightDetailResp.FlightInfo.Price))
+		order.DepartPosition = flightDetailResp.FlightInfo.DepartPosition
+		order.DepartTime = flightDetailResp.FlightInfo.DepartTime.AsTime()
+		order.ArrivePosition = flightDetailResp.FlightInfo.ArrivePosition
+		order.ArriveTime = flightDetailResp.FlightInfo.ArriveTime.AsTime()
+		order.Discount = flightDetailResp.FlightInfo.Discount
+		order.TicketId = in.TicketId
+		order.UserId = in.UserId
+		order.TradeCode = tool.Krand(8, tool.KC_RAND_KIND_ALL)
+		order.TicketPrice = int64(flightDetailResp.FlightInfo.Price)
+		order.TradeState = model.FlightOrderTradeStateWaitPay
+		_, err = l.svcCtx.OrderModel.Insert(session, order)
+		if err != nil {
+			return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "下单数据库异常 order : %+v , err: %v", order, err)
+		}
+
+		ticket, err := l.svcCtx.TicketsModel.FindOne(in.TicketId)
+		if err != nil && err != commonModel.ErrNotFound {
+			return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "查找票失败, ticketID: %d, err: %v", in.TicketId, err)
+		}
+		if ticket == nil {
+			return errors.Wrapf(xerr.NewErrMsg("找不到票信息"), "Not Found ticketID: %d", in.TicketId)
+		}
+
+		space, err := l.svcCtx.SpacesModel.FindOne(ticket.SpaceId)
+		if err != nil && err != commonModel.ErrNotFound {
+			return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "查找舱位失败, spaceID: %d, err: %v", ticket.SpaceId, err)
+		}
+		if ticket == nil {
+			return errors.Wrapf(xerr.NewErrMsg("找不到舱位信息"), "Not Found spaceID: %d", ticket.SpaceId)
+		}
+		space.Surplus = space.Surplus - 1
+		err = l.svcCtx.SpacesModel.UpdateWithVersion(session, space)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "下单数据库异常 order : %+v , err: %v", order, err)
+		return nil, err
 	}
 
 	// 延迟关闭订单任务
