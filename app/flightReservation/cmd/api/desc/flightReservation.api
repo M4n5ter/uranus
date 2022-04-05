@@ -18,4 +18,12 @@ service flightReservation {
     @doc "航班预定"
     @handler flightReservation
     post /reservation (flightReservationReq) returns (flightReservationResp)
+
+    @doc "退票"
+    @handler flightRefund
+    post /refund () returns ()
+
+    @doc "改票"
+    @handler flightChange
+    post /change () returns ()
 }
