@@ -1,7 +1,31 @@
 Name: payment-rpc
-ListenOn: 0.0.0.0:9001
+ListenOn: 0.0.0.0:9009
 Mode: dev
 
 Log:
   ServiceName: payment-rpc
   Level: error
+
+DB:
+  DataSource: "root:Flight_1@tcp(mysql:3306)/flight?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai"
+Cache:
+  - Host: redis:6379
+    Pass: W53t27obgKnZ29gf
+
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 3010
+  Path: /metrics
+
+#链路追踪
+Telemetry:
+  Name: payment-rpc
+  Endpoint: http://jaeger:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+MqueueRpcConf:
+  Endpoints:
+    - 127.0.0.1:9005
+  NonBlock: true

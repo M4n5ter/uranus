@@ -10,7 +10,7 @@ info(
 import "user/user.api"
 
 @server(
-	prefix: v1/userCenter
+	prefix: userCenter/v1
 	group:  user
 )
 service userCenter {

@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
-	"uranus/common/casbinTools"
 )
 
 type Config struct {
@@ -14,5 +13,5 @@ type Config struct {
 		AppId  string
 		Secret string
 	}
-	CasbinConf casbinTools.Conf
+	//CasbinConf casbinTools.Conf
 }

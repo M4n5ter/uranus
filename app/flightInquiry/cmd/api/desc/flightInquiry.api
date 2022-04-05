@@ -12,12 +12,12 @@ import "types/types.api"
 
 @server(
 	group: flightInquiry
-	prefix: v1/flightInquiry
+	prefix: flightInquiry/v1
 )
 service flightInquiry {
 	@doc "航班查询"
 	@handler QuireBySetOutDateAndFlightNumber
-	get /flight/quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns (QuireBySetOutDateAndFlightNumberResp)
+	get /quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns (QuireBySetOutDateAndFlightNumberResp)
 	@handler QuireBySetOutDateStartPositionEndPosition
-	get /flight/quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns (QuireBySetOutDateStartPositionEndPositionResp)
+	get /quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns (QuireBySetOutDateStartPositionEndPositionResp)
 }

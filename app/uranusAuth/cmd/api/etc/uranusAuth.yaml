@@ -1,26 +1,25 @@
 Name: auth-api
 Host: 0.0.0.0
-Port: 8001
+Port: 9012
 
 
 RpcConf:
-  Etcd:
-    Hosts:
-      - etcd:2379
-    Key: auth-rpc
+  Endpoints:
+    - 127.0.0.1:9011
+    NonBlock: true
 
 Jwt:
   AccessSecret: ae0536f9-5a19ed505ea0-6450-4606-8e13
 
 NoAuthUrls:
-  - "/v1/usercenter/user/register"
-  - "/v1/usercenter/user/login"
-  - "/v1/usercenter/user/wxMiniAuth"
+  - "/userCenter/v1/user/register"
+  - "/userCenter/v1/user/login"
+  - "/userCenter/v1/user/wxMiniAuth"
 
 #监控
 Prometheus:
   Host: 0.0.0.0
-  Port: 9091
+  Port: 3013
   Path: /metrics
 
 #链路追踪

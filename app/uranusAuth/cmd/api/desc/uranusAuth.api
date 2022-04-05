@@ -13,7 +13,7 @@ import "verify/verify.api"
 	group: verify
 	prefix: auth/v1
 )
-service auth {
+service uranusAuth {
 	@doc "验证 token"
 	@handler token
 	get /verify/token (VerifyTokenReq) returns (VerifyTokenResp)

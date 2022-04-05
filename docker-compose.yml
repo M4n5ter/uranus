@@ -185,7 +185,7 @@ services:
       # 时区上海
       TZ: Asia/Shanghai
       # root 密码
-      MYSQL_ROOT_PASSWORD: PXDN93VRKUm8TeE7
+      MYSQL_ROOT_PASSWORD: Flight_1
     ports:
       - 33069:3306
     volumes:
@@ -216,7 +216,7 @@ services:
     volumes:
       # 数据文件
       - ./data/redis/data:/data:rw
-    command: "redis-server --requirepass G62m50oigInC30sf  --appendonly yes"
+    command: "redis-server --requirepass W53t27obgKnZ29gf  --appendonly yes"
     privileged: true
     restart: always
     networks:
