@@ -1,29 +1,29 @@
 syntax = "v1"
 
 info(
-    title: "order API"
-    desc: "订单服务 API"
-    author: "王勇涛"
-    email: "wangyontao2000@qq.com"
-    version: "v1"
+	title: "order API"
+	desc: "订单服务 API"
+	author: "王勇涛"
+	email: "wangyontao2000@qq.com"
+	version: "v1"
 )
 
 import "types/types.api"
 
 @server(
-    group: flightOrder
-    prefix: flightOrder/v1
+	group: flightOrder
+	prefix: flightOrder/v1
 )
 service order {
-//    @doc "创建机票订单"
-//    @handler CreateFlightOrder
-//    post /createFlightOrder (CreateFlightOrderReq) returns (CreateFlightOrderResp)
-
-    @doc "获取用户订单列表"
-    @handler UserFlightOrderList
-    post /userFlightOrderList (UserFlightOrderListReq) returns (UserFlightOrderListResp)
-
-    @doc "用户订单明细"
-    @handler UserFlightOrderDetail
-    post /userFlightOrderDetail (UserFlightOrderDetailReq) returns (UserFlightOrderDetailResp)
+	//    @doc "创建机票订单"
+	//    @handler CreateFlightOrder
+	//    post /createFlightOrder (CreateFlightOrderReq) returns (CreateFlightOrderResp)
+	
+	@doc "获取用户订单列表"
+	@handler UserFlightOrderList
+	post /userFlightOrderList (UserFlightOrderListReq) returns (UserFlightOrderListResp)
+	
+	@doc "用户订单明细"
+	@handler UserFlightOrderDetail
+	post /userFlightOrderDetail (UserFlightOrderDetailReq) returns (UserFlightOrderDetailResp)
 }
