@@ -34,7 +34,7 @@ type (
 		Insert(session sqlx.Session, data *FlightOrder) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*FlightOrder, error)
-		// FindOneBy 根据唯一索引查询一条数据，走缓存
+		// FindOneBySn 根据唯一索引查询一条数据，走缓存
 		FindOneBySn(sn string) (*FlightOrder, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -140,7 +140,7 @@ func (m *defaultFlightOrderModel) FindOne(id int64) (*FlightOrder, error) {
 	}
 }
 
-// FindOneBy 根据唯一索引查询一条数据，走缓存
+// FindOneBySn 根据唯一索引查询一条数据，走缓存
 func (m *defaultFlightOrderModel) FindOneBySn(sn string) (*FlightOrder, error) {
 	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, sn)
 	var resp FlightOrder
