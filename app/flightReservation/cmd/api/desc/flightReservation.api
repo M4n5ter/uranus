@@ -8,7 +8,7 @@ info(
     version: "v1"
 )
 
-import ""
+import "types/types.api"
 
 @server(
     group: flightReservation
@@ -21,9 +21,9 @@ service flightReservation {
 
     @doc "退票"
     @handler flightRefund
-    post /refund () returns ()
+    post /refund (flightRefundReq) returns (flightRefundResp)
 
     @doc "改票"
     @handler flightChange
-    post /change () returns ()
+    post /change (flightChangeReq) returns (flightChangeResp)
 }

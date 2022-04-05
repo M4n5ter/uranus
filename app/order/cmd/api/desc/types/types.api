@@ -1,0 +1,51 @@
+syntax = "v1"
+
+info(
+    title: "order API's types'"
+    desc: "订单服务 API 用到的类型"
+    author: "王勇涛"
+    email: "wangyontao2000@qq.com"
+    version: "v1"
+)
+
+type FlightOrder {
+    id                  int64   `json:"id"`                 // 订单id
+    sn                  string  `json:"sn"`                 // 订单号
+    userId              int64   `json:"userId"`             // 用户id
+    ticketId            int64   `json:"ticketId"`           // 票id
+    departPosition      string  `json:"departPosition"`     // 出发地点
+    departTime          string  `json:"departTime"`         // 出发时间
+    arrivePosisition    string  `json:"arrivePosisition"`   // 降落地点
+    arriveTime          string  `json:"arriveTime"`         // 降落地点
+    ticketPrice         int64   `json:"ticketPrice"`        // 票价(分)
+    discount            int64   `json:"discount"`           // 折扣(-n%)
+    tradeState          int64   `json:"tradeState"`         // 交易状态（-1: 已取消 0:待支付 1:未使用 2:已使用  3:已退款 4:已过期）
+    orderTotalPrice     int64   `json:"orderTotalPrice"`    // 订单总价(分)(ticketPrice-ticketPrice*discount)
+    createTime          string  `json:"createTime"`         // 订单创建时间
+}
+
+//type (
+//    CreateFlightOrderReq {
+//        ticketID int64 `json:"ticketId"`
+//    }
+//    CreateFlightOrderResp {
+//        sn  string `json:"sn"`
+//    }
+//)
+
+type (
+    UserFlightOrderListReq {}
+    UserFlightOrderListResp {
+        flightOrderList []string `json:"flightOrderList"`// 用户拥有的订单号
+    }
+)
+
+type (
+    UserFlightOrderDetailReq {
+        sn  string `json:"sn"`
+    }
+    UserFlightOrderDetailResp {
+        flightOrderDetail FlightOrder `json:"flightOrderDetail"`
+    }
+)
+

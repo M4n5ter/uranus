@@ -10,9 +10,35 @@ info(
 
 type (
     flightReservationReq {
-
+        FlightNumber    string `json:"flightNumber"`            // 航班号
+        SetOutDate      string `json:"setOutDate"`              // 出发时间
+        IsFirstClass    bool   `json:"isFirstClass"`            // 是否是头等舱/商务舱
+        DepartPosition  string `json:"departPosition"`          // 起飞地点
+        DepartTime      string `json:"departTime"`              // 起飞时间
+        ArrivePosition  string `json:"arrivePosition"`          // 降落地点
+        ArriveTime      string `json:"arriveTime"`              // 降落时间
     }
     flightReservationResp {
+        OrderSn         string `json:"orderSn"`                 // 订单号
+    }
+)
+
+type (
+    flightRefundReq {
+        TicketID uint64 `json:"ticketId"`// 用户要退的票id
+    }
+    flightRefundResp {
 
     }
 )
+
+type (
+    flightChangeReq {
+        TicketID uint64 `json:"ticketId"`// 要改的票id
+        SpaceID  uint64 `json:"spaceId"`// 目标舱位id
+    }
+    flightChangeResp {
+
+    }
+)
+
