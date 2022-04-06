@@ -3,6 +3,13 @@
 # 查看消费者组情况
 # kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --group {group}
 # 命令行消费
-# ./kafka-console-consumer.sh  --bootstrap-server kafka:9092  --topic looklook-log   --from-beginning
+# ./kafka-console-consumer.sh  --bootstrap-server kafka:9092  --topic uranus-log   --from-beginning
 # 命令生产
 # ./kafka-console-producer.sh --bootstrap-server kafka:9092 --topic second
+
+// 日志收集 topic
+kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -partitions 1 --topic uranus-log
+// 支付流水更新状态的通知 topic
+kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -partitions 1 --topic payment-update-paystatus-topic
+// 修改订单状态后发送小程序通知用户 topic
+kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -partitions 1 --topic send-wx-mini-tpl-message
