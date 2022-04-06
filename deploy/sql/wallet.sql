@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localMysql8
+ Source Server         : uranus
  Source Server Type    : MySQL
  Source Server Version : 80028
- Source Host           : 192.168.141.4:3306
+ Source Host           : 127.0.0.1:33069
  Source Schema         : flight
 
  Target Server Type    : MySQL
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 03/04/2022 22:19:53
+ Date: 06/04/2022 14:42:03
 */
 
 SET NAMES utf8mb4;

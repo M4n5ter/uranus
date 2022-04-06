@@ -49,6 +49,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		return nil, err
 	}
+	resp = &types.LoginResp{}
 	resp.AccessToken = loginResp.AccessToken
 	resp.AccessExpire = loginResp.AccessExpire
 	resp.RefreshAfter = loginResp.RefreshAfter

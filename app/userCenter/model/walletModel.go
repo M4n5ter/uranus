@@ -383,7 +383,7 @@ func (m *defaultWalletModel) Delete(session sqlx.Session, id int64) error {
 			return session.Exec(query, id)
 		}
 		return conn.Exec(query, id)
-	}, walletIdKey, walletUserIdKey)
+	}, walletUserIdKey, walletIdKey)
 	return err
 }
 
