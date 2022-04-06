@@ -24,8 +24,8 @@ type (
     }
     RegisterResp {
         AccessToken     string  `json:"accessToken"`
-        AccessExpire    string  `json:"accessExpire"`
-        RefreshAfter    string  `json:"refreshAfter"`
+        AccessExpire    int64   `json:"accessExpire"`
+        RefreshAfter    int64   `json:"refreshAfter"`
     }
 )
 
@@ -36,9 +36,9 @@ type (
         Password    string  `json:"password"`
     }
     LoginResp {
-        AccessToken     string  `json:"accessToken"`
-        AccessExpire    string  `json:"accessExpire"`
-        RefreshAfter    string  `json:"refreshAfter"`
+        AccessToken     string `json:"accessToken"`
+        AccessExpire    int64  `json:"accessExpire"`
+        RefreshAfter    int64  `json:"refreshAfter"`
     }
 )
 

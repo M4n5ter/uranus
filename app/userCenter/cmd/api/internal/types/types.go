@@ -13,14 +13,14 @@ type User struct {
 type RegisterReq struct {
 	Mobile   string `json:"mobile"`
 	Password string `json:"password"`
-	Sex      int64  `json:"sex"`
+	Sex      int64  `json:"sex"` // 性别 0:男 1:女 -1:未知
 	Nickname string `json:"nickname"`
 }
 
 type RegisterResp struct {
 	AccessToken  string `json:"accessToken"`
-	AccessExpire string `json:"accessExpire"`
-	RefreshAfter string `json:"refreshAfter"`
+	AccessExpire int64  `json:"accessExpire"`
+	RefreshAfter int64  `json:"refreshAfter"`
 }
 
 type LoginReq struct {
@@ -31,8 +31,8 @@ type LoginReq struct {
 
 type LoginResp struct {
 	AccessToken  string `json:"accessToken"`
-	AccessExpire string `json:"accessExpire"`
-	RefreshAfter string `json:"refreshAfter"`
+	AccessExpire int64  `json:"accessExpire"`
+	RefreshAfter int64  `json:"refreshAfter"`
 }
 
 type WXMiniAuthReq struct {

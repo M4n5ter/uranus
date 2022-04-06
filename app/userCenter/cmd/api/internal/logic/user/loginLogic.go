@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"uranus/app/userCenter/cmd/rpc/userCenter"
 	"uranus/app/userCenter/model"
@@ -50,6 +49,8 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		return nil, err
 	}
-	_ = copier.Copy(resp, loginResp)
+	resp.AccessToken = loginResp.AccessToken
+	resp.AccessExpire = loginResp.AccessExpire
+	resp.RefreshAfter = loginResp.RefreshAfter
 	return
 }
