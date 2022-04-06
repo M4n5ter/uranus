@@ -21,17 +21,17 @@ WxPayConf:
 UserCenterRpcConf:
   Endpoints:
     - 127.0.0.1:9013
-    NonBlock: true
+  NonBlock: true
 
 PaymentRpcConf:
   Endpoints:
     - 127.0.0.1:9009
-    NonBlock: true
+  NonBlock: true
 
 OrderRpcConf:
   Endpoints:
     - 127.0.0.1:9006
-    NonBlock: true
+  NonBlock: true
 
 DB:
   DataSource: "root:Flight_1@tcp(mysql:3306)/flight?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai"

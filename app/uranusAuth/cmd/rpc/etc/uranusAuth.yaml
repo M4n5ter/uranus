@@ -1,6 +1,5 @@
 Name: auth-rpc
 ListenOn: 0.0.0.0:9011
-Mode: dev
 
 Jwt:
   AccessSecret: ae0536f9-5a19ed505ea0-6450-4606-8e13

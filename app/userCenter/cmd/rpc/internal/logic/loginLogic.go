@@ -8,8 +8,8 @@ import (
 	"uranus/app/userCenter/model"
 	"uranus/common/xerr"
 
-	"uranus/app/usercenter/cmd/rpc/internal/svc"
-	"uranus/app/usercenter/cmd/rpc/pb"
+	"uranus/app/userCenter/cmd/rpc/internal/svc"
+	"uranus/app/userCenter/cmd/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

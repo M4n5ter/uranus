@@ -5,7 +5,7 @@ Mode: dev
 AuthRpc:
   Endpoints:
     - 127.0.0.1:9011
-    NonBlock: true
+  NonBlock: true
 
 Log:
   ServiceName: usercenter-rpc

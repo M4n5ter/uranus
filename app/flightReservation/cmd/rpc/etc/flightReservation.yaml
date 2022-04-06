@@ -18,7 +18,9 @@ Redis:
   Pass: W53t27obgKnZ29gf
 
 FlightInquiryRpcConf:
-  Target: 127.0.0.1:9001
+  Endpoints:
+    - 127.0.0.1:9001
+  NonBlock: true
 
 #监控
 Prometheus:

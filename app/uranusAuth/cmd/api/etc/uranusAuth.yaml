@@ -6,7 +6,7 @@ Port: 9012
 RpcConf:
   Endpoints:
     - 127.0.0.1:9011
-    NonBlock: true
+  NonBlock: true
 
 Jwt:
   AccessSecret: ae0536f9-5a19ed505ea0-6450-4606-8e13

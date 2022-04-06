@@ -140,7 +140,7 @@ services:
       TZ: Asia/Shanghai
     restart: always
     ports:
-      - 2181:2181
+      - 3181:2181
     networks:
       - uranus_net
 

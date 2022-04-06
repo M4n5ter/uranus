@@ -70,7 +70,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 }
 
 // combineAllInfos respType 为 true 时，将 resp 转化为 *pb.QuireBySetOutDateAndFlightNumberResp,否则转化为 *pb.QuireBySetOutDateStartPositionEndPositionResp
-func (l *FlightQuirer) combineAllInfos(flightInfos []*commonModel.FlightInfos, resp any, respType bool) (any, error) {
+func (l *FlightQuirer) combineAllInfos(flightInfos []*commonModel.FlightInfos, resp interface{}, respType bool) (interface{}, error) {
 	// 查询 IsFirstClass Surplus FlightTypes
 	for _, info := range flightInfos {
 		flt, err := l.svcCtx.Flights.FindOneByNumber(info.FlightNumber)
