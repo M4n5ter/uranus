@@ -12,7 +12,7 @@ import (
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/order/model"
 	paymentModel "uranus/app/payment/model"
-	"uranus/app/usercenter/cmd/rpc/usercenter"
+	"uranus/app/usercenter/cmd/rpc/userCenter"
 	"uranus/common/kqueue"
 	"uranus/common/tool"
 	"uranus/common/wxminisub"
@@ -95,7 +95,7 @@ func (l *PaymentUpdateStatusMq) getOrderTradeStateByPaymentTradeState(paymentPay
 //发送小程序模版消息通知用户
 func (l *PaymentUpdateStatusMq) notifyUser(sn, code, departPosition, arrivePosition string, orderTotalPrice, userId int64, departTime, arriveTime time.Time) {
 
-	userCenterResp, err := l.svcCtx.UserCenterClient.GetUserAuthByUserId(l.ctx, &usercenter.GetUserAuthByUserIdReq{
+	userCenterResp, err := l.svcCtx.UserCenterClient.GetUserAuthByUserId(l.ctx, &userCenter.GetUserAuthByUserIdReq{
 		UserId:   userId,
 		AuthType: userCenterModel.UserAuthTypeSmallWX,
 	})

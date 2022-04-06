@@ -15,6 +15,7 @@ NoAuthUrls:
   - "/userCenter/v1/user/register"
   - "/userCenter/v1/user/login"
   - "/userCenter/v1/user/wxMiniAuth"
+  - "/payment/v1/payment/paymentWxPayCallback"
 
 #监控
 Prometheus:

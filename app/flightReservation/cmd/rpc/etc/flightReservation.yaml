@@ -22,6 +22,10 @@ FlightInquiryRpcConf:
     - 127.0.0.1:9001
   NonBlock: true
 
+OrderRpcConf:
+  Endpoints:
+    - 127.0.0.1:9006
+
 #监控
 Prometheus:
   Host: 0.0.0.0

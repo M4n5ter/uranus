@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"uranus/app/userCenter/cmd/rpc/usercenter"
+	"uranus/app/userCenter/cmd/rpc/userCenter"
 	"uranus/common/ctxdata"
 
 	"uranus/app/userCenter/cmd/api/internal/svc"
@@ -29,7 +29,7 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) DetailLogic
 // Detail 获取当前登录用户的信息
 func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, err error) {
 	userId := ctxdata.GetUidFromCtx(l.ctx)
-	userInfoResp, err := l.svcCtx.UsercenterRpcClient.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{Id: userId})
+	userInfoResp, err := l.svcCtx.UsercenterRpcClient.GetUserInfo(l.ctx, &userCenter.GetUserInfoReq{Id: userId})
 	if err != nil {
 		return nil, err
 	}

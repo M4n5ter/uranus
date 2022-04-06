@@ -7,7 +7,7 @@ import (
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/payment/cmd/rpc/payment"
 	"uranus/app/payment/model"
-	"uranus/app/userCenter/cmd/rpc/usercenter"
+	"uranus/app/userCenter/cmd/rpc/userCenter"
 	"uranus/common/ctxdata"
 	"uranus/common/xerr"
 	"uranus/commonModel"
@@ -81,7 +81,7 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	}
 
 	// 获取用户钱包余额
-	getMoneyResp, err := l.svcCtx.UserCenterClient.GetUserMoney(l.ctx, &usercenter.GetUserMoneyReq{UserId: userID})
+	getMoneyResp, err := l.svcCtx.UserCenterClient.GetUserMoney(l.ctx, &userCenter.GetUserMoneyReq{UserId: userID})
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("获取用户钱包余额失败"), "获取用户钱包余额失败 err: %v, userID: %d", err, userID)
 	}
@@ -103,7 +103,7 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	}
 
 	// 扣除用户钱包余额
-	_, err = l.svcCtx.UserCenterClient.UpdateUserWallet(l.ctx, &usercenter.UpdateUserWalletReq{
+	_, err = l.svcCtx.UserCenterClient.UpdateUserWallet(l.ctx, &userCenter.UpdateUserWalletReq{
 		UserId: userID,
 		Money:  getMoneyResp.Money - orderDetail.FlightOrder.OrderTotalPrice,
 	})

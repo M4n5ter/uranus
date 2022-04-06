@@ -13,3 +13,7 @@ kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -part
 kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -partitions 1 --topic payment-update-paystatus-topic
 // 修改订单状态后发送小程序通知用户 topic
 kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -partitions 1 --topic send-wx-mini-tpl-message
+
+
+
+./kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic uranus-log

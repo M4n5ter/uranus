@@ -3,11 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/zeromicro/go-zero/core/conf"
-	"github.com/zeromicro/go-zero/rest"
+
 	"uranus/app/userCenter/cmd/api/internal/config"
 	"uranus/app/userCenter/cmd/api/internal/handler"
 	"uranus/app/userCenter/cmd/api/internal/svc"
+
+	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/rest"
 )
 
 var configFile = flag.String("f", "etc/userCenter.yaml", "the config file")

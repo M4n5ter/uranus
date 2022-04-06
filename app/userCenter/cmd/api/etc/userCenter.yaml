@@ -12,12 +12,12 @@ WxMiniConf:
 UserCenterRpc:
   Endpoints:
     - 127.0.0.1:9013
-    NonBlock: true
+  NonBlock: true
 
 AuthRpc:
   Endpoints:
     - 127.0.0.1:9011
-    NonBlock: true
+  NonBlock: true
 
 #监控
 Prometheus:

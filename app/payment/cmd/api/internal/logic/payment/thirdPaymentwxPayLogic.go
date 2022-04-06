@@ -7,7 +7,7 @@ import (
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/payment/cmd/rpc/payment"
 	"uranus/app/payment/model"
-	"uranus/app/userCenter/cmd/rpc/usercenter"
+	"uranus/app/userCenter/cmd/rpc/userCenter"
 	userCenterModel "uranus/app/userCenter/model"
 	"uranus/common/ctxdata"
 	"uranus/common/xerr"
@@ -66,7 +66,7 @@ func (l *ThirdPaymentwxPayLogic) createWxPrePayOrder(orderSn string, totalPrice 
 
 	// 获取用户 openid
 	userID := ctxdata.GetUidFromCtx(l.ctx)
-	userResp, err := l.svcCtx.UserCenterClient.GetUserAuthByUserId(l.ctx, &usercenter.GetUserAuthByUserIdReq{
+	userResp, err := l.svcCtx.UserCenterClient.GetUserAuthByUserId(l.ctx, &userCenter.GetUserAuthByUserIdReq{
 		UserId:   userID,
 		AuthType: userCenterModel.UserAuthTypeSmallWX,
 	})

@@ -37,7 +37,7 @@ services:
     restart: always
     user: root
     ports:
-      - 9090:9090
+      - "9090:9090"
     networks:
       - uranus_net
 
@@ -71,8 +71,8 @@ services:
       - ./data/elasticsearch/data:/usr/share/elasticsearch/data
     restart: always
     ports:
-    - 9200:9200
-    - 9300:9300
+    - "9200:9200"
+    - "9300:9300"
     networks:
       - uranus_net
 
@@ -140,7 +140,7 @@ services:
       TZ: Asia/Shanghai
     restart: always
     ports:
-      - 3181:2181
+      - "3181:2181"
     networks:
       - uranus_net
 
@@ -149,7 +149,7 @@ services:
     image: wurstmeister/kafka
     container_name: kafka
     ports:
-      - 9092:9092
+      - "9092:9092"
     environment:
       - KAFKA_ADVERTISED_HOST_NAME=kafka
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
@@ -168,7 +168,7 @@ services:
     image: hibiken/asynqmon:latest
     container_name: asynqmon
     ports:
-      - 8980:8080
+      - "8980:8080"
     command:
       - '--redis-addr=redis:6379'
       - '--redis-password=G62m50oigInC30sf'
@@ -187,7 +187,7 @@ services:
       # root 密码
       MYSQL_ROOT_PASSWORD: Flight_1
     ports:
-      - 33069:3306
+      - "33069:3306"
     volumes:
       # 数据挂载
       - ./data/mysql/data:/var/lib/mysql
@@ -209,7 +209,7 @@ services:
     image: redis:6.2.5
     container_name: redis
     ports:
-      - 36379:6379
+      - "36379:6379"
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -231,7 +231,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     ports:
-      - 8888:8081
+      - "8888:8081"
     volumes:
       - ./deploy/nginx/conf.d:/etc/nginx/conf.d
       - ./data/nginx/log:/var/log/nginx
