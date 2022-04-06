@@ -1,29 +1,29 @@
 syntax = "v1"
 
 info(
-    title: "flightReservation API"
-    desc: "航班预定接口"
-    author: "王勇涛"
-    email: "wangyontao2000@qq.com"
-    version: "v1"
+	title: "flightReservation API"
+	desc: "航班预定接口"
+	author: "王勇涛"
+	email: "wangyontao2000@qq.com"
+	version: "v1"
 )
 
 import "types/types.api"
 
 @server(
-    group: flightReservation
-    prefix: flightReservation/v1
+	group: flightReservation
+	prefix: flightReservation/v1
 )
 service flightReservation {
-    @doc "航班预定"
-    @handler flightReservation
-    post /reservation (flightReservationReq) returns (flightReservationResp)
-
-    @doc "退票"
-    @handler flightRefund
-    post /refund (flightRefundReq) returns (flightRefundResp)
-
-    @doc "改票"
-    @handler flightChange
-    post /change (flightChangeReq) returns (flightChangeResp)
+	@doc "航班预定"
+	@handler flightReservation
+	post /reservation (flightReservationReq) returns (flightReservationResp)
+	
+	@doc "退票"
+	@handler flightRefund
+	post /refund (flightRefundReq) returns (flightRefundResp)
+	
+	@doc "改票"
+	@handler flightChange
+	post /change (flightChangeReq) returns (flightChangeResp)
 }

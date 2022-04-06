@@ -28,7 +28,7 @@ type (
         TicketID uint64 `json:"ticketId"`// 用户要退的票id
     }
     flightRefundResp {
-
+        Message string `json:"message"`// 退票成功的提示信息
     }
 )
 
@@ -38,7 +38,7 @@ type (
         SpaceID  uint64 `json:"spaceId"`// 目标舱位id
     }
     flightChangeResp {
-
+        Message string `json:"message"`// 改签成功的提示信息
     }
 )
 
