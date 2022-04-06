@@ -34,12 +34,12 @@ func NewBookAirTicketsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Bo
 // BookAirTickets 给定：用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
 func (l *BookAirTicketsLogic) BookAirTickets(in *pb.BookAirTicketsReq) (*pb.BookAirTicketsResp, error) {
 	// 获取对应航班信息
-	flightInfo, err := l.svcCtx.FlightInfosModel.FindOneByByNumberAndSetOutDateAndPosition(l.svcCtx.FlightInfosModel.RowBuilder(), in.FlightNumber, in.SetOutDate.AsTime(), in.DepartPosition, in.DepartTime.AsTime(), in.ArrivePosition, in.ArriveTime.AsTime())
+	flightInfo, err := l.svcCtx.FlightInfosModel.FindOneByByNumberAndSetOutDateAndPosition(l.svcCtx.FlightInfosModel.RowBuilder(), in.FlightNumber, in.SetOutDate.AsTime().Local(), in.DepartPosition, in.DepartTime.AsTime().Local(), in.ArrivePosition, in.ArriveTime.AsTime().Local())
 	if err != nil {
 		if err == commonModel.ErrNotFound {
-			return nil, errors.Wrapf(ERRNotFound, "err not found:flightreservation-rpc.BookAirTickets.l.svcCtx.FlightInfosModel.FindOneByByNumberAndSetOutDateAndPosition,number: %s, sod: %v,departPosition: %s, departTime: %v, arrivePosition: %s, arriveTime: %v\n", in.FlightNumber, in.SetOutDate.AsTime(), in.DepartPosition, in.DepartTime.AsTime(), in.ArrivePosition, in.ArriveTime.AsTime())
+			return nil, errors.Wrapf(ERRNotFound, "err not found:flightreservation-rpc.BookAirTickets.l.svcCtx.FlightInfosModel.FindOneByByNumberAndSetOutDateAndPosition,number: %s, sod: %v,departPosition: %s, departTime: %v, arrivePosition: %s, arriveTime: %v\n", in.FlightNumber, in.SetOutDate.AsTime().Local(), in.DepartPosition, in.DepartTime.AsTime().Local(), in.ArrivePosition, in.ArriveTime.AsTime().Local())
 		}
-		return nil, errors.Wrapf(ERRDBERR, "DBERR in flightreservation-rpc.BookAirTickets.l.svcCtx.FlightInfosModel.FindOneByByNumberAndSetOutDateAndPosition:number: %s, sod: %v,departPosition: %s, departTime: %v, arrivePosition: %s, arriveTime: %v, err: %v\n", in.FlightNumber, in.SetOutDate.AsTime(), in.DepartPosition, in.DepartTime.AsTime(), in.ArrivePosition, in.ArriveTime.AsTime(), err)
+		return nil, errors.Wrapf(ERRDBERR, "DBERR in flightreservation-rpc.BookAirTickets.l.svcCtx.FlightInfosModel.FindOneByByNumberAndSetOutDateAndPosition:number: %s, sod: %v,departPosition: %s, departTime: %v, arrivePosition: %s, arriveTime: %v, err: %v\n", in.FlightNumber, in.SetOutDate.AsTime().Local(), in.DepartPosition, in.DepartTime.AsTime().Local(), in.ArrivePosition, in.ArriveTime.AsTime().Local(), err)
 	}
 
 	var isFirstClass int64
