@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 06/04/2022 14:42:03
+ Date: 06/04/2022 18:06:02
 */
 
 SET NAMES utf8mb4;
@@ -22,16 +22,16 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `wallet`;
 CREATE TABLE `wallet`  (
-  `id` bigint(0) NOT NULL,
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
-  `delete_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-  `del_state` tinyint(0) NOT NULL,
-  `version` bigint(0) NOT NULL,
-  `user_id` bigint(0) NOT NULL COMMENT '用户id\r\n',
-  `money` bigint(0) NOT NULL COMMENT '余额(分)',
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `delete_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `del_state` tinyint NOT NULL DEFAULT 0,
+  `version` bigint NOT NULL DEFAULT 0,
+  `user_id` bigint NOT NULL COMMENT '用户id\r\n',
+  `money` bigint NOT NULL DEFAULT 0 COMMENT '余额(分)',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_user_id`(`user_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;

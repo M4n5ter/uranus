@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"uranus/app/uranusAuth/cmd/rpc/auth"
 	"uranus/app/userCenter/model"
+	"uranus/common/tool"
 	"uranus/common/xerr"
 
 	"uranus/app/userCenter/cmd/rpc/internal/svc"
@@ -39,12 +40,14 @@ func (l *LoginLogic) Login(in *pb.LoginReq) (*pb.LoginResp, error) {
 		return nil, errors.Wrapf(ErrLoginErr, "mobile doesn't exist, req: %+v", in)
 	}
 	resp := &pb.LoginResp{}
-	if user.Password == in.Password {
+	if user.Password == tool.Md5ByString(in.Password) {
 		authResp, err := l.svcCtx.AuthRpcClient.GenerateToken(l.ctx, &auth.GenerateTokenReq{UserId: user.Id})
 		if err != nil {
 			return nil, err
 		}
 		_ = copier.Copy(resp, authResp)
+	} else {
+		return nil, errors.Wrapf(xerr.NewErrMsg("密码错误"), "invalid password")
 	}
 
 	return resp, nil

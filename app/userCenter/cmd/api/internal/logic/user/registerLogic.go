@@ -14,7 +14,7 @@ import (
 )
 
 var ErrEmptyMobileErr = xerr.NewErrMsg("手机号不能为空")
-var ErrRegisterErr = xerr.NewErrMsg("注册失败")
+var ErrRegisterErr = xerr.NewErrCodeMsg(400, "注册失败，账号已存在")
 
 type RegisterLogic struct {
 	logx.Logger
@@ -45,6 +45,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	if err != nil {
 		return nil, errors.Wrapf(ErrRegisterErr, "err: %v, req: %+v", err, req)
 	}
+	resp = &types.RegisterResp{}
 	_ = copier.Copy(resp, rpcResp)
 	return
 }
