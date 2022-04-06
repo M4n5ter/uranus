@@ -21,8 +21,8 @@ import (
 var (
 	refundAndChangeInfosFieldNames          = builder.RawFieldNames(&RefundAndChangeInfos{})
 	refundAndChangeInfosRows                = strings.Join(refundAndChangeInfosFieldNames, ",")
-	refundAndChangeInfosRowsExpectAutoSet   = strings.Join(stringx.Remove(refundAndChangeInfosFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
-	refundAndChangeInfosRowsWithPlaceHolder = strings.Join(stringx.Remove(refundAndChangeInfosFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	refundAndChangeInfosRowsExpectAutoSet   = strings.Join(stringx.Remove(refundAndChangeInfosFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
+	refundAndChangeInfosRowsWithPlaceHolder = strings.Join(stringx.Remove(refundAndChangeInfosFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheRefundAndChangeInfosIdPrefix               = "cache:refundAndChangeInfos:id:"
 	cacheRefundAndChangeInfosTicketIdIsRefundPrefix = "cache:refundAndChangeInfos:ticketId:isRefund:"

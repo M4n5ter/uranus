@@ -43,7 +43,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 		Nickname: req.Nickname,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(ErrRegisterErr, "req: %+v", req)
+		return nil, errors.Wrapf(ErrRegisterErr, "err: %v, req: %+v", err, req)
 	}
 	_ = copier.Copy(resp, rpcResp)
 	return

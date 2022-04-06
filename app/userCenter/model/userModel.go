@@ -21,8 +21,8 @@ import (
 var (
 	userFieldNames          = builder.RawFieldNames(&User{})
 	userRows                = strings.Join(userFieldNames, ",")
-	userRowsExpectAutoSet   = strings.Join(stringx.Remove(userFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
-	userRowsWithPlaceHolder = strings.Join(stringx.Remove(userFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	userRowsExpectAutoSet   = strings.Join(stringx.Remove(userFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
+	userRowsWithPlaceHolder = strings.Join(stringx.Remove(userFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheUserIdPrefix     = "cache:user:id:"
 	cacheUserMobilePrefix = "cache:user:mobile:"
@@ -34,7 +34,7 @@ type (
 		Insert(session sqlx.Session, data *User) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*User, error)
-		// FindOneByMobile 根据唯一索引查询一条数据，走缓存
+		// FindOneBy 根据唯一索引查询一条数据，走缓存
 		FindOneByMobile(mobile string) (*User, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -83,7 +83,7 @@ type (
 		Mobile     string    `db:"mobile"`
 		Password   string    `db:"password"`
 		Nickname   string    `db:"nickname"`
-		Sex        int64     `db:"sex"` // 性别 0:男 1:女 -1:未知
+		Sex        int64     `db:"sex"` // 性别 0:男 1:女
 		Avatar     string    `db:"avatar"`
 		Info       string    `db:"info"`
 	}
@@ -134,7 +134,7 @@ func (m *defaultUserModel) FindOne(id int64) (*User, error) {
 	}
 }
 
-// FindOneByMobile 根据唯一索引查询一条数据，走缓存
+// FindOneBy 根据唯一索引查询一条数据，走缓存
 func (m *defaultUserModel) FindOneByMobile(mobile string) (*User, error) {
 	userMobileKey := fmt.Sprintf("%s%v", cacheUserMobilePrefix, mobile)
 	var resp User
@@ -379,8 +379,8 @@ func (m *defaultUserModel) Delete(session sqlx.Session, id int64) error {
 		return err
 	}
 
-	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, id)
 	userMobileKey := fmt.Sprintf("%s%v", cacheUserMobilePrefix, data.Mobile)
+	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, id)
 	_, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		if session != nil {

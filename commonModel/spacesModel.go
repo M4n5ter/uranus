@@ -21,8 +21,8 @@ import (
 var (
 	spacesFieldNames          = builder.RawFieldNames(&Spaces{})
 	spacesRows                = strings.Join(spacesFieldNames, ",")
-	spacesRowsExpectAutoSet   = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
-	spacesRowsWithPlaceHolder = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	spacesRowsExpectAutoSet   = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
+	spacesRowsWithPlaceHolder = strings.Join(stringx.Remove(spacesFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheSpacesIdPrefix                       = "cache:spaces:id:"
 	cacheSpacesFlightInfoIdIsFirstClassPrefix = "cache:spaces:flightInfoId:isFirstClass:"

@@ -21,8 +21,8 @@ import (
 var (
 	paymentFieldNames          = builder.RawFieldNames(&Payment{})
 	paymentRows                = strings.Join(paymentFieldNames, ",")
-	paymentRowsExpectAutoSet   = strings.Join(stringx.Remove(paymentFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
-	paymentRowsWithPlaceHolder = strings.Join(stringx.Remove(paymentFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	paymentRowsExpectAutoSet   = strings.Join(stringx.Remove(paymentFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
+	paymentRowsWithPlaceHolder = strings.Join(stringx.Remove(paymentFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cachePaymentIdPrefix = "cache:payment:id:"
 	cachePaymentSnPrefix = "cache:payment:sn:"
@@ -106,8 +106,8 @@ func (m *defaultPaymentModel) Insert(session sqlx.Session, data *Payment) (sql.R
 
 	data.DeleteTime = time.Unix(0, 0)
 
-	paymentIdKey := fmt.Sprintf("%s%v", cachePaymentIdPrefix, data.Id)
 	paymentSnKey := fmt.Sprintf("%s%v", cachePaymentSnPrefix, data.Sn)
+	paymentIdKey := fmt.Sprintf("%s%v", cachePaymentIdPrefix, data.Id)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, paymentRowsExpectAutoSet)
 		if session != nil {

@@ -21,8 +21,8 @@ import (
 var (
 	flightsFieldNames          = builder.RawFieldNames(&Flights{})
 	flightsRows                = strings.Join(flightsFieldNames, ",")
-	flightsRowsExpectAutoSet   = strings.Join(stringx.Remove(flightsFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
-	flightsRowsWithPlaceHolder = strings.Join(stringx.Remove(flightsFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	flightsRowsExpectAutoSet   = strings.Join(stringx.Remove(flightsFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
+	flightsRowsWithPlaceHolder = strings.Join(stringx.Remove(flightsFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheFlightsIdPrefix     = "cache:flights:id:"
 	cacheFlightsNumberPrefix = "cache:flights:number:"

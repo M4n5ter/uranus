@@ -21,8 +21,8 @@ import (
 var (
 	flightOrderFieldNames          = builder.RawFieldNames(&FlightOrder{})
 	flightOrderRows                = strings.Join(flightOrderFieldNames, ",")
-	flightOrderRowsExpectAutoSet   = strings.Join(stringx.Remove(flightOrderFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
-	flightOrderRowsWithPlaceHolder = strings.Join(stringx.Remove(flightOrderFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	flightOrderRowsExpectAutoSet   = strings.Join(stringx.Remove(flightOrderFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
+	flightOrderRowsWithPlaceHolder = strings.Join(stringx.Remove(flightOrderFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheFlightOrderIdPrefix = "cache:flightOrder:id:"
 	cacheFlightOrderSnPrefix = "cache:flightOrder:sn:"
@@ -34,7 +34,7 @@ type (
 		Insert(session sqlx.Session, data *FlightOrder) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*FlightOrder, error)
-		// FindOneBySn 根据唯一索引查询一条数据，走缓存
+		// FindOneBy 根据唯一索引查询一条数据，走缓存
 		FindOneBySn(sn string) (*FlightOrder, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -107,8 +107,8 @@ func (m *defaultFlightOrderModel) Insert(session sqlx.Session, data *FlightOrder
 
 	data.DeleteTime = time.Unix(0, 0)
 
-	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
 	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, data.Sn)
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, flightOrderRowsExpectAutoSet)
 		if session != nil {
@@ -140,7 +140,7 @@ func (m *defaultFlightOrderModel) FindOne(id int64) (*FlightOrder, error) {
 	}
 }
 
-// FindOneBySn 根据唯一索引查询一条数据，走缓存
+// FindOneBy 根据唯一索引查询一条数据，走缓存
 func (m *defaultFlightOrderModel) FindOneBySn(sn string) (*FlightOrder, error) {
 	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, sn)
 	var resp FlightOrder
@@ -166,8 +166,8 @@ func (m *defaultFlightOrderModel) FindOneBySn(sn string) (*FlightOrder, error) {
 
 // Update 修改数据 ,推荐优先使用乐观锁更新
 func (m *defaultFlightOrderModel) Update(session sqlx.Session, data *FlightOrder) (sql.Result, error) {
-	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
 	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, data.Sn)
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, flightOrderRowsWithPlaceHolder)
 		if session != nil {
@@ -186,8 +186,8 @@ func (m *defaultFlightOrderModel) UpdateWithVersion(session sqlx.Session, data *
 	var sqlResult sql.Result
 	var err error
 
-	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
 	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, data.Sn)
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, data.Id)
 	sqlResult, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, flightOrderRowsWithPlaceHolder)
 		if session != nil {
@@ -385,8 +385,8 @@ func (m *defaultFlightOrderModel) Delete(session sqlx.Session, id int64) error {
 		return err
 	}
 
-	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, id)
 	flightOrderSnKey := fmt.Sprintf("%s%v", cacheFlightOrderSnPrefix, data.Sn)
+	flightOrderIdKey := fmt.Sprintf("%s%v", cacheFlightOrderIdPrefix, id)
 	_, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		if session != nil {

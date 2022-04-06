@@ -21,8 +21,8 @@ import (
 var (
 	ticketsFieldNames          = builder.RawFieldNames(&Tickets{})
 	ticketsRows                = strings.Join(ticketsFieldNames, ",")
-	ticketsRowsExpectAutoSet   = strings.Join(stringx.Remove(ticketsFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
-	ticketsRowsWithPlaceHolder = strings.Join(stringx.Remove(ticketsFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	ticketsRowsExpectAutoSet   = strings.Join(stringx.Remove(ticketsFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
+	ticketsRowsWithPlaceHolder = strings.Join(stringx.Remove(ticketsFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheTicketsIdPrefix      = "cache:tickets:id:"
 	cacheTicketsSpaceIdPrefix = "cache:tickets:spaceId:"

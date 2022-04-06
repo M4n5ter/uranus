@@ -21,8 +21,8 @@ import (
 var (
 	walletFieldNames          = builder.RawFieldNames(&Wallet{})
 	walletRows                = strings.Join(walletFieldNames, ",")
-	walletRowsExpectAutoSet   = strings.Join(stringx.Remove(walletFieldNames, "`created_at`", "`updated_at`"), ",")
-	walletRowsWithPlaceHolder = strings.Join(stringx.Remove(walletFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	walletRowsExpectAutoSet   = strings.Join(stringx.Remove(walletFieldNames, "`create_time`", "`update_time`"), ",")
+	walletRowsWithPlaceHolder = strings.Join(stringx.Remove(walletFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheWalletIdPrefix     = "cache:wallet:id:"
 	cacheWalletUserIdPrefix = "cache:wallet:userId:"
@@ -34,7 +34,7 @@ type (
 		Insert(session sqlx.Session, data *Wallet) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*Wallet, error)
-		// FindOneByUserId 根据唯一索引查询一条数据，走缓存
+		// FindOneBy 根据唯一索引查询一条数据，走缓存
 		FindOneByUserId(userId int64) (*Wallet, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -80,8 +80,8 @@ type (
 		DeleteTime time.Time `db:"delete_time"`
 		DelState   int64     `db:"del_state"`
 		Version    int64     `db:"version"`
-		UserId     int64     `db:"user_id"`
-		Money      int64     `db:"money"`
+		UserId     int64     `db:"user_id"` // 用户id
+		Money      int64     `db:"money"`   // 余额(分)
 	}
 )
 
@@ -97,8 +97,8 @@ func (m *defaultWalletModel) Insert(session sqlx.Session, data *Wallet) (sql.Res
 
 	data.DeleteTime = time.Unix(0, 0)
 
-	walletUserIdKey := fmt.Sprintf("%s%v", cacheWalletUserIdPrefix, data.UserId)
 	walletIdKey := fmt.Sprintf("%s%v", cacheWalletIdPrefix, data.Id)
+	walletUserIdKey := fmt.Sprintf("%s%v", cacheWalletUserIdPrefix, data.UserId)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, walletRowsExpectAutoSet)
 		if session != nil {
@@ -130,7 +130,7 @@ func (m *defaultWalletModel) FindOne(id int64) (*Wallet, error) {
 	}
 }
 
-// FindOneByUserId 根据唯一索引查询一条数据，走缓存
+// FindOneBy 根据唯一索引查询一条数据，走缓存
 func (m *defaultWalletModel) FindOneByUserId(userId int64) (*Wallet, error) {
 	walletUserIdKey := fmt.Sprintf("%s%v", cacheWalletUserIdPrefix, userId)
 	var resp Wallet

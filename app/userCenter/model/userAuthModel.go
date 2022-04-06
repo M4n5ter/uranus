@@ -21,8 +21,8 @@ import (
 var (
 	userAuthFieldNames          = builder.RawFieldNames(&UserAuth{})
 	userAuthRows                = strings.Join(userAuthFieldNames, ",")
-	userAuthRowsExpectAutoSet   = strings.Join(stringx.Remove(userAuthFieldNames, "`id`", "`created_at`", "`updated_at`"), ",")
-	userAuthRowsWithPlaceHolder = strings.Join(stringx.Remove(userAuthFieldNames, "`id`", "`created_at`", "`updated_at`"), "=?,") + "=?"
+	userAuthRowsExpectAutoSet   = strings.Join(stringx.Remove(userAuthFieldNames, "`id`", "`create_time`", "`update_time`"), ",")
+	userAuthRowsWithPlaceHolder = strings.Join(stringx.Remove(userAuthFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheUserAuthIdPrefix              = "cache:userAuth:id:"
 	cacheUserAuthAuthTypeAuthKeyPrefix = "cache:userAuth:authType:authKey:"
@@ -35,9 +35,9 @@ type (
 		Insert(session sqlx.Session, data *UserAuth) (sql.Result, error)
 		// FindOne 根据主键查询一条数据，走缓存
 		FindOne(id int64) (*UserAuth, error)
-		// FindOneByAuthTypeAuthKey 根据唯一索引查询一条数据，走缓存
+		// FindOneBy 根据唯一索引查询一条数据，走缓存
 		FindOneByAuthTypeAuthKey(authType string, authKey string) (*UserAuth, error)
-		// FindOneByUserIdAuthType 根据唯一索引查询一条数据，走缓存
+		// FindOneBy 根据唯一索引查询一条数据，走缓存
 		FindOneByUserIdAuthType(userId int64, authType string) (*UserAuth, error)
 		// Delete 删除数据
 		Delete(session sqlx.Session, id int64) error
@@ -101,9 +101,9 @@ func (m *defaultUserAuthModel) Insert(session sqlx.Session, data *UserAuth) (sql
 
 	data.DeleteTime = time.Unix(0, 0)
 
-	userAuthUserIdAuthTypeKey := fmt.Sprintf("%s%v:%v", cacheUserAuthUserIdAuthTypePrefix, data.UserId, data.AuthType)
 	userAuthIdKey := fmt.Sprintf("%s%v", cacheUserAuthIdPrefix, data.Id)
 	userAuthAuthTypeAuthKeyKey := fmt.Sprintf("%s%v:%v", cacheUserAuthAuthTypeAuthKeyPrefix, data.AuthType, data.AuthKey)
+	userAuthUserIdAuthTypeKey := fmt.Sprintf("%s%v:%v", cacheUserAuthUserIdAuthTypePrefix, data.UserId, data.AuthType)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, userAuthRowsExpectAutoSet)
 		if session != nil {
@@ -135,7 +135,7 @@ func (m *defaultUserAuthModel) FindOne(id int64) (*UserAuth, error) {
 	}
 }
 
-// FindOneByAuthTypeAuthKey 根据唯一索引查询一条数据，走缓存
+// FindOneBy 根据唯一索引查询一条数据，走缓存
 func (m *defaultUserAuthModel) FindOneByAuthTypeAuthKey(authType string, authKey string) (*UserAuth, error) {
 	userAuthAuthTypeAuthKeyKey := fmt.Sprintf("%s%v:%v", cacheUserAuthAuthTypeAuthKeyPrefix, authType, authKey)
 	var resp UserAuth
@@ -159,7 +159,7 @@ func (m *defaultUserAuthModel) FindOneByAuthTypeAuthKey(authType string, authKey
 	}
 }
 
-// FindOneByUserIdAuthType 根据唯一索引查询一条数据，走缓存
+// FindOneBy 根据唯一索引查询一条数据，走缓存
 func (m *defaultUserAuthModel) FindOneByUserIdAuthType(userId int64, authType string) (*UserAuth, error) {
 	userAuthUserIdAuthTypeKey := fmt.Sprintf("%s%v:%v", cacheUserAuthUserIdAuthTypePrefix, userId, authType)
 	var resp UserAuth
@@ -185,16 +185,16 @@ func (m *defaultUserAuthModel) FindOneByUserIdAuthType(userId int64, authType st
 
 // Update 修改数据 ,推荐优先使用乐观锁更新
 func (m *defaultUserAuthModel) Update(session sqlx.Session, data *UserAuth) (sql.Result, error) {
-	userAuthIdKey := fmt.Sprintf("%s%v", cacheUserAuthIdPrefix, data.Id)
 	userAuthAuthTypeAuthKeyKey := fmt.Sprintf("%s%v:%v", cacheUserAuthAuthTypeAuthKeyPrefix, data.AuthType, data.AuthKey)
 	userAuthUserIdAuthTypeKey := fmt.Sprintf("%s%v:%v", cacheUserAuthUserIdAuthTypePrefix, data.UserId, data.AuthType)
+	userAuthIdKey := fmt.Sprintf("%s%v", cacheUserAuthIdPrefix, data.Id)
 	return m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userAuthRowsWithPlaceHolder)
 		if session != nil {
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.UserId, data.AuthKey, data.AuthType, data.Id)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.UserId, data.AuthKey, data.AuthType, data.Id)
-	}, userAuthIdKey, userAuthAuthTypeAuthKeyKey, userAuthUserIdAuthTypeKey)
+	}, userAuthAuthTypeAuthKeyKey, userAuthUserIdAuthTypeKey, userAuthIdKey)
 }
 
 // UpdateWithVersion 乐观锁修改数据 ,推荐使用
@@ -206,16 +206,16 @@ func (m *defaultUserAuthModel) UpdateWithVersion(session sqlx.Session, data *Use
 	var sqlResult sql.Result
 	var err error
 
-	userAuthIdKey := fmt.Sprintf("%s%v", cacheUserAuthIdPrefix, data.Id)
 	userAuthAuthTypeAuthKeyKey := fmt.Sprintf("%s%v:%v", cacheUserAuthAuthTypeAuthKeyPrefix, data.AuthType, data.AuthKey)
 	userAuthUserIdAuthTypeKey := fmt.Sprintf("%s%v:%v", cacheUserAuthUserIdAuthTypePrefix, data.UserId, data.AuthType)
+	userAuthIdKey := fmt.Sprintf("%s%v", cacheUserAuthIdPrefix, data.Id)
 	sqlResult, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, userAuthRowsWithPlaceHolder)
 		if session != nil {
 			return session.Exec(query, data.DeleteTime, data.DelState, data.Version, data.UserId, data.AuthKey, data.AuthType, data.Id, oldVersion)
 		}
 		return conn.Exec(query, data.DeleteTime, data.DelState, data.Version, data.UserId, data.AuthKey, data.AuthType, data.Id, oldVersion)
-	}, userAuthIdKey, userAuthAuthTypeAuthKeyKey, userAuthUserIdAuthTypeKey)
+	}, userAuthAuthTypeAuthKeyKey, userAuthUserIdAuthTypeKey, userAuthIdKey)
 	if err != nil {
 		return err
 	}
@@ -406,9 +406,9 @@ func (m *defaultUserAuthModel) Delete(session sqlx.Session, id int64) error {
 		return err
 	}
 
-	userAuthAuthTypeAuthKeyKey := fmt.Sprintf("%s%v:%v", cacheUserAuthAuthTypeAuthKeyPrefix, data.AuthType, data.AuthKey)
 	userAuthUserIdAuthTypeKey := fmt.Sprintf("%s%v:%v", cacheUserAuthUserIdAuthTypePrefix, data.UserId, data.AuthType)
 	userAuthIdKey := fmt.Sprintf("%s%v", cacheUserAuthIdPrefix, id)
+	userAuthAuthTypeAuthKeyKey := fmt.Sprintf("%s%v:%v", cacheUserAuthAuthTypeAuthKeyPrefix, data.AuthType, data.AuthKey)
 	_, err = m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		if session != nil {
