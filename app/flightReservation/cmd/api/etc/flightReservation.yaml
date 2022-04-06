@@ -1,8 +1,26 @@
 Name: flightReservation-api
 Host: 0.0.0.0
-Port: 8888
+Port: 9004
 Mode: dev
 
 Log:
   ServiceName: flightReservation-api
   Level: error
+
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 3005
+  Path: /metrics
+
+#链路追踪
+Telemetry:
+  Name: flightReservation-api
+  Endpoint: http://jaeger:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+FlightReservation:
+  Endpoints:
+    - 127.0.0.1:9003
+  NonBlock: true
