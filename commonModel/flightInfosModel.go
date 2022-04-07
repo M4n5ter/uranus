@@ -3,6 +3,7 @@ package commonModel
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -452,7 +453,6 @@ func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squir
 func (m *defaultFlightInfosModel) FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, sod time.Time, depart, arrive string) ([]*FlightInfos, error) {
 
 	if len(depart) > 0 && len(arrive) > 0 && !sod.IsZero() {
-		sod = sod.Local()
 		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
 		rowBuilder = rowBuilder.Where(" depart_position = ? AND arrive_position = ? AND set_out_date = ? ", depart, arrive, sod.Format("2006-01-02 15:04:05"))
 	} else {
@@ -482,21 +482,22 @@ func (m *defaultFlightInfosModel) FindOneByByNumberAndSetOutDateAndPosition(rowB
 	} else {
 		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
 		sodString := sod.Format("2006-01-02 15:04:05")
-		departTimeString := strings.Split(departTime.Local().String(), " +")[0]
-		arriveTimeString := strings.Split(arriveTime.Local().String(), " +")[0]
-		rowBuilder = rowBuilder.Where("flight_number = ? AND set_out_date = ? AND depart_position = ? AND depart_time = ? AND arrive_position = ? AND arrive_time = ?", number, sodString, depart, departTimeString, arrive, arriveTimeString)
+		departTimeString := strings.Split(departTime.String(), " +")[0]
+		arriveTimeString := strings.Split(arriveTime.String(), " +")[0]
+		rowBuilder = rowBuilder.Where("flight_number = ? AND depart_position = ? AND arrive_position = ?", number, depart, arrive)
+		rowBuilder = rowBuilder.Where(squirrel.Eq{"set_out_date": sodString, "depart_time": departTimeString, "arrive_time": arriveTimeString})
 	}
-
 	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return nil, err
 	}
 
-	var resp *FlightInfos
-	err = m.QueryRowsNoCache(&resp, query, values...)
+	log.Printf("检查点495,query: %s, values: %v", query, values)
+	var resp FlightInfos
+	err = m.QueryRowNoCache(&resp, query, values...)
 	switch err {
 	case nil:
-		return resp, nil
+		return &resp, nil
 	default:
 		return nil, err
 	}
