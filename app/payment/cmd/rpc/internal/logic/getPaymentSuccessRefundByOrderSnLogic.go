@@ -37,7 +37,7 @@ func (l *GetPaymentSuccessRefundByOrderSnLogic) GetPaymentSuccessRefundByOrderSn
 
 	whereBuilder := l.svcCtx.PaymentModel.RowBuilder().Where(
 		"order_sn = ? AND (trade_state = ? OR trade_state = ?)",
-		in.OrderSn, model.PaymentPayTradeStateSuccess, model.PaymentPayTradeStateRefund)
+		in.OrderSn, model.CommonPaySuccess, model.CommonPayRefund)
 
 	payment, err := l.svcCtx.PaymentModel.FindOneByQuery(whereBuilder)
 	if err != nil && err != model.ErrNotFound {
