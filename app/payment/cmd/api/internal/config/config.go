@@ -18,4 +18,8 @@ type Config struct {
 		DataSource string
 	}
 	Cache cache.CacheConf
+
+	DtmServer struct {
+		Target string
+	}
 }

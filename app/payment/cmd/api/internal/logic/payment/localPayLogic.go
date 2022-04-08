@@ -101,6 +101,10 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	}
 
 	// 更新支付状态和扣除钱包余额应使用分布式事务 todo
+	//gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
+	//saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
+	//	Add().
+	//	Add()
 
 	// 更新支付状态
 	_, err = l.svcCtx.PaymentClient.UpdateTradeState(l.ctx, &payment.UpdateTradeStateReq{

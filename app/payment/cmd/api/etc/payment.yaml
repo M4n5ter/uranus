@@ -40,6 +40,9 @@ Cache:
     Pass: W53t27obgKnZ29gf
 
 
+DtmServer:
+  Target: 127.0.0.1:36790
+
 #监控
 Prometheus:
   Host: 0.0.0.0
