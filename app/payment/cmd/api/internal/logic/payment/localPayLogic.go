@@ -2,6 +2,7 @@ package payment
 
 import (
 	"context"
+	"github.com/dtm-labs/dtm/dtmgrpc"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"uranus/app/order/cmd/rpc/order"
@@ -101,10 +102,10 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	}
 
 	// 更新支付状态和扣除钱包余额应使用分布式事务 todo
-	//gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
-	//saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
-	//	Add().
-	//	Add()
+	gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
+	saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
+		Add().
+		Add()
 
 	// 更新支付状态
 	_, err = l.svcCtx.PaymentClient.UpdateTradeState(l.ctx, &payment.UpdateTradeStateReq{

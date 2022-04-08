@@ -77,6 +77,9 @@ service payment {
   //UpdateTradeState 更新交易状态
   rpc UpdateTradeState(UpdateTradeStateReq) returns(UpdateTradeStateResp);
 
+  //UpdateTradeStateRollBack 回滚更新交易状态
+  rpc UpdateTradeStateRollBack(UpdateTradeStateReq) returns(UpdateTradeStateResp);
+
   //GetPaymentSuccessRefundByOrderSn 根据订单sn查询流水记录
   rpc GetPaymentSuccessRefundByOrderSn(GetPaymentSuccessRefundByOrderSnReq) returns(GetPaymentSuccessRefundByOrderSnResp);
 

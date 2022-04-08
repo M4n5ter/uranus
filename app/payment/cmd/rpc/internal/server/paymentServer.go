@@ -40,6 +40,12 @@ func (s *PaymentServer) UpdateTradeState(ctx context.Context, in *pb.UpdateTrade
 	return l.UpdateTradeState(in)
 }
 
+// UpdateTradeStateRollBack 回滚更新交易状态
+func (s *PaymentServer) UpdateTradeStateRollBack(ctx context.Context, in *pb.UpdateTradeStateReq) (*pb.UpdateTradeStateResp, error) {
+	l := logic.NewUpdateTradeStateRollBackLogic(ctx, s.svcCtx)
+	return l.UpdateTradeStateRollBack(in)
+}
+
 // GetPaymentSuccessRefundByOrderSn 根据订单sn查询流水记录
 func (s *PaymentServer) GetPaymentSuccessRefundByOrderSn(ctx context.Context, in *pb.GetPaymentSuccessRefundByOrderSnReq) (*pb.GetPaymentSuccessRefundByOrderSnResp, error) {
 	l := logic.NewGetPaymentSuccessRefundByOrderSnLogic(ctx, s.svcCtx)

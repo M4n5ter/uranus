@@ -30,6 +30,8 @@ type (
 		GetPaymentBySn(ctx context.Context, in *GetPaymentBySnReq, opts ...grpc.CallOption) (*GetPaymentBySnResp, error)
 		// UpdateTradeState 更新交易状态
 		UpdateTradeState(ctx context.Context, in *UpdateTradeStateReq, opts ...grpc.CallOption) (*UpdateTradeStateResp, error)
+		// UpdateTradeStateRollBack 回滚更新交易状态
+		UpdateTradeStateRollBack(ctx context.Context, in *UpdateTradeStateReq, opts ...grpc.CallOption) (*UpdateTradeStateResp, error)
 		// GetPaymentSuccessRefundByOrderSn 根据订单sn查询流水记录
 		GetPaymentSuccessRefundByOrderSn(ctx context.Context, in *GetPaymentSuccessRefundByOrderSnReq, opts ...grpc.CallOption) (*GetPaymentSuccessRefundByOrderSnResp, error)
 	}
@@ -61,6 +63,12 @@ func (m *defaultPayment) GetPaymentBySn(ctx context.Context, in *GetPaymentBySnR
 func (m *defaultPayment) UpdateTradeState(ctx context.Context, in *UpdateTradeStateReq, opts ...grpc.CallOption) (*UpdateTradeStateResp, error) {
 	client := pb.NewPaymentClient(m.cli.Conn())
 	return client.UpdateTradeState(ctx, in, opts...)
+}
+
+// UpdateTradeStateRollBack 回滚更新交易状态
+func (m *defaultPayment) UpdateTradeStateRollBack(ctx context.Context, in *UpdateTradeStateReq, opts ...grpc.CallOption) (*UpdateTradeStateResp, error) {
+	client := pb.NewPaymentClient(m.cli.Conn())
+	return client.UpdateTradeStateRollBack(ctx, in, opts...)
 }
 
 // GetPaymentSuccessRefundByOrderSn 根据订单sn查询流水记录

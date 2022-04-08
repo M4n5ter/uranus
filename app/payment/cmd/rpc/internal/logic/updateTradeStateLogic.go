@@ -2,7 +2,12 @@ package logic
 
 import (
 	"context"
+	"database/sql"
+	"github.com/dtm-labs/dtm/dtmgrpc"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"uranus/app/mqueue/cmd/rpc/mqueue"
 	"uranus/app/payment/model"
 	"uranus/common/xerr"
@@ -58,20 +63,35 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 		}
 	}
 	//3、更新.
-	if len(in.TradeState) > 0 {
-		// 这种情况下是第三方支付，下方信息都是第三方提供，平台内支付无需提供
-		payment.TradeState = in.TradeState
-		payment.TransactionId = in.TransactionId
-		payment.TradeStateDesc = in.TradeStateDesc
-		payment.TradeType = in.TradeType
-	}
-	payment.PayStatus = in.PayStatus
-	payment.PayTime = in.PayTime.AsTime()
-	payment.PayMode = in.PayMode
-	err = l.svcCtx.PaymentModel.UpdateWithVersion(nil, payment)
+
+	// 开一个 barrier
+	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)
+	db, err := sqlx.NewMysql(l.svcCtx.Config.DB.DataSource).RawDB()
 	if err != nil {
-		return nil, errors.Wrapf(ERRDBERR, "更新支付流水失败: payment: %+v", payment)
+		return nil, status.Error(codes.Internal, err.Error())
 	}
+
+	if err := barrier.CallWithDB(db, func(tx *sql.Tx) error {
+		if len(in.TradeState) > 0 {
+			// 这种情况下是第三方支付，下方信息都是第三方提供，平台内支付无需提供
+			payment.TradeState = in.TradeState
+			payment.TransactionId = in.TransactionId
+			payment.TradeStateDesc = in.TradeStateDesc
+			payment.TradeType = in.TradeType
+		}
+		payment.PayStatus = in.PayStatus
+		payment.PayTime = in.PayTime.AsTime()
+		payment.PayMode = in.PayMode
+		err = l.svcCtx.PaymentModel.UpdateWithVersion(sqlx.NewSessionFromTx(tx), payment)
+		if err != nil {
+			return errors.Wrapf(ERRDBERR, "更新支付流水失败: payment: %+v", payment)
+		}
+		return nil
+
+	}); err != nil {
+		return nil, status.Error(codes.Aborted, err.Error())
+	}
+
 	//4、通知其他服务
 	_, err = l.svcCtx.MqueueClient.KqPaymentStatusUpdate(l.ctx, &mqueue.KqPaymentStatusUpdateReq{
 		OrderSn:   payment.OrderSn,
