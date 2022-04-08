@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"github.com/pkg/errors"
+	"time"
 	"uranus/app/payment/model"
 	"uranus/common/uniqueid"
 	"uranus/common/xerr"
@@ -32,7 +33,7 @@ func NewCreatePaymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 // CreatePayment 创建支付预处理订单
 func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreatePaymentResp, error) {
 	// 检查输入合法性
-	if in.UserID < 1 || len(in.OrderSn) == 0 || len(in.PayModel) == 0 || in.PayTotal < 0 {
+	if in.UserID < 1 || len(in.OrderSn) == 0 || len(in.PayMode) == 0 || in.PayTotal < 0 {
 		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input %+v", in)
 	}
 
@@ -41,8 +42,9 @@ func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreateP
 	data.Sn = uniqueid.GenSn(uniqueid.SN_PREFIX_THIRD_PAYMENT)
 	data.OrderSn = in.OrderSn
 	data.UserId = in.UserID
-	data.PayMode = in.PayModel
+	data.PayMode = in.PayMode
 	data.PayTotal = in.PayTotal
+	data.PayTime = time.Now()
 
 	_, err := l.svcCtx.PaymentModel.Insert(nil, data)
 	if err != nil {

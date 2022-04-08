@@ -89,7 +89,7 @@ func (l *ThirdPaymentWxPayCallbackLogic) validAndUpdateState(notifyTransaction *
 
 	// 判断状态
 	payStatus := l.getPayStatusByWXPayTradeState(*notifyTransaction.TradeState)
-	if payStatus == model.PaymentPayTradeStateSuccess {
+	if payStatus == model.ThirdPartyPayTradeStateSuccess {
 		//  支付通知
 
 		// 更新状态
@@ -104,7 +104,7 @@ func (l *ThirdPaymentWxPayCallbackLogic) validAndUpdateState(notifyTransaction *
 			return errors.Wrapf(ErrWxPayCallbackError, "更新流水状态失败, err: %v, notifyTransaction: %+v", err, notifyTransaction)
 		}
 
-	} else if payStatus == model.PaymentPayTradeStateRefund {
+	} else if payStatus == model.ThirdPartyPayTradeStateRefund {
 		// 退款通知 todo 暂时不需要
 	}
 
@@ -115,12 +115,12 @@ func (l *ThirdPaymentWxPayCallbackLogic) getPayStatusByWXPayTradeState(wxPayTrad
 
 	switch wxPayTradeState {
 	case SUCCESS: //支付成功
-		return model.PaymentPayTradeStateSuccess
+		return model.ThirdPartyPayTradeStateSuccess
 	case USERPAYING: //支付中
-		return model.PaymentPayTradeStateWait
+		return model.ThirdPartyPayTradeStateWait
 	case REFUND: //已退款
-		return model.PaymentPayTradeStateRefund
+		return model.ThirdPartyPayTradeStateRefund
 	default:
-		return model.PaymentPayTradeStateFAIL
+		return model.ThirdPartyPayTradeStateFAIL
 	}
 }

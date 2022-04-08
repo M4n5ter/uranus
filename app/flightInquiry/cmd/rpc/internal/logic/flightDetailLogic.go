@@ -107,6 +107,7 @@ func (l *FlightDetailLogic) FlightDetail(in *pb.FlightDetailReq) (*pb.FlightDeta
 	resp.Price = uint64(ticket.Price)
 	resp.Cba = ticket.Cba
 	if ri != nil {
+		resp.RefundInfo = &pb.RefundInfo{}
 		resp.RefundInfo.TimeFees = append(resp.RefundInfo.TimeFees,
 			&pb.TimeFee{Time: timestamppb.New(ri.Time1), Fee: uint64(ri.Fee1)},
 			&pb.TimeFee{Time: timestamppb.New(ri.Time2), Fee: uint64(ri.Fee2)},
@@ -118,6 +119,7 @@ func (l *FlightDetailLogic) FlightDetail(in *pb.FlightDetailReq) (*pb.FlightDeta
 		}
 	}
 	if ci != nil {
+		resp.ChangeInfo = &pb.ChangeInfo{}
 		resp.ChangeInfo.TimeFees = append(resp.ChangeInfo.TimeFees,
 			&pb.TimeFee{Time: timestamppb.New(ci.Time1), Fee: uint64(ci.Fee1)},
 			&pb.TimeFee{Time: timestamppb.New(ci.Time2), Fee: uint64(ci.Fee2)},

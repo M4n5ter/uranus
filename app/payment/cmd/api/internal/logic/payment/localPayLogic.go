@@ -62,6 +62,7 @@ func (l *LocalPayLogic) LocalPay(req *types.LocalPaymentReq) (resp *types.LocalP
 
 // 本地支付
 func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (resp *types.LocalPaymentResp, err error) {
+	resp = &types.LocalPaymentResp{}
 
 	userID := ctxdata.GetUidFromCtx(l.ctx)
 	if userID != orderDetail.FlightOrder.UserId {
@@ -71,7 +72,7 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	// 创建支付流水
 	paymentSn, err := l.svcCtx.PaymentClient.CreatePayment(l.ctx, &payment.CreatePaymentReq{
 		UserID:   userID,
-		PayModel: model.PayModeWalletBalance,
+		PayMode:  model.PayModeWalletBalance,
 		PayTotal: orderDetail.FlightOrder.OrderTotalPrice,
 		OrderSn:  orderDetail.FlightOrder.Sn,
 	})
@@ -88,18 +89,28 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	if getMoneyResp.Money-orderDetail.FlightOrder.OrderTotalPrice < 0 {
 		// 余额不足，更新支付状态为支付失败
 		_, err = l.svcCtx.PaymentClient.UpdateTradeState(l.ctx, &payment.UpdateTradeStateReq{
-			Sn:             paymentSn.Sn,
-			TradeState:     "",
-			TransactionId:  "",
-			TradeType:      "",
-			TradeStateDesc: "",
-			PayStatus:      model.PaymentPayTradeStateFAIL,
-			PayTime:        timestamppb.Now(),
+			Sn:        paymentSn.Sn,
+			PayStatus: model.PaymentLocalPayStatusFAIL,
+			PayTime:   timestamppb.Now(),
+			PayMode:   model.PayModeWalletBalance,
 		})
 		if err != nil {
 			return nil, errors.Wrapf(xerr.NewErrMsg("用户钱包余额不足,应更新支付状态为失败，但操作失败"), "用户钱包余额不足,应更新支付状态为失败，但操作失败 err: %v", err)
 		}
 		return nil, errors.Wrapf(xerr.NewErrMsg("用户钱包余额不足"), "余额不足, orderTotalPrice: %d, userId: %d", orderDetail.FlightOrder.OrderTotalPrice, userID)
+	}
+
+	// 更新支付状态和扣除钱包余额应使用分布式事务 todo
+
+	// 更新支付状态
+	_, err = l.svcCtx.PaymentClient.UpdateTradeState(l.ctx, &payment.UpdateTradeStateReq{
+		Sn:        paymentSn.Sn,
+		PayStatus: model.PaymentLocalPayStatusSuccess,
+		PayTime:   timestamppb.Now(),
+		PayMode:   model.PayModeWalletBalance,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("更新支付状态失败"), "err %v", err)
 	}
 
 	// 扣除用户钱包余额
@@ -110,6 +121,7 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("从用户钱包余额扣除金额失败"), "从用户钱包余额扣除金额失败 userId: %d, err: %v", userID, err)
 	}
+
 	return
 }
 

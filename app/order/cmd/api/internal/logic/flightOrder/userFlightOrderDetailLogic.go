@@ -48,6 +48,8 @@ func (l *UserFlightOrderDetailLogic) UserFlightOrderDetail(req *types.UserFlight
 	fltOrder.DepartTime = timeTools.Timestamppb2TimeStringYMDhms(orderDetailResp.FlightOrder.DepartTime)
 	fltOrder.ArriveTime = timeTools.Timestamppb2TimeStringYMDhms(orderDetailResp.FlightOrder.ArriveTime)
 	fltOrder.CreateTime = timeTools.Timestamppb2TimeStringYMDhms(orderDetailResp.FlightOrder.CreateTime)
+
+	resp = &types.UserFlightOrderDetailResp{FlightOrderDetail: types.FlightOrder{}}
 	resp.FlightOrderDetail = fltOrder
 	return
 }

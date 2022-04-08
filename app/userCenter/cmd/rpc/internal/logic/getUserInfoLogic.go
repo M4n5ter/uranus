@@ -37,7 +37,7 @@ func (l *GetUserInfoLogic) GetUserInfo(in *pb.GetUserInfoReq) (*pb.GetUserInfoRe
 	if userInfoResp == nil {
 		return nil, errors.Wrapf(ErrUnknownErr, "Err: unknown user but it has an userId, id: %d", in.Id)
 	}
-	resp := &pb.GetUserInfoResp{}
-	_ = copier.Copy(resp, userInfoResp)
+	resp := &pb.GetUserInfoResp{User: &pb.User{}}
+	_ = copier.Copy(resp.User, userInfoResp)
 	return resp, nil
 }

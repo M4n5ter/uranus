@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 //req 、resp
 message CreatePaymentReq {
   int64 userID = 1;
-  string payModel = 2;
+  string payMode = 2;
   int64  payTotal = 3; //（分）
   string orderSn = 4;
 }
@@ -25,7 +25,7 @@ message PaymentDetail{
   int64 userID = 3;       // 用户id
   string payMode = 4;      // 支付方式 WECHAT_PAY:微信支付
   string tradeType = 5;    // 第三方支付类型Jsapi\App等
-  int64  tradeState = 6;   // 交易状态  0:未支付 1:支付成功 -1:支付失败
+  string tradeState = 6;   // 第三方交易状态(由第三方回调提供)  0:未支付 1:支付成功 -1:支付失败
   int64  payTotal = 7;     // 支付总金额(分)
   string transactionId = 8; // 第三方支付单号
   string tradeStateDesc = 9; // 支付状态描述
@@ -59,6 +59,7 @@ message UpdateTradeStateReq {
   string   tradeStateDesc = 5;
   int64    payStatus = 6;
   google.protobuf.Timestamp    payTime = 7;
+  string   payMode = 8;
 }
 message UpdateTradeStateResp {
 }

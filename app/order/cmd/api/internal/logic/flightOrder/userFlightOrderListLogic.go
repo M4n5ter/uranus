@@ -38,9 +38,11 @@ func (l *UserFlightOrderListLogic) UserFlightOrderList(req *types.UserFlightOrde
 	}
 
 	list := make([]string, len(listResp.List))
-	for i, _ := range list {
+	for i := range list {
 		list[i] = listResp.List[i].Sn
 	}
+
+	resp = &types.UserFlightOrderListResp{}
 	resp.FlightOrderList = list
 	return
 }

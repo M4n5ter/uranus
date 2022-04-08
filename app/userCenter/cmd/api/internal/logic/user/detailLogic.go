@@ -34,7 +34,7 @@ func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, 
 		return nil, err
 	}
 	userInfo := userInfoResp.User
-	resp = &types.UserInfoResp{}
-	_ = copier.Copy(resp, userInfo)
+	resp = &types.UserInfoResp{UserInfo: types.User{}}
+	_ = copier.Copy(&resp.UserInfo, userInfo)
 	return
 }

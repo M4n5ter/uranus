@@ -72,6 +72,7 @@ func (l *FlightReservationLogic) FlightReservation(req *types.FlightReservationR
 		return nil, errors.Wrapf(ERRBookFail, "Rpc ERR in l.svcCtx.FlightReservationRpcClient.BookAirTickets: err: %v, req: %+v", err, req)
 	}
 
+	resp = &types.FlightReservationResp{}
 	resp.OrderSn = bookResp.OrderSn
 	return
 }

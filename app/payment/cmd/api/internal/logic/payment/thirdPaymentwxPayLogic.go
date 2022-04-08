@@ -81,7 +81,7 @@ func (l *ThirdPaymentwxPayLogic) createWxPrePayOrder(orderSn string, totalPrice 
 	// 创建本地支付流水记录
 	createPaymentResp, err := l.svcCtx.PaymentClient.CreatePayment(l.ctx, &payment.CreatePaymentReq{
 		UserID:   userID,
-		PayModel: model.PayModeWechatPay,
+		PayMode:  model.PayModeWechatPay,
 		PayTotal: totalPrice,
 		OrderSn:  orderSn,
 	})

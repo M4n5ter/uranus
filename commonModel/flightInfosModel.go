@@ -3,7 +3,6 @@ package commonModel
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -492,7 +491,6 @@ func (m *defaultFlightInfosModel) FindOneByByNumberAndSetOutDateAndPosition(rowB
 		return nil, err
 	}
 
-	log.Printf("检查点495,query: %s, values: %v", query, values)
 	var resp FlightInfos
 	err = m.QueryRowNoCache(&resp, query, values...)
 	switch err {

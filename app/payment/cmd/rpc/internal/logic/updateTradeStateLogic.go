@@ -30,7 +30,7 @@ func NewUpdateTradeStateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 // UpdateTradeState 更新交易状态
 func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*pb.UpdateTradeStateResp, error) {
 	// 检查输入合法性
-	if len(in.TradeState) == 0 || len(in.TradeStateDesc) == 0 || len(in.TradeType) == 0 || len(in.Sn) == 0 || len(in.TransactionId) == 0 ||
+	if len(in.TradeStateDesc) == 0 || len(in.TradeType) == 0 || len(in.Sn) == 0 || len(in.TransactionId) == 0 ||
 		in.PayStatus < -1 || in.PayStatus > 2 || !in.PayTime.IsValid() {
 		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input : %+v", in)
 	}
@@ -44,13 +44,13 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 		return nil, errors.Wrapf(xerr.NewErrMsg("流水记录不存在"), "Not Found: Sn: %s", in.Sn)
 	}
 	//2、判断状态
-	if in.PayStatus == model.PaymentPayTradeStateFAIL || in.PayStatus == model.PaymentPayTradeStateSuccess {
+	if in.PayStatus == model.CommonPayFAIL || in.PayStatus == model.CommonPaySuccess {
 		// 想要修改为支付失败或者支付成功的情况
-		if payment.PayStatus != model.PaymentPayTradeStateWait {
+		if payment.PayStatus != model.CommonPayWait {
 			return nil, errors.Wrapf(xerr.NewErrMsg("只有待支付的订单可以修改为支付失败状态或者支付成功状态"), "当前流水状态非待支付状态，不可修改为支付成功或失败, in: %+v", in)
-		} else if in.PayStatus == model.PaymentPayTradeStateRefund {
+		} else if in.PayStatus == model.CommonPayRefund {
 			// 要修改为退款成功的情况
-			if payment.PayStatus != model.PaymentPayTradeStateSuccess {
+			if payment.PayStatus != model.CommonPaySuccess {
 				return nil, errors.Wrapf(xerr.NewErrMsg("只有付款成功的订单才能退款"), "修改支付流水记录为退款失败，当前支付流水未支付成功无法退款 in : %+v", in)
 			}
 		} else {
@@ -58,12 +58,16 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 		}
 	}
 	//3、更新.
-	payment.TradeState = in.TradeState
-	payment.TransactionId = in.TransactionId
-	payment.TradeStateDesc = in.TradeStateDesc
-	payment.TradeType = in.TradeType
+	if len(in.TradeState) > 0 {
+		// 这种情况下是第三方支付，下方信息都是第三方提供，平台内支付无需提供
+		payment.TradeState = in.TradeState
+		payment.TransactionId = in.TransactionId
+		payment.TradeStateDesc = in.TradeStateDesc
+		payment.TradeType = in.TradeType
+	}
 	payment.PayStatus = in.PayStatus
 	payment.PayTime = in.PayTime.AsTime()
+	payment.PayMode = in.PayMode
 	err = l.svcCtx.PaymentModel.UpdateWithVersion(nil, payment)
 	if err != nil {
 		return nil, errors.Wrapf(ERRDBERR, "更新支付流水失败: payment: %+v", payment)
