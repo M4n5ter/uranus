@@ -90,10 +90,10 @@ func (l *TokenLogic) isPass(r *http.Request) (int64, error) {
 
 	parser := token.NewTokenParser()
 	tok, err := parser.ParseToken(r, l.svcCtx.Config.Jwt.AccessSecret, "")
-
 	if err != nil {
 		return 0, errors.Wrapf(ValidateTokenError, "JwtAuthLogic isPass  ParseToken err : %v", err)
 	}
+
 	if tok.Valid {
 		claims, ok := tok.Claims.(jwt.MapClaims) // 解析token中对内容
 		if ok {
@@ -113,5 +113,5 @@ func (l *TokenLogic) isPass(r *http.Request) (int64, error) {
 			return 0, errors.Wrapf(ValidateTokenError, "tok.Claims is invalid ,tok.Claims ：%+v , claims : %+v , ok:%v ", tok.Claims, claims, ok)
 		}
 	}
-	return 0, nil
+	return 0, errors.Wrapf(xerr.NewErrMsg("token 无效"), "无效的token: %+v", tok)
 }

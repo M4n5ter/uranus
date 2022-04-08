@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"uranus/common/middleware"
 
 	"uranus/app/payment/cmd/api/internal/config"
 	"uranus/app/payment/cmd/api/internal/handler"
@@ -25,6 +26,10 @@ func main() {
 	defer server.Stop()
 
 	handler.RegisterHandlers(server, ctx)
+
+	// 全局中间件
+	//将nginx网关验证后的userId设置到ctx中.
+	server.Use(middleware.NewSetUidToCtxMiddleware().Handle)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()

@@ -53,8 +53,13 @@ func (l *FlightReservationLogic) FlightReservation(req *types.FlightReservationR
 		return nil, errors.Wrapf(ERRInvalidInput, "invalid input departTime err: %v", err)
 	}
 
+	userID := ctxdata.GetUidFromCtx(l.ctx)
+	if userID < 1 {
+		return nil, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "userID:%d 小于 1", userID)
+	}
+
 	bookResp, err := l.svcCtx.FlightReservationRpcClient.BookAirTickets(l.ctx, &flightreservation.BookAirTicketsReq{
-		UserID:         ctxdata.GetUidFromCtx(l.ctx),
+		UserID:         userID,
 		FlightNumber:   req.FlightNumber,
 		SetOutDate:     timestamppb.New(sod),
 		IsFirstClass:   req.IsFirstClass,
