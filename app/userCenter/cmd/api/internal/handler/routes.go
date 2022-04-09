@@ -39,6 +39,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.WxMiniAuthHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/userCenter/v1"),
+		rest.WithPrefix("/usercenter/v1"),
 	)
 }

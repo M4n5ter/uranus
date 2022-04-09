@@ -1,4 +1,4 @@
-Name: userCenter-api
+Name: usercenter-api
 Host: 0.0.0.0
 Port: 9014
 
@@ -27,13 +27,13 @@ Prometheus:
 
 #链路追踪
 Telemetry:
-  Name: userCenter-api
+  Name: usercenter-api
   Endpoint: http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
 
 Log:
-  ServiceName: userCenter-api
+  ServiceName: usercenter-api
   Level: error
 
 #CasbinConf:

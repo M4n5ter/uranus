@@ -4,12 +4,12 @@ import (
 	"github.com/zeromicro/go-zero/zrpc"
 	"uranus/app/uranusAuth/cmd/rpc/auth"
 	"uranus/app/userCenter/cmd/api/internal/config"
-	"uranus/app/userCenter/cmd/rpc/userCenter"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 )
 
 type ServiceContext struct {
 	Config              config.Config
-	UsercenterRpcClient userCenter.Usercenter
+	UsercenterRpcClient usercenter.Usercenter
 	AuthRpcClient       auth.Auth
 	//CasbinCachedEnforcer casbin.CachedEnforcer
 }
@@ -17,7 +17,7 @@ type ServiceContext struct {
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:              c,
-		UsercenterRpcClient: userCenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpc)),
+		UsercenterRpcClient: usercenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpc)),
 		AuthRpcClient:       auth.NewAuth(zrpc.MustNewClient(c.AuthRpc)),
 		//CasbinCachedEnforcer: *casbinTools.MustGetEnforcer(c.CasbinConf),
 	}

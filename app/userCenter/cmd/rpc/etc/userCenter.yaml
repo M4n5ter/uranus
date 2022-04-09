@@ -1,4 +1,4 @@
-Name: userCenter-rpc
+Name: usercenter-rpc
 ListenOn: 0.0.0.0:9013
 Mode: dev
 
@@ -8,7 +8,7 @@ AuthRpc:
   NonBlock: true
 
 Log:
-  ServiceName: userCenter-rpc
+  ServiceName: usercenter-rpc
   Level: error
 
 DB:
@@ -30,7 +30,7 @@ Prometheus:
 
 #链路追踪
 Telemetry:
-  Name: userCenter-rpc
+  Name: usercenter-rpc
   Endpoint: http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger

@@ -1,7 +1,7 @@
 syntax = "v1"
 
 info(
-	title: "userCenter"
+	title: "usercenter"
 	desc: "用户中心服务"
 	author: "王勇涛 <wangyongtao2000@qq.com>"
 	version: "v1"

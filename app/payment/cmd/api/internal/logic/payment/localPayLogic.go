@@ -2,13 +2,15 @@ package payment
 
 import (
 	"context"
+	"fmt"
+	"github.com/dtm-labs/dtm/dtmcli/logger"
 	"github.com/dtm-labs/dtm/dtmgrpc"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/payment/cmd/rpc/payment"
 	"uranus/app/payment/model"
-	"uranus/app/userCenter/cmd/rpc/userCenter"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/common/ctxdata"
 	"uranus/common/xerr"
 	"uranus/commonModel"
@@ -83,7 +85,7 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	}
 
 	// 获取用户钱包余额
-	getMoneyResp, err := l.svcCtx.UserCenterClient.GetUserMoney(l.ctx, &userCenter.GetUserMoneyReq{UserId: userID})
+	getMoneyResp, err := l.svcCtx.UserCenterClient.GetUserMoney(l.ctx, &usercenter.GetUserMoneyReq{UserId: userID})
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("获取用户钱包余额失败"), "获取用户钱包余额失败 err: %v, userID: %d", err, userID)
 	}
@@ -101,32 +103,28 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 		return nil, errors.Wrapf(xerr.NewErrMsg("用户钱包余额不足"), "余额不足, orderTotalPrice: %d, userId: %d", orderDetail.FlightOrder.OrderTotalPrice, userID)
 	}
 
-	// 更新支付状态和扣除钱包余额应使用分布式事务 todo
-	gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
-	saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
-		Add().
-		Add()
-
+	// 用分部署事务处理(没有用分布式事务处理库存，后续需要可以加进分布式事务)
 	// 更新支付状态
-	_, err = l.svcCtx.PaymentClient.UpdateTradeState(l.ctx, &payment.UpdateTradeStateReq{
+	updatePaymentReq := &payment.UpdateTradeStateReq{
 		Sn:        paymentSn.Sn,
 		PayStatus: model.PaymentLocalPayStatusSuccess,
 		PayTime:   timestamppb.Now(),
 		PayMode:   model.PayModeWalletBalance,
-	})
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("更新支付状态失败"), "err %v", err)
 	}
-
 	// 扣除用户钱包余额
-	_, err = l.svcCtx.UserCenterClient.UpdateUserWallet(l.ctx, &userCenter.UpdateUserWalletReq{
+	updateUserWalletReq := &usercenter.DeductMoneyReq{
 		UserId: userID,
-		Money:  getMoneyResp.Money - orderDetail.FlightOrder.OrderTotalPrice,
-	})
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("从用户钱包余额扣除金额失败"), "从用户钱包余额扣除金额失败 userId: %d, err: %v", userID, err)
+		Money:  orderDetail.FlightOrder.OrderTotalPrice,
 	}
-
+	gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
+	saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
+		Add(l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeState", l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq).
+		Add(l.svcCtx.Config.UserCenterRpcConf.Target+"/pb.usercenter/DeductMoney", l.svcCtx.Config.UserCenterRpcConf.Target+"/pb.usercenter/DeductMontyRollBack", updateUserWalletReq)
+	err = saga.Submit()
+	logger.FatalIfError(err)
+	if err != nil {
+		return nil, fmt.Errorf("submit data to  dtm-server err  : %+v \n", err)
+	}
 	return
 }
 

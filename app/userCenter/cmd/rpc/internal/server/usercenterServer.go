@@ -56,3 +56,18 @@ func (s *UsercenterServer) UpdateUserWallet(ctx context.Context, in *pb.UpdateUs
 	l := logic.NewUpdateUserWalletLogic(ctx, s.svcCtx)
 	return l.UpdateUserWallet(in)
 }
+
+func (s *UsercenterServer) AddMoney(ctx context.Context, in *pb.AddMoneyReq) (*pb.AddMoneyResp, error) {
+	l := logic.NewAddMoneyLogic(ctx, s.svcCtx)
+	return l.AddMoney(in)
+}
+
+func (s *UsercenterServer) DeductMoney(ctx context.Context, in *pb.DeductMoneyReq) (*pb.DeductMoneyResp, error) {
+	l := logic.NewDeductMoneyLogic(ctx, s.svcCtx)
+	return l.DeductMoney(in)
+}
+
+func (s *UsercenterServer) DeductMontyRollBack(ctx context.Context, in *pb.DeductMoneyReq) (*pb.DeductMoneyResp, error) {
+	l := logic.NewDeductMontyRollBackLogic(ctx, s.svcCtx)
+	return l.DeductMontyRollBack(in)
+}

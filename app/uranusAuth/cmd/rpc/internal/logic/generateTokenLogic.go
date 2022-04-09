@@ -29,7 +29,7 @@ func NewGenerateTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Gen
 	}
 }
 
-// GenerateToken 生成 Token 服务只对 userCenter 开放
+// GenerateToken 生成 Token 服务只对 usercenter 开放
 func (l *GenerateTokenLogic) GenerateToken(in *pb.GenerateTokenReq) (*pb.GenerateTokenResp, error) {
 	now := time.Now().Unix()
 	accessExpire := l.svcCtx.Config.Jwt.AccessExpire

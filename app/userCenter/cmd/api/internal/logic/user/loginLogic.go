@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
-	"uranus/app/userCenter/cmd/rpc/userCenter"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/app/userCenter/model"
 	"uranus/common/xerr"
 
@@ -42,7 +42,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if len(req.Password) == 0 {
 		return nil, errors.Wrapf(ErrInvalidMobileOrPassword, "empty password err, req: %+v", req)
 	}
-	loginResp, err := l.svcCtx.UsercenterRpcClient.Login(l.ctx, &userCenter.LoginReq{
+	loginResp, err := l.svcCtx.UsercenterRpcClient.Login(l.ctx, &usercenter.LoginReq{
 		AuthKey:  req.Mobile,
 		AuthType: req.AuthType,
 		Password: req.Password,

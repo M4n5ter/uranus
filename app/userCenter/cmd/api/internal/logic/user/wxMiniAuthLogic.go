@@ -7,7 +7,7 @@ import (
 	"github.com/silenceper/wechat/v2/cache"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
 	"uranus/app/uranusAuth/cmd/rpc/auth"
-	"uranus/app/userCenter/cmd/rpc/userCenter"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/app/userCenter/model"
 	"uranus/common/tool"
 	"uranus/common/xerr"
@@ -52,7 +52,7 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req *types.WXMiniAuthReq) (resp *types.WXMi
 	}
 	// 绑定用户(未绑定)或者登录(已绑定)
 	var userId int64
-	rpcResp, err := l.svcCtx.UsercenterRpcClient.GetUserAuthByAuthKey(l.ctx, &userCenter.GetUserAuthByAuthKeyReq{
+	rpcResp, err := l.svcCtx.UsercenterRpcClient.GetUserAuthByAuthKey(l.ctx, &usercenter.GetUserAuthByAuthKeyReq{
 		AuthKey:  authResult.OpenID,
 		AuthType: model.UserAuthTypeSmallWX,
 	})
@@ -64,7 +64,7 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req *types.WXMiniAuthReq) (resp *types.WXMi
 		mobile := userData.PhoneNumber
 		// 昵称为 4 位随机字符串加上手机号后四位
 		nickname := tool.Krand(4, tool.KC_RAND_KIND_ALL) + mobile[8:]
-		registerResp, err := l.svcCtx.UsercenterRpcClient.Register(l.ctx, &userCenter.RegisterReq{
+		registerResp, err := l.svcCtx.UsercenterRpcClient.Register(l.ctx, &usercenter.RegisterReq{
 			Mobile:   mobile,
 			Nickname: nickname,
 			Sex:      model.Unknown,

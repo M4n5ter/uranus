@@ -33,7 +33,7 @@ func (l *GetUserMoneyLogic) GetUserMoney(in *pb.GetUserMoneyReq) (*pb.GetUserMon
 
 	wallet, err := l.svcCtx.WalletModel.FindOneByUserId(in.UserId)
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR in userCenter-rpc.GetUserMoney.l.svcCtx.WalletModel.FindOneByUserId, err: %v, userId: %d", err, in.UserId)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR in usercenter-rpc.GetUserMoney.l.svcCtx.WalletModel.FindOneByUserId, err: %v, userId: %d", err, in.UserId)
 	}
 	if wallet == nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("用户没有钱包"), "Not Found wallet, userId: %d", in.UserId)

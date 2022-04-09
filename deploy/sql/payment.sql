@@ -37,7 +37,7 @@ CREATE TABLE `payment`  (
   `transaction_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '第三方支付单号',
   `trade_state_desc` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '支付状态描述',
   `order_sn` char(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '业务单号',
-  `pay_status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '平台内交易状态   -1:支付失败 0:未支付 1:支付成功 2:已退款',
+  `pay_status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '平台内交易状态(第三方支付这条也要有)   -2：回滚废弃 -1:支付失败 0:未支付 1:支付成功 2:已退款',
   `pay_time` datetime NOT NULL DEFAULT '1970-01-01 08:00:00' COMMENT '支付成功时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_sn`(`sn`) USING BTREE

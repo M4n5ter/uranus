@@ -12,9 +12,9 @@ Jwt:
   AccessSecret: ae0536f9-5a19ed505ea0-6450-4606-8e13
 
 NoAuthUrls:
-  - "/userCenter/v1/user/register"
-  - "/userCenter/v1/user/login"
-  - "/userCenter/v1/user/wxMiniAuth"
+  - "/usercenter/v1/user/register"
+  - "/usercenter/v1/user/login"
+  - "/usercenter/v1/user/wxMiniAuth"
   - "/payment/v1/payment/paymentWxPayCallback"
 
 #监控

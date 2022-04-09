@@ -29,7 +29,7 @@ func NewClearTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ClearT
 	}
 }
 
-// ClearToken 清除 Token 服务只对 userCenter 开放
+// ClearToken 清除 Token 服务只对 usercenter 开放
 func (l *ClearTokenLogic) ClearToken(in *pb.ClearTokenReq) (*pb.ClearTokenResp, error) {
 	userTokenKey := fmt.Sprintf(globalkey.CacheUserTokenKey, in.UserId)
 	if _, err := l.svcCtx.RedisClient.Del(userTokenKey); err != nil {

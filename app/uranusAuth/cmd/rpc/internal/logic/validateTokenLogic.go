@@ -29,7 +29,7 @@ func NewValidateTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Val
 	}
 }
 
-// ValidateToken 只对 userCenter 和 uranusAuth api 开放
+// ValidateToken 只对 usercenter 和 uranusAuth api 开放
 func (l *ValidateTokenLogic) ValidateToken(in *pb.ValidateTokenReq) (*pb.ValidateTokenResp, error) {
 	userTokenKey := fmt.Sprintf(globalkey.CacheUserTokenKey, in.UserId)
 	token, err := l.svcCtx.RedisClient.Get(userTokenKey)

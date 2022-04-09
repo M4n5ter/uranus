@@ -101,17 +101,17 @@ scrape_configs:
           job: auth-api
           app: auth-api
           env: dev
-  - job_name: 'userCenter-rpc'
+  - job_name: 'usercenter-rpc'
     static_configs:
       - targets: [ 'uranus:3014' ]
         labels:
-          job: userCenter-rpc
-          app: userCenter-rpc
+          job: usercenter-rpc
+          app: usercenter-rpc
           env: dev
-  - job_name: 'userCenter-api'
+  - job_name: 'usercenter-api'
     static_configs:
       - targets: [ 'uranus:3015' ]
         labels:
-          job: userCenter-api
-          app: userCenter-api
+          job: usercenter-api
+          app: usercenter-api
           env: dev

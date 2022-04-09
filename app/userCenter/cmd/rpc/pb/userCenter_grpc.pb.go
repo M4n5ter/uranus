@@ -29,6 +29,9 @@ type UsercenterClient interface {
 	GetUserAuthByAuthKey(ctx context.Context, in *GetUserAuthByAuthKeyReq, opts ...grpc.CallOption) (*GetUserAuthByAuthKeyResp, error)
 	GetUserMoney(ctx context.Context, in *GetUserMoneyReq, opts ...grpc.CallOption) (*GetUserMoneyResp, error)
 	UpdateUserWallet(ctx context.Context, in *UpdateUserWalletReq, opts ...grpc.CallOption) (*UpdateUserWalletResp, error)
+	AddMoney(ctx context.Context, in *AddMoneyReq, opts ...grpc.CallOption) (*AddMoneyResp, error)
+	DeductMoney(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
+	DeductMontyRollBack(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
 }
 
 type usercenterClient struct {
@@ -102,6 +105,33 @@ func (c *usercenterClient) UpdateUserWallet(ctx context.Context, in *UpdateUserW
 	return out, nil
 }
 
+func (c *usercenterClient) AddMoney(ctx context.Context, in *AddMoneyReq, opts ...grpc.CallOption) (*AddMoneyResp, error) {
+	out := new(AddMoneyResp)
+	err := c.cc.Invoke(ctx, "/pb.usercenter/AddMoney", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usercenterClient) DeductMoney(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error) {
+	out := new(DeductMoneyResp)
+	err := c.cc.Invoke(ctx, "/pb.usercenter/DeductMoney", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usercenterClient) DeductMontyRollBack(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error) {
+	out := new(DeductMoneyResp)
+	err := c.cc.Invoke(ctx, "/pb.usercenter/DeductMontyRollBack", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsercenterServer is the server API for Usercenter service.
 // All implementations must embed UnimplementedUsercenterServer
 // for forward compatibility
@@ -113,6 +143,9 @@ type UsercenterServer interface {
 	GetUserAuthByAuthKey(context.Context, *GetUserAuthByAuthKeyReq) (*GetUserAuthByAuthKeyResp, error)
 	GetUserMoney(context.Context, *GetUserMoneyReq) (*GetUserMoneyResp, error)
 	UpdateUserWallet(context.Context, *UpdateUserWalletReq) (*UpdateUserWalletResp, error)
+	AddMoney(context.Context, *AddMoneyReq) (*AddMoneyResp, error)
+	DeductMoney(context.Context, *DeductMoneyReq) (*DeductMoneyResp, error)
+	DeductMontyRollBack(context.Context, *DeductMoneyReq) (*DeductMoneyResp, error)
 	mustEmbedUnimplementedUsercenterServer()
 }
 
@@ -140,6 +173,15 @@ func (UnimplementedUsercenterServer) GetUserMoney(context.Context, *GetUserMoney
 }
 func (UnimplementedUsercenterServer) UpdateUserWallet(context.Context, *UpdateUserWalletReq) (*UpdateUserWalletResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserWallet not implemented")
+}
+func (UnimplementedUsercenterServer) AddMoney(context.Context, *AddMoneyReq) (*AddMoneyResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMoney not implemented")
+}
+func (UnimplementedUsercenterServer) DeductMoney(context.Context, *DeductMoneyReq) (*DeductMoneyResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeductMoney not implemented")
+}
+func (UnimplementedUsercenterServer) DeductMontyRollBack(context.Context, *DeductMoneyReq) (*DeductMoneyResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeductMontyRollBack not implemented")
 }
 func (UnimplementedUsercenterServer) mustEmbedUnimplementedUsercenterServer() {}
 
@@ -280,6 +322,60 @@ func _Usercenter_UpdateUserWallet_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Usercenter_AddMoney_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddMoneyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).AddMoney(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.usercenter/AddMoney",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).AddMoney(ctx, req.(*AddMoneyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Usercenter_DeductMoney_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeductMoneyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).DeductMoney(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.usercenter/DeductMoney",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).DeductMoney(ctx, req.(*DeductMoneyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Usercenter_DeductMontyRollBack_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeductMoneyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).DeductMontyRollBack(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.usercenter/DeductMontyRollBack",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).DeductMontyRollBack(ctx, req.(*DeductMoneyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Usercenter_ServiceDesc is the grpc.ServiceDesc for Usercenter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -314,6 +410,18 @@ var Usercenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserWallet",
 			Handler:    _Usercenter_UpdateUserWallet_Handler,
+		},
+		{
+			MethodName: "AddMoney",
+			Handler:    _Usercenter_AddMoney_Handler,
+		},
+		{
+			MethodName: "DeductMoney",
+			Handler:    _Usercenter_DeductMoney_Handler,
+		},
+		{
+			MethodName: "DeductMontyRollBack",
+			Handler:    _Usercenter_DeductMontyRollBack_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -35,6 +35,7 @@ var (
 	CommonPaySuccess int64 = 1  // 支付成功
 	CommonPayWait    int64 = 0  // 待支付
 	CommonPayRefund  int64 = 2  // 已退款
+	CommonPayDiscard int64 = -2 // 回滚废弃
 )
 
 var ErrNotFound = sqlx.ErrNotFound

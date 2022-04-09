@@ -19,18 +19,15 @@ WxPayConf:
   NotifyUrl: ""
 
 UserCenterRpcConf:
-  Endpoints:
-    - 127.0.0.1:9013
+  Target: 127.0.0.1:9013
   NonBlock: true
 
 PaymentRpcConf:
-  Endpoints:
-    - 127.0.0.1:9009
+  Target: 127.0.0.1:9009
   NonBlock: true
 
 OrderRpcConf:
-  Endpoints:
-    - 127.0.0.1:9006
+  Target: 127.0.0.1:9006
   NonBlock: true
 
 DB:

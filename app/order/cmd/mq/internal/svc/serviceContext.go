@@ -5,7 +5,7 @@ import (
 	"uranus/app/mqueue/cmd/rpc/mqueue"
 	"uranus/app/order/cmd/mq/internal/config"
 	"uranus/app/order/cmd/rpc/order"
-	"uranus/app/usercenter/cmd/rpc/userCenter"
+	"uranus/app/usercenter/cmd/rpc/usercenter"
 	"uranus/commonModel"
 
 	"github.com/zeromicro/go-zero/zrpc"
@@ -17,7 +17,7 @@ type ServiceContext struct {
 	TicketsModel     commonModel.TicketsModel
 	OrderClient      order.Order
 	MqueueClient     mqueue.Mqueue
-	UserCenterClient userCenter.Usercenter
+	UserCenterClient usercenter.Usercenter
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -27,6 +27,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		TicketsModel:     commonModel.NewTicketsModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		OrderClient:      order.NewOrder(zrpc.MustNewClient(c.OrderRpcConf)),
 		MqueueClient:     mqueue.NewMqueue(zrpc.MustNewClient(c.MqueueRpcConf)),
-		UserCenterClient: userCenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpcConf)),
+		UserCenterClient: usercenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpcConf)),
 	}
 }
