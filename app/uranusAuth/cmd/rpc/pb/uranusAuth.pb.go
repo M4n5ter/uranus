@@ -26,7 +26,7 @@ type GenerateTokenReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId int64 `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	UserId int64 `protobuf:"varint,1,opt,name=userId,proto3" json:"userId"`
 }
 
 func (x *GenerateTokenReq) Reset() {
@@ -73,9 +73,9 @@ type GenerateTokenResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AccessToken  string `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
-	AccessExpire int64  `protobuf:"varint,2,opt,name=accessExpire,proto3" json:"accessExpire,omitempty"`
-	RefreshAfter int64  `protobuf:"varint,3,opt,name=refreshAfter,proto3" json:"refreshAfter,omitempty"`
+	AccessToken  string `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken"`
+	AccessExpire int64  `protobuf:"varint,2,opt,name=accessExpire,proto3" json:"accessExpire"`
+	RefreshAfter int64  `protobuf:"varint,3,opt,name=refreshAfter,proto3" json:"refreshAfter"`
 }
 
 func (x *GenerateTokenResp) Reset() {
@@ -137,7 +137,7 @@ type ClearTokenReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId int64 `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	UserId int64 `protobuf:"varint,1,opt,name=userId,proto3" json:"userId"`
 }
 
 func (x *ClearTokenReq) Reset() {
@@ -184,7 +184,7 @@ type ClearTokenResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok"`
 }
 
 func (x *ClearTokenResp) Reset() {
@@ -232,8 +232,8 @@ type ValidateTokenReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId int64  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
-	Token  string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	UserId int64  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId"`
+	Token  string `protobuf:"bytes,2,opt,name=token,proto3" json:"token"`
 }
 
 func (x *ValidateTokenReq) Reset() {
@@ -287,7 +287,7 @@ type ValidateTokenResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok"`
 }
 
 func (x *ValidateTokenResp) Reset() {

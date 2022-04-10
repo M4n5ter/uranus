@@ -27,10 +27,10 @@ type CreatePaymentReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserID   int64  `protobuf:"varint,1,opt,name=userID,proto3" json:"userID,omitempty"`
-	PayMode  string `protobuf:"bytes,2,opt,name=payMode,proto3" json:"payMode,omitempty"`
-	PayTotal int64  `protobuf:"varint,3,opt,name=payTotal,proto3" json:"payTotal,omitempty"` //（分）
-	OrderSn  string `protobuf:"bytes,4,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	UserID   int64  `protobuf:"varint,1,opt,name=userID,proto3" json:"userID"`
+	PayMode  string `protobuf:"bytes,2,opt,name=payMode,proto3" json:"payMode"`
+	PayTotal int64  `protobuf:"varint,3,opt,name=payTotal,proto3" json:"payTotal"` //（分）
+	OrderSn  string `protobuf:"bytes,4,opt,name=orderSn,proto3" json:"orderSn"`
 }
 
 func (x *CreatePaymentReq) Reset() {
@@ -98,7 +98,7 @@ type CreatePaymentResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"` // 流水记录单号
+	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"` // 流水记录单号
 }
 
 func (x *CreatePaymentResp) Reset() {
@@ -145,20 +145,20 @@ type PaymentDetail struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Sn             string                 `protobuf:"bytes,2,opt,name=sn,proto3" json:"sn,omitempty"`
-	UserID         int64                  `protobuf:"varint,3,opt,name=userID,proto3" json:"userID,omitempty"`                // 用户id
-	PayMode        string                 `protobuf:"bytes,4,opt,name=payMode,proto3" json:"payMode,omitempty"`               // 支付方式 WECHAT_PAY:微信支付
-	TradeType      string                 `protobuf:"bytes,5,opt,name=tradeType,proto3" json:"tradeType,omitempty"`           // 第三方支付类型Jsapi\App等
-	TradeState     string                 `protobuf:"bytes,6,opt,name=tradeState,proto3" json:"tradeState,omitempty"`         // 第三方交易状态(由第三方回调提供)  0:未支付 1:支付成功 -1:支付失败
-	PayTotal       int64                  `protobuf:"varint,7,opt,name=payTotal,proto3" json:"payTotal,omitempty"`            // 支付总金额(分)
-	TransactionId  string                 `protobuf:"bytes,8,opt,name=transactionId,proto3" json:"transactionId,omitempty"`   // 第三方支付单号
-	TradeStateDesc string                 `protobuf:"bytes,9,opt,name=tradeStateDesc,proto3" json:"tradeStateDesc,omitempty"` // 支付状态描述
-	OrderSn        string                 `protobuf:"bytes,10,opt,name=orderSn,proto3" json:"orderSn,omitempty"`              // 业务单号
-	CreateTime     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
-	PayStatus      int64                  `protobuf:"varint,13,opt,name=payStatus,proto3" json:"payStatus,omitempty"` // 平台内交易状态  0:未支付 1:支付成功 2:已退款 -1:支付失败
-	PayTime        *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=payTime,proto3" json:"payTime,omitempty"`      // 支付成功时间
+	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
+	Sn             string                 `protobuf:"bytes,2,opt,name=sn,proto3" json:"sn"`
+	UserID         int64                  `protobuf:"varint,3,opt,name=userID,proto3" json:"userID"`                // 用户id
+	PayMode        string                 `protobuf:"bytes,4,opt,name=payMode,proto3" json:"payMode"`               // 支付方式 WECHAT_PAY:微信支付
+	TradeType      string                 `protobuf:"bytes,5,opt,name=tradeType,proto3" json:"tradeType"`           // 第三方支付类型Jsapi\App等
+	TradeState     string                 `protobuf:"bytes,6,opt,name=tradeState,proto3" json:"tradeState"`         // 第三方交易状态(由第三方回调提供)  0:未支付 1:支付成功 -1:支付失败
+	PayTotal       int64                  `protobuf:"varint,7,opt,name=payTotal,proto3" json:"payTotal"`            // 支付总金额(分)
+	TransactionId  string                 `protobuf:"bytes,8,opt,name=transactionId,proto3" json:"transactionId"`   // 第三方支付单号
+	TradeStateDesc string                 `protobuf:"bytes,9,opt,name=tradeStateDesc,proto3" json:"tradeStateDesc"` // 支付状态描述
+	OrderSn        string                 `protobuf:"bytes,10,opt,name=orderSn,proto3" json:"orderSn"`              // 业务单号
+	CreateTime     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=createTime,proto3" json:"createTime"`
+	UpdateTime     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updateTime,proto3" json:"updateTime"`
+	PayStatus      int64                  `protobuf:"varint,13,opt,name=payStatus,proto3" json:"payStatus"` // 平台内交易状态  0:未支付 1:支付成功 2:已退款 -1:支付失败
+	PayTime        *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=payTime,proto3" json:"payTime"`      // 支付成功时间
 }
 
 func (x *PaymentDetail) Reset() {
@@ -296,7 +296,7 @@ type GetPaymentBySnReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
+	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
 }
 
 func (x *GetPaymentBySnReq) Reset() {
@@ -343,7 +343,7 @@ type GetPaymentBySnResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PaymentDetail *PaymentDetail `protobuf:"bytes,1,opt,name=paymentDetail,proto3" json:"paymentDetail,omitempty"`
+	PaymentDetail *PaymentDetail `protobuf:"bytes,1,opt,name=paymentDetail,proto3" json:"paymentDetail"`
 }
 
 func (x *GetPaymentBySnResp) Reset() {
@@ -390,7 +390,7 @@ type GetPaymentSuccessRefundByOrderSnReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderSn string `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	OrderSn string `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn"`
 }
 
 func (x *GetPaymentSuccessRefundByOrderSnReq) Reset() {
@@ -437,7 +437,7 @@ type GetPaymentSuccessRefundByOrderSnResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PaymentDetail *PaymentDetail `protobuf:"bytes,1,opt,name=paymentDetail,proto3" json:"paymentDetail,omitempty"`
+	PaymentDetail *PaymentDetail `protobuf:"bytes,1,opt,name=paymentDetail,proto3" json:"paymentDetail"`
 }
 
 func (x *GetPaymentSuccessRefundByOrderSnResp) Reset() {
@@ -485,14 +485,14 @@ type UpdateTradeStateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn             string                 `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
-	TradeState     string                 `protobuf:"bytes,2,opt,name=tradeState,proto3" json:"tradeState,omitempty"`
-	TransactionId  string                 `protobuf:"bytes,3,opt,name=transactionId,proto3" json:"transactionId,omitempty"`
-	TradeType      string                 `protobuf:"bytes,4,opt,name=tradeType,proto3" json:"tradeType,omitempty"`
-	TradeStateDesc string                 `protobuf:"bytes,5,opt,name=tradeStateDesc,proto3" json:"tradeStateDesc,omitempty"`
-	PayStatus      int64                  `protobuf:"varint,6,opt,name=payStatus,proto3" json:"payStatus,omitempty"`
-	PayTime        *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=payTime,proto3" json:"payTime,omitempty"`
-	PayMode        string                 `protobuf:"bytes,8,opt,name=payMode,proto3" json:"payMode,omitempty"`
+	Sn             string                 `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
+	TradeState     string                 `protobuf:"bytes,2,opt,name=tradeState,proto3" json:"tradeState"`
+	TransactionId  string                 `protobuf:"bytes,3,opt,name=transactionId,proto3" json:"transactionId"`
+	TradeType      string                 `protobuf:"bytes,4,opt,name=tradeType,proto3" json:"tradeType"`
+	TradeStateDesc string                 `protobuf:"bytes,5,opt,name=tradeStateDesc,proto3" json:"tradeStateDesc"`
+	PayStatus      int64                  `protobuf:"varint,6,opt,name=payStatus,proto3" json:"payStatus"`
+	PayTime        *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=payTime,proto3" json:"payTime"`
+	PayMode        string                 `protobuf:"bytes,8,opt,name=payMode,proto3" json:"payMode"`
 }
 
 func (x *UpdateTradeStateReq) Reset() {

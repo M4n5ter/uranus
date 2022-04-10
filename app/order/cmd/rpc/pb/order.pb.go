@@ -26,20 +26,20 @@ type FlightOrder struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Sn              string                 `protobuf:"bytes,2,opt,name=sn,proto3" json:"sn,omitempty"`
-	UserId          int64                  `protobuf:"varint,3,opt,name=userId,proto3" json:"userId,omitempty"`
-	TicketId        int64                  `protobuf:"varint,4,opt,name=ticketId,proto3" json:"ticketId,omitempty"`
-	DepartPosition  string                 `protobuf:"bytes,5,opt,name=departPosition,proto3" json:"departPosition,omitempty"`
-	DepartTime      *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=departTime,proto3" json:"departTime,omitempty"`
-	ArrivePosition  string                 `protobuf:"bytes,7,opt,name=arrivePosition,proto3" json:"arrivePosition,omitempty"`
-	ArriveTime      *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=arriveTime,proto3" json:"arriveTime,omitempty"`
-	TicketPrice     int64                  `protobuf:"varint,9,opt,name=ticketPrice,proto3" json:"ticketPrice,omitempty"`
-	Discount        int64                  `protobuf:"varint,10,opt,name=discount,proto3" json:"discount,omitempty"`
-	TradeState      int64                  `protobuf:"varint,11,opt,name=tradeState,proto3" json:"tradeState,omitempty"`
-	TradeCode       string                 `protobuf:"bytes,12,opt,name=tradeCode,proto3" json:"tradeCode,omitempty"`
-	OrderTotalPrice int64                  `protobuf:"varint,13,opt,name=orderTotalPrice,proto3" json:"orderTotalPrice,omitempty"`
-	CreateTime      *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
+	Sn              string                 `protobuf:"bytes,2,opt,name=sn,proto3" json:"sn"`
+	UserId          int64                  `protobuf:"varint,3,opt,name=userId,proto3" json:"userId"`
+	TicketId        int64                  `protobuf:"varint,4,opt,name=ticketId,proto3" json:"ticketId"`
+	DepartPosition  string                 `protobuf:"bytes,5,opt,name=departPosition,proto3" json:"departPosition"`
+	DepartTime      *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=departTime,proto3" json:"departTime"`
+	ArrivePosition  string                 `protobuf:"bytes,7,opt,name=arrivePosition,proto3" json:"arrivePosition"`
+	ArriveTime      *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=arriveTime,proto3" json:"arriveTime"`
+	TicketPrice     int64                  `protobuf:"varint,9,opt,name=ticketPrice,proto3" json:"ticketPrice"`
+	Discount        int64                  `protobuf:"varint,10,opt,name=discount,proto3" json:"discount"`
+	TradeState      int64                  `protobuf:"varint,11,opt,name=tradeState,proto3" json:"tradeState"`
+	TradeCode       string                 `protobuf:"bytes,12,opt,name=tradeCode,proto3" json:"tradeCode"`
+	OrderTotalPrice int64                  `protobuf:"varint,13,opt,name=orderTotalPrice,proto3" json:"orderTotalPrice"`
+	CreateTime      *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=createTime,proto3" json:"createTime"`
 }
 
 func (x *FlightOrder) Reset() {
@@ -177,8 +177,8 @@ type CreateFlightOrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	TicketId int64 `protobuf:"varint,1,opt,name=ticketId,proto3" json:"ticketId,omitempty"`
-	UserId   int64 `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
+	TicketId int64 `protobuf:"varint,1,opt,name=ticketId,proto3" json:"ticketId"`
+	UserId   int64 `protobuf:"varint,2,opt,name=userId,proto3" json:"userId"`
 }
 
 func (x *CreateFlightOrderReq) Reset() {
@@ -232,7 +232,7 @@ type CreateFlightOrderResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
+	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
 }
 
 func (x *CreateFlightOrderResp) Reset() {
@@ -279,7 +279,7 @@ type FlightOrderDetailReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
+	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
 }
 
 func (x *FlightOrderDetailReq) Reset() {
@@ -326,7 +326,7 @@ type FlightOrderDetailResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	FlightOrder *FlightOrder `protobuf:"bytes,1,opt,name=flightOrder,proto3" json:"flightOrder,omitempty"`
+	FlightOrder *FlightOrder `protobuf:"bytes,1,opt,name=flightOrder,proto3" json:"flightOrder"`
 }
 
 func (x *FlightOrderDetailResp) Reset() {
@@ -373,8 +373,8 @@ type UpdateFlightOrderTradeStateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn         string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
-	TradeState int64  `protobuf:"varint,2,opt,name=tradeState,proto3" json:"tradeState,omitempty"` //-1: 已取消 0:待支付 1:未使用 2:已使用  3:已过关闭
+	Sn         string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
+	TradeState int64  `protobuf:"varint,2,opt,name=tradeState,proto3" json:"tradeState"` //-1: 已取消 0:待支付 1:未使用 2:已使用  3:已过关闭
 }
 
 func (x *UpdateFlightOrderTradeStateReq) Reset() {
@@ -428,15 +428,15 @@ type UpdateFlightOrderTradeStateResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId          int64                  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
-	Sn              string                 `protobuf:"bytes,3,opt,name=sn,proto3" json:"sn,omitempty"`
-	TradeCode       string                 `protobuf:"bytes,4,opt,name=tradeCode,proto3" json:"tradeCode,omitempty"`
-	OrderTotalPrice int64                  `protobuf:"varint,5,opt,name=orderTotalPrice,proto3" json:"orderTotalPrice,omitempty"`
-	DepartPosition  string                 `protobuf:"bytes,6,opt,name=departPosition,proto3" json:"departPosition,omitempty"`
-	DepartTime      *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=departTime,proto3" json:"departTime,omitempty"`
-	ArrivePosition  string                 `protobuf:"bytes,8,opt,name=arrivePosition,proto3" json:"arrivePosition,omitempty"`
-	ArriveTime      *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=arriveTime,proto3" json:"arriveTime,omitempty"`
+	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
+	UserId          int64                  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId"`
+	Sn              string                 `protobuf:"bytes,3,opt,name=sn,proto3" json:"sn"`
+	TradeCode       string                 `protobuf:"bytes,4,opt,name=tradeCode,proto3" json:"tradeCode"`
+	OrderTotalPrice int64                  `protobuf:"varint,5,opt,name=orderTotalPrice,proto3" json:"orderTotalPrice"`
+	DepartPosition  string                 `protobuf:"bytes,6,opt,name=departPosition,proto3" json:"departPosition"`
+	DepartTime      *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=departTime,proto3" json:"departTime"`
+	ArrivePosition  string                 `protobuf:"bytes,8,opt,name=arrivePosition,proto3" json:"arrivePosition"`
+	ArriveTime      *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=arriveTime,proto3" json:"arriveTime"`
 }
 
 func (x *UpdateFlightOrderTradeStateResp) Reset() {
@@ -539,10 +539,10 @@ type UserFlightOrderListReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	LastId      int64 `protobuf:"varint,1,opt,name=lastId,proto3" json:"lastId,omitempty"`
-	PageSize    int64 `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
-	UserId      int64 `protobuf:"varint,3,opt,name=userId,proto3" json:"userId,omitempty"`
-	TraderState int64 `protobuf:"varint,4,opt,name=traderState,proto3" json:"traderState,omitempty"`
+	LastId      int64 `protobuf:"varint,1,opt,name=lastId,proto3" json:"lastId"`
+	PageSize    int64 `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize"`
+	UserId      int64 `protobuf:"varint,3,opt,name=userId,proto3" json:"userId"`
+	TraderState int64 `protobuf:"varint,4,opt,name=traderState,proto3" json:"traderState"`
 }
 
 func (x *UserFlightOrderListReq) Reset() {
@@ -610,7 +610,7 @@ type UserFlightOrderListResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	List []*FlightOrder `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	List []*FlightOrder `protobuf:"bytes,1,rep,name=list,proto3" json:"list"`
 }
 
 func (x *UserFlightOrderListResp) Reset() {

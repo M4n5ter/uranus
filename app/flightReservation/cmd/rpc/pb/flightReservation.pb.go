@@ -28,21 +28,21 @@ type BookAirTicketsReq struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户的id
-	UserID int64 `protobuf:"varint,1,opt,name=UserID,proto3" json:"UserID,omitempty"`
+	UserID int64 `protobuf:"varint,1,opt,name=UserID,proto3" json:"UserID"`
 	// 航班号，例如MU5735
-	FlightNumber string `protobuf:"bytes,2,opt,name=FlightNumber,proto3" json:"FlightNumber,omitempty"`
+	FlightNumber string `protobuf:"bytes,2,opt,name=FlightNumber,proto3" json:"FlightNumber"`
 	// 出发日期
-	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=SetOutDate,proto3" json:"SetOutDate,omitempty"`
+	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=SetOutDate,proto3" json:"SetOutDate"`
 	// 是否为头等舱/商务舱
-	IsFirstClass bool `protobuf:"varint,4,opt,name=IsFirstClass,proto3" json:"IsFirstClass,omitempty"`
+	IsFirstClass bool `protobuf:"varint,4,opt,name=IsFirstClass,proto3" json:"IsFirstClass"`
 	// 起飞地点
-	DepartPosition string `protobuf:"bytes,5,opt,name=DepartPosition,proto3" json:"DepartPosition,omitempty"`
+	DepartPosition string `protobuf:"bytes,5,opt,name=DepartPosition,proto3" json:"DepartPosition"`
 	// 起飞时间
-	DepartTime *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=DepartTime,proto3" json:"DepartTime,omitempty"`
+	DepartTime *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=DepartTime,proto3" json:"DepartTime"`
 	// 降落地点
-	ArrivePosition string `protobuf:"bytes,7,opt,name=ArrivePosition,proto3" json:"ArrivePosition,omitempty"`
+	ArrivePosition string `protobuf:"bytes,7,opt,name=ArrivePosition,proto3" json:"ArrivePosition"`
 	// 降落时间
-	ArriveTime *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=ArriveTime,proto3" json:"ArriveTime,omitempty"`
+	ArriveTime *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=ArriveTime,proto3" json:"ArriveTime"`
 }
 
 func (x *BookAirTicketsReq) Reset() {
@@ -139,7 +139,7 @@ type BookAirTicketsResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderSn string `protobuf:"bytes,2,opt,name=OrderSn,proto3" json:"OrderSn,omitempty"`
+	OrderSn string `protobuf:"bytes,2,opt,name=OrderSn,proto3" json:"OrderSn"`
 }
 
 func (x *BookAirTicketsResp) Reset() {
@@ -188,9 +188,9 @@ type RefundAirTicketsReq struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户的id
-	UserID int64 `protobuf:"varint,1,opt,name=UserID,proto3" json:"UserID,omitempty"`
+	UserID int64 `protobuf:"varint,1,opt,name=UserID,proto3" json:"UserID"`
 	// 用户拥有的对应票id
-	TicketID uint64 `protobuf:"varint,2,opt,name=TicketID,proto3" json:"TicketID,omitempty"`
+	TicketID uint64 `protobuf:"varint,2,opt,name=TicketID,proto3" json:"TicketID"`
 }
 
 func (x *RefundAirTicketsReq) Reset() {
@@ -285,11 +285,11 @@ type ChangeAirTicketsReq struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户的id
-	UserID int64 `protobuf:"varint,1,opt,name=UserID,proto3" json:"UserID,omitempty"`
+	UserID int64 `protobuf:"varint,1,opt,name=UserID,proto3" json:"UserID"`
 	// 用户拥有的对应票id
-	TicketID uint64 `protobuf:"varint,2,opt,name=TicketID,proto3" json:"TicketID,omitempty"`
+	TicketID uint64 `protobuf:"varint,2,opt,name=TicketID,proto3" json:"TicketID"`
 	// 目标舱位id
-	SpaceID uint64 `protobuf:"varint,3,opt,name=SpaceID,proto3" json:"SpaceID,omitempty"`
+	SpaceID uint64 `protobuf:"varint,3,opt,name=SpaceID,proto3" json:"SpaceID"`
 }
 
 func (x *ChangeAirTicketsReq) Reset() {

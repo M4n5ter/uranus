@@ -27,7 +27,7 @@ type AqDeferFlightOrderCloseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
+	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
 }
 
 func (x *AqDeferFlightOrderCloseReq) Reset() {
@@ -112,8 +112,8 @@ type KqPaymentStatusUpdateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderSn   string `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
-	PayStatus int64  `protobuf:"varint,2,opt,name=payStatus,proto3" json:"payStatus,omitempty"`
+	OrderSn   string `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn"`
+	PayStatus int64  `protobuf:"varint,2,opt,name=payStatus,proto3" json:"payStatus"`
 }
 
 func (x *KqPaymentStatusUpdateReq) Reset() {
@@ -205,10 +205,10 @@ type SendWxMiniSubMessageReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Openid     string            `protobuf:"bytes,1,opt,name=Openid,proto3" json:"Openid,omitempty"`
-	TemplateID string            `protobuf:"bytes,2,opt,name=TemplateID,proto3" json:"TemplateID,omitempty"`
-	Page       string            `protobuf:"bytes,3,opt,name=Page,proto3" json:"Page,omitempty"`
-	Data       map[string]string `protobuf:"bytes,4,rep,name=Data,proto3" json:"Data,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Openid     string            `protobuf:"bytes,1,opt,name=Openid,proto3" json:"Openid"`
+	TemplateID string            `protobuf:"bytes,2,opt,name=TemplateID,proto3" json:"TemplateID"`
+	Page       string            `protobuf:"bytes,3,opt,name=Page,proto3" json:"Page"`
+	Data       map[string]string `protobuf:"bytes,4,rep,name=Data,proto3" json:"Data" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *SendWxMiniSubMessageReq) Reset() {

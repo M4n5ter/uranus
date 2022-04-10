@@ -28,37 +28,37 @@ type FlightInfo struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 航班信息id
-	FlightInfoID int64 `protobuf:"varint,16,opt,name=FlightInfoID,proto3" json:"FlightInfoID,omitempty"`
+	FlightInfoID int64 `protobuf:"varint,16,opt,name=FlightInfoID,proto3" json:"FlightInfoID"`
 	// 航班号，例如MU5735
-	FlightNumber string `protobuf:"bytes,1,opt,name=FlightNumber,proto3" json:"FlightNumber,omitempty"`
+	FlightNumber string `protobuf:"bytes,1,opt,name=FlightNumber,proto3" json:"FlightNumber"`
 	// 出发日期
-	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=SetOutDate,proto3" json:"SetOutDate,omitempty"`
+	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=SetOutDate,proto3" json:"SetOutDate"`
 	// 是否为头等舱/商务舱
-	IsFirstClass bool `protobuf:"varint,3,opt,name=IsFirstClass,proto3" json:"IsFirstClass,omitempty"`
+	IsFirstClass bool `protobuf:"varint,3,opt,name=IsFirstClass,proto3" json:"IsFirstClass"`
 	// 票价(￥)
-	Price uint64 `protobuf:"varint,4,opt,name=Price,proto3" json:"Price,omitempty"`
+	Price uint64 `protobuf:"varint,4,opt,name=Price,proto3" json:"Price"`
 	// 折扣(-n%)
-	Discount int64 `protobuf:"varint,5,opt,name=Discount,proto3" json:"Discount,omitempty"`
+	Discount int64 `protobuf:"varint,5,opt,name=Discount,proto3" json:"Discount"`
 	// 剩余量(由于有超卖可能性，可能为负)
-	Surplus int64 `protobuf:"varint,6,opt,name=Surplus,proto3" json:"Surplus,omitempty"`
+	Surplus int64 `protobuf:"varint,6,opt,name=Surplus,proto3" json:"Surplus"`
 	// 准点率(例如97，表示97%)
-	Punctuality uint32 `protobuf:"varint,7,opt,name=Punctuality,proto3" json:"Punctuality,omitempty"`
+	Punctuality uint32 `protobuf:"varint,7,opt,name=Punctuality,proto3" json:"Punctuality"`
 	// 起飞地点
-	DepartPosition string `protobuf:"bytes,8,opt,name=DepartPosition,proto3" json:"DepartPosition,omitempty"`
+	DepartPosition string `protobuf:"bytes,8,opt,name=DepartPosition,proto3" json:"DepartPosition"`
 	// 起飞时间
-	DepartTime *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=DepartTime,proto3" json:"DepartTime,omitempty"`
+	DepartTime *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=DepartTime,proto3" json:"DepartTime"`
 	// 降落地点
-	ArrivePosition string `protobuf:"bytes,10,opt,name=ArrivePosition,proto3" json:"ArrivePosition,omitempty"`
+	ArrivePosition string `protobuf:"bytes,10,opt,name=ArrivePosition,proto3" json:"ArrivePosition"`
 	// 降落时间
-	ArriveTime *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=ArriveTime,proto3" json:"ArriveTime,omitempty"`
+	ArriveTime *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=ArriveTime,proto3" json:"ArriveTime"`
 	// 退票信息
-	RefundInfo *RefundInfo `protobuf:"bytes,12,opt,name=RefundInfo,proto3" json:"RefundInfo,omitempty"`
+	RefundInfo *RefundInfo `protobuf:"bytes,12,opt,name=RefundInfo,proto3" json:"RefundInfo"`
 	// 改票信息
-	ChangeInfo *ChangeInfo `protobuf:"bytes,13,opt,name=ChangeInfo,proto3" json:"ChangeInfo,omitempty"`
+	ChangeInfo *ChangeInfo `protobuf:"bytes,13,opt,name=ChangeInfo,proto3" json:"ChangeInfo"`
 	// 托运行李额(KG)
-	Cba int64 `protobuf:"varint,14,opt,name=Cba,proto3" json:"Cba,omitempty"`
+	Cba int64 `protobuf:"varint,14,opt,name=Cba,proto3" json:"Cba"`
 	// 机型
-	FlightType string `protobuf:"bytes,15,opt,name=FlightType,proto3" json:"FlightType,omitempty"`
+	FlightType string `protobuf:"bytes,15,opt,name=FlightType,proto3" json:"FlightType"`
 }
 
 func (x *FlightInfo) Reset() {
@@ -211,8 +211,8 @@ type TimeFee struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Time *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=Time,proto3" json:"Time,omitempty"`
-	Fee  uint64                 `protobuf:"varint,2,opt,name=Fee,proto3" json:"Fee,omitempty"`
+	Time *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=Time,proto3" json:"Time"`
+	Fee  uint64                 `protobuf:"varint,2,opt,name=Fee,proto3" json:"Fee"`
 }
 
 func (x *TimeFee) Reset() {
@@ -267,7 +267,7 @@ type RefundInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	TimeFees []*TimeFee `protobuf:"bytes,1,rep,name=TimeFees,proto3" json:"TimeFees,omitempty"`
+	TimeFees []*TimeFee `protobuf:"bytes,1,rep,name=TimeFees,proto3" json:"TimeFees"`
 }
 
 func (x *RefundInfo) Reset() {
@@ -315,7 +315,7 @@ type ChangeInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	TimeFees []*TimeFee `protobuf:"bytes,1,rep,name=TimeFees,proto3" json:"TimeFees,omitempty"`
+	TimeFees []*TimeFee `protobuf:"bytes,1,rep,name=TimeFees,proto3" json:"TimeFees"`
 }
 
 func (x *ChangeInfo) Reset() {
@@ -364,9 +364,9 @@ type QuireBySetOutDateAndFlightNumberReq struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 航班号，例如MU5735
-	FlightNumber string `protobuf:"bytes,1,opt,name=FlightNumber,proto3" json:"FlightNumber,omitempty"`
+	FlightNumber string `protobuf:"bytes,1,opt,name=FlightNumber,proto3" json:"FlightNumber"`
 	// 出发日期
-	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=SetOutDate,proto3" json:"SetOutDate,omitempty"`
+	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=SetOutDate,proto3" json:"SetOutDate"`
 }
 
 func (x *QuireBySetOutDateAndFlightNumberReq) Reset() {
@@ -422,7 +422,7 @@ type QuireBySetOutDateAndFlightNumberResp struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 查询结果
-	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos,omitempty"`
+	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos"`
 }
 
 func (x *QuireBySetOutDateAndFlightNumberResp) Reset() {
@@ -471,11 +471,11 @@ type QuireBySetOutDateStartPositionEndPositionReq struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 出发日期
-	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=SetOutDate,proto3" json:"SetOutDate,omitempty"`
+	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=SetOutDate,proto3" json:"SetOutDate"`
 	// 起飞地点
-	DepartPosition string `protobuf:"bytes,2,opt,name=DepartPosition,proto3" json:"DepartPosition,omitempty"`
+	DepartPosition string `protobuf:"bytes,2,opt,name=DepartPosition,proto3" json:"DepartPosition"`
 	// 降落地点
-	ArrivePosition string `protobuf:"bytes,3,opt,name=ArrivePosition,proto3" json:"ArrivePosition,omitempty"`
+	ArrivePosition string `protobuf:"bytes,3,opt,name=ArrivePosition,proto3" json:"ArrivePosition"`
 }
 
 func (x *QuireBySetOutDateStartPositionEndPositionReq) Reset() {
@@ -538,7 +538,7 @@ type QuireBySetOutDateStartPositionEndPositionResp struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 查询结果
-	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos,omitempty"`
+	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos"`
 }
 
 func (x *QuireBySetOutDateStartPositionEndPositionResp) Reset() {
@@ -587,7 +587,7 @@ type FlightDetailReq struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 票id
-	TicketID int64 `protobuf:"varint,1,opt,name=ticketID,proto3" json:"ticketID,omitempty"`
+	TicketID int64 `protobuf:"varint,1,opt,name=ticketID,proto3" json:"ticketID"`
 }
 
 func (x *FlightDetailReq) Reset() {
@@ -635,7 +635,7 @@ type FlightDetailResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	FlightInfo *FlightInfo `protobuf:"bytes,3,opt,name=FlightInfo,proto3" json:"FlightInfo,omitempty"`
+	FlightInfo *FlightInfo `protobuf:"bytes,3,opt,name=FlightInfo,proto3" json:"FlightInfo"`
 }
 
 func (x *FlightDetailResp) Reset() {
