@@ -101,13 +101,14 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 			PayMode:   model.PayModeWalletBalance,
 		}
 		gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
-		saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).Add(l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeState", l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq)
+		saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
+			Add(l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeState", l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq)
 		err = saga.Submit()
 		logger.FatalIfError(err)
 		if err != nil {
 			return nil, fmt.Errorf("submit data to  dtm-server err  : %+v \n", err)
 		}
-		return nil, errors.Wrapf(xerr.NewErrMsg("用户钱包余额不足"), "余额不足, orderTotalPrice: %d, userId: %d", orderDetail.FlightOrder.OrderTotalPrice, userID)
+		return nil, errors.Wrapf(xerr.NewErrMsg("用户钱包余额不足"), "余额不足, orderTotalPrice: %d, userId: %d, user's money: %d", orderDetail.FlightOrder.OrderTotalPrice, userID, getMoneyResp.Money)
 	}
 
 	// 用分布式事务处理
