@@ -76,13 +76,7 @@ func (l *BookAirTicketsLogic) BookAirTickets(in *pb.BookAirTicketsReq) (*pb.Book
 		if err != nil {
 			return nil, err
 		}
-		//更新库存移至创建订单内，用事务处理
-		//更新库存,若超时未支付、支付失败或退款， 会在响应代码块将占用的库存释放
-		//space.Surplus = space.Surplus - 1
-		//err = l.svcCtx.SpacesModel.UpdateWithVersion(session, space)
-		//if err != nil {
-		//	return err
-		//}
+
 		resp = orderResp.Sn
 	} else {
 		// 库存不足
