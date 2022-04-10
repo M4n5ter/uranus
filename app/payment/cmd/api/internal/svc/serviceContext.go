@@ -6,6 +6,7 @@ import (
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/payment/cmd/api/internal/config"
 	"uranus/app/payment/cmd/rpc/payment"
+	"uranus/app/stock/cmd/rpc/stock"
 	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/commonModel"
 )
@@ -15,6 +16,7 @@ type ServiceContext struct {
 	UserCenterClient usercenter.Usercenter
 	PaymentClient    payment.Payment
 	OrderClient      order.Order
+	StockClient      stock.Stock
 	TicketsModel     commonModel.TicketsModel
 	SpacesModel      commonModel.SpacesModel
 }
@@ -25,6 +27,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserCenterClient: usercenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpcConf)),
 		PaymentClient:    payment.NewPayment(zrpc.MustNewClient(c.PaymentRpcConf)),
 		OrderClient:      order.NewOrder(zrpc.MustNewClient(c.OrderRpcConf)),
+		StockClient:      stock.NewStock(zrpc.MustNewClient(c.StockRpcConf)),
 		TicketsModel:     commonModel.NewTicketsModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		SpacesModel:      commonModel.NewSpacesModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 	}

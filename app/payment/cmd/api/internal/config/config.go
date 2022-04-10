@@ -13,6 +13,7 @@ type Config struct {
 	UserCenterRpcConf zrpc.RpcClientConf
 	PaymentRpcConf    zrpc.RpcClientConf
 	OrderRpcConf      zrpc.RpcClientConf
+	StockRpcConf      zrpc.RpcClientConf
 
 	DB struct {
 		DataSource string
