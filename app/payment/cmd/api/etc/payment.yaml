@@ -30,6 +30,10 @@ OrderRpcConf:
   Target: 127.0.0.1:9006
   NonBlock: true
 
+StockRpcConf:
+  Target: 127.0.0.1:9015
+  NonBlock: true
+
 DB:
   DataSource: "root:Flight_1@tcp(mysql:3306)/flight?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai"
 Cache:
