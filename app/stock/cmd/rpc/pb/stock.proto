@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+// 加库存
+message AddStockByTicketIDReq {
+  int64 ticketID  = 1;
+  int64 num       = 2;
+}
+message AddStockBySpaceIDReq {
+  int64 spaceID   = 1;
+  int64 num       = 2;
+}
+message AddStockResp {}
+// 加库存
+
+// 扣库存
+message DeductStockByTicketIDReq {
+  int64 ticketID  = 1;
+  int64 num       = 2;
+}
+message DeductStockBySpaceIDReq {
+  int64 spaceID   = 1;
+  int64 num       = 2;
+}
+message DeductStockResp {}
+// 扣库存
+
+
+service stock {
+  //通过 ticketID 加库存
+  rpc AddStockByTicketID(AddStockByTicketIDReq) returns(AddStockResp);
+  //通过 ticketID 加库存 rollback
+  rpc AddStockByTicketIDRollBack(AddStockByTicketIDReq) returns(AddStockResp);
+  //通过 spaceID 加库存
+  rpc AddStockBySpaceID(AddStockBySpaceIDReq) returns(AddStockResp);
+  //通过 spaceID 加库存 rollback
+  rpc AddStockBySpaceIDRollBack(AddStockBySpaceIDReq) returns(AddStockResp);
+
+  //通过 ticketID 扣库存
+  rpc DeductStockByTicketID(DeductStockByTicketIDReq) returns(DeductStockResp);
+  //通过 ticketID 扣库存 rollback
+  rpc DeductStockByTicketIDRollBack(DeductStockByTicketIDReq) returns(DeductStockResp);
+  //通过 spaceID 扣库存
+  rpc DeductStockBySpaceID(DeductStockBySpaceIDReq) returns(DeductStockResp);
+  //通过 spaceID 扣库存 rollback
+  rpc DeductStockBySpaceIDRollBack(DeductStockBySpaceIDReq) returns(DeductStockResp);
+}

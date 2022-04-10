@@ -1,0 +1,26 @@
+Name: stock-rpc
+ListenOn: 0.0.0.0:9001
+Mode: dev
+
+Log:
+  ServiceName: stock-rpc
+  Level: error
+
+DB:
+  DataSource: "root:Flight_1@tcp(mysql:3306)/flight?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai"
+Cache:
+  - Host: redis:6379
+    Pass: W53t27obgKnZ29gf
+
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 3016
+  Path: /metrics
+
+#链路追踪
+Telemetry:
+  Name: stock-rpc
+  Endpoint: http://jaeger:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
