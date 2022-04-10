@@ -115,3 +115,10 @@ scrape_configs:
           job: usercenter-api
           app: usercenter-api
           env: dev
+  - job_name: 'stock-rpc'
+    static_configs:
+      - targets: [ 'uranus:3016' ]
+        labels:
+          job: stock-rpc
+          app: stock-rpc
+          env: dev
