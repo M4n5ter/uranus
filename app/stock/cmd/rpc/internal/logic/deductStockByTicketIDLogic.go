@@ -33,12 +33,12 @@ func NewDeductStockByTicketIDLogic(ctx context.Context, svcCtx *svc.ServiceConte
 func (l *DeductStockByTicketIDLogic) DeductStockByTicketID(in *pb.DeductStockByTicketIDReq) (*pb.DeductStockResp, error) {
 
 	if in.Num < 0 {
-		return nil, errors.Wrapf(ERRInvalidInput, "扣的库存数量不能为负数")
+		return nil, status.Error(codes.Aborted, errors.Wrapf(ERRInvalidInput, "扣的库存数量不能为负数").Error())
 	}
 
 	space, err := l.svcCtx.GetSpaceByTicketID(in.TicketID)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Aborted, err.Error())
 	}
 
 	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)
@@ -48,11 +48,10 @@ func (l *DeductStockByTicketIDLogic) DeductStockByTicketID(in *pb.DeductStockByT
 	}
 
 	if err := barrier.CallWithDB(db, func(tx *sql.Tx) error {
-		space.Surplus = space.Surplus - in.Num
-		space.Surplus = space.Surplus - in.Num
-		if space.Surplus < 0 {
+		if space.Surplus-space.LockedStock < 0 {
 			return errors.Wrapf(xerr.NewErrMsg("库存不足"), "")
 		}
+		space.Surplus, space.LockedStock = space.Surplus-in.Num, space.LockedStock-in.Num
 		err = l.svcCtx.SpacesModel.UpdateWithVersion(sqlx.NewSessionFromTx(tx), space)
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrMsg("更新库存失败"), "DBERR: %v", err)

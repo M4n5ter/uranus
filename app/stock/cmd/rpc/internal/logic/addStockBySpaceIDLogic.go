@@ -36,15 +36,15 @@ func NewAddStockBySpaceIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 // 通过 spaceID 加库存
 func (l *AddStockBySpaceIDLogic) AddStockBySpaceID(in *pb.AddStockBySpaceIDReq) (*pb.AddStockResp, error) {
 	if in.Num < 0 {
-		return nil, errors.Wrapf(ERRInvalidInput, "加的库存数量不能为负数")
+		return nil, status.Error(codes.Aborted, errors.Wrapf(ERRInvalidInput, "加的库存数量不能为负数").Error())
 	}
 
 	space, err := l.svcCtx.SpacesModel.FindOne(in.SpaceID)
 	if err != nil && err != commonModel.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
 	}
 	if space == nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("找不到对应舱位"), "spaceID: %d", in.SpaceID)
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("找不到对应舱位"), "spaceID: %d", in.SpaceID).Error())
 	}
 
 	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)

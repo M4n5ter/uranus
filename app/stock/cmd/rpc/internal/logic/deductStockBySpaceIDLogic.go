@@ -35,15 +35,15 @@ func NewDeductStockBySpaceIDLogic(ctx context.Context, svcCtx *svc.ServiceContex
 func (l *DeductStockBySpaceIDLogic) DeductStockBySpaceID(in *pb.DeductStockBySpaceIDReq) (*pb.DeductStockResp, error) {
 
 	if in.Num < 0 {
-		return nil, errors.Wrapf(ERRInvalidInput, "扣的库存数量不能为负数")
+		return nil, status.Error(codes.Aborted, errors.Wrapf(ERRInvalidInput, "扣的库存数量不能为负数").Error())
 	}
 
 	space, err := l.svcCtx.SpacesModel.FindOne(in.SpaceID)
 	if err != nil && err != commonModel.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
 	}
 	if space == nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("找不到对应舱位"), "spaceID: %d", in.SpaceID)
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("找不到对应舱位"), "spaceID: %d", in.SpaceID).Error())
 	}
 
 	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)
@@ -53,10 +53,10 @@ func (l *DeductStockBySpaceIDLogic) DeductStockBySpaceID(in *pb.DeductStockBySpa
 	}
 
 	if err := barrier.CallWithDB(db, func(tx *sql.Tx) error {
-		space.Surplus = space.Surplus - in.Num
-		if space.Surplus < 0 {
+		if space.Surplus-space.LockedStock < 0 {
 			return errors.Wrapf(xerr.NewErrMsg("库存不足"), "")
 		}
+		space.Surplus, space.LockedStock = space.Surplus-in.Num, space.LockedStock-in.Num
 		err = l.svcCtx.SpacesModel.UpdateWithVersion(sqlx.NewSessionFromTx(tx), space)
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrMsg("更新库存失败"), "DBERR: %v", err)

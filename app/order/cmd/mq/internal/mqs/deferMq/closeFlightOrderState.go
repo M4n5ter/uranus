@@ -36,7 +36,7 @@ func (l *AsynqTask) closeFlightOrderStateMqHandler(ctx context.Context, t *asynq
 			return errors.Wrapf(xerr.NewErrMsg("关闭订单失败"), "closeFlightOrderStateMqHandler 关闭订单失败  err:%v, sn:%s ", err, p.Sn)
 		}
 	}
-	// 恢复该订单占用的库存
+	// 恢复该订单锁定的库存
 	ticket, err := l.svcCtx.TicketsModel.FindOne(resp.FlightOrder.TicketId)
 	if err != nil && err != commonModel.ErrNotFound {
 		return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
@@ -51,7 +51,7 @@ func (l *AsynqTask) closeFlightOrderStateMqHandler(ctx context.Context, t *asynq
 	if ticket == nil {
 		return errors.Wrapf(xerr.NewErrMsg("舱位不存在"), "舱位不存在, spaceID: %d", ticket.SpaceId)
 	}
-	space.Surplus = space.Surplus + 1
+	space.LockedStock = space.LockedStock - 1
 	err = l.svcCtx.SpacesModel.UpdateWithVersion(nil, space)
 	if err != nil {
 		return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "更新库存失败 space: %+v", space)

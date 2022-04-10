@@ -32,12 +32,12 @@ func NewAddStockByTicketIDLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 // 通过 ticketID 加库存
 func (l *AddStockByTicketIDLogic) AddStockByTicketID(in *pb.AddStockByTicketIDReq) (*pb.AddStockResp, error) {
 	if in.Num < 0 {
-		return nil, errors.Wrapf(ERRInvalidInput, "加的库存数量不能为负数")
+		return nil, status.Error(codes.Aborted, errors.Wrapf(ERRInvalidInput, "加的库存数量不能为负数").Error())
 	}
 
 	space, err := l.svcCtx.GetSpaceByTicketID(in.TicketID)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Aborted, err.Error())
 	}
 
 	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)

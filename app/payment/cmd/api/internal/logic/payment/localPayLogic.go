@@ -130,9 +130,9 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	}
 	gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
 	saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
-		Add(l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeState", l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq).
+		Add(l.svcCtx.Config.StockRpcConf.Target+"/pb.stock/DeductStockByTicketID", l.svcCtx.Config.StockRpcConf.Target+"/pb.stock/DeductStockByTicketIDRollBack", deductReq).
 		Add(l.svcCtx.Config.UserCenterRpcConf.Target+"/pb.usercenter/DeductMoney", l.svcCtx.Config.UserCenterRpcConf.Target+"/pb.usercenter/DeductMontyRollBack", updateUserWalletReq).
-		Add(l.svcCtx.Config.StockRpcConf.Target+"/pb.stock/DeductStockByTicketID", l.svcCtx.Config.StockRpcConf.Target+"/pb.stock/DeductStockByTicketIDRollBack", deductReq)
+		Add(l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeState", l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq)
 	err = saga.Submit()
 	logger.FatalIfError(err)
 	if err != nil {
