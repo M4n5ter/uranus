@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : test2
+ Source Server         : uranus
  Source Server Type    : MySQL
  Source Server Version : 80028
- Source Host           : 192.168.75.132:3306
+ Source Host           : 127.0.0.1:33069
  Source Schema         : flight
 
  Target Server Type    : MySQL
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 30/03/2022 18:58:42
+ Date: 10/04/2022 20:18:39
 */
 
 SET NAMES utf8mb4;
@@ -42,6 +42,6 @@ CREATE TABLE `flight_order`  (
   `order_total_price` bigint NOT NULL DEFAULT 0 COMMENT '订单总价格(分)',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_sn`(`sn`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
