@@ -100,6 +100,7 @@ CREATE TABLE `spaces`  (
   `is_first_class` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否是头等舱/商务舱',
   `total` bigint NOT NULL DEFAULT 0 COMMENT '总量',
   `surplus` bigint NOT NULL DEFAULT 0 COMMENT '剩余量',
+  `locked_stock` bigint NOT NULL DEFAULT 0 COMMENT '已经被锁定的库存',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_spaces_delete_time`(`delete_time`) USING BTREE,
   UNIQUE INDEX `idx_spaces_info_id_is_firstclass`(`flight_info_id`, `is_first_class`) USING BTREE
