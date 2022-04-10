@@ -54,6 +54,9 @@ func (l *DeductStockBySpaceIDLogic) DeductStockBySpaceID(in *pb.DeductStockBySpa
 
 	if err := barrier.CallWithDB(db, func(tx *sql.Tx) error {
 		space.Surplus = space.Surplus - in.Num
+		if space.Surplus < 0 {
+			return errors.Wrapf(xerr.NewErrMsg("库存不足"), "")
+		}
 		err = l.svcCtx.SpacesModel.UpdateWithVersion(sqlx.NewSessionFromTx(tx), space)
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrMsg("更新库存失败"), "DBERR: %v", err)
