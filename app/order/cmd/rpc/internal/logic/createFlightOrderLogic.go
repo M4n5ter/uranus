@@ -45,9 +45,10 @@ func (l *CreateFlightOrderLogic) CreateFlightOrder(in *pb.CreateFlightOrderReq) 
 	if flightDetailResp == nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("查询不到票所对应的航班信息"), "查询不到票所对应的航班信息, ticketID: %d", in.TicketId)
 	}
-	// 创建订单 + 更新库存
+	// 创建订单 + 锁定库存(本地事务)
 	order := new(model.FlightOrder)
 	err = l.svcCtx.OrderModel.Trans(func(session sqlx.Session) error {
+		// 创建订单
 		order.Sn = uniqueid.GenSn(uniqueid.SN_PREFIX_FLIGHT_ORDER)
 		order.OrderTotalPrice = int64(flightDetailResp.FlightInfo.Price) - int64(float64(flightDetailResp.FlightInfo.Discount)/100*float64(flightDetailResp.FlightInfo.Price))
 		order.DepartPosition = flightDetailResp.FlightInfo.DepartPosition
@@ -65,6 +66,7 @@ func (l *CreateFlightOrderLogic) CreateFlightOrder(in *pb.CreateFlightOrderReq) 
 			return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "下单数据库异常 order : %+v , err: %v", order, err)
 		}
 
+		// 锁定库存
 		ticket, err := l.svcCtx.TicketsModel.FindOne(in.TicketId)
 		if err != nil && err != commonModel.ErrNotFound {
 			return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "查找票失败, ticketID: %d, err: %v", in.TicketId, err)
@@ -77,10 +79,14 @@ func (l *CreateFlightOrderLogic) CreateFlightOrder(in *pb.CreateFlightOrderReq) 
 		if err != nil && err != commonModel.ErrNotFound {
 			return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "查找舱位失败, spaceID: %d, err: %v", ticket.SpaceId, err)
 		}
-		if ticket == nil {
+		if space == nil {
 			return errors.Wrapf(xerr.NewErrMsg("找不到舱位信息"), "Not Found spaceID: %d", ticket.SpaceId)
 		}
-		space.Surplus = space.Surplus - 1
+		if space.Surplus-space.LockedStock-1 < 0 {
+			return errors.Wrapf(xerr.NewErrMsg("库存不足"), "stock is not enough,spaceID: %d", space.Id)
+		}
+
+		space.LockedStock = space.LockedStock + 1
 		err = l.svcCtx.SpacesModel.UpdateWithVersion(session, space)
 		if err != nil {
 			return err
