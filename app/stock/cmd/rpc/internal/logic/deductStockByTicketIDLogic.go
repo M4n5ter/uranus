@@ -51,7 +51,7 @@ func (l *DeductStockByTicketIDLogic) DeductStockByTicketID(in *pb.DeductStockByT
 		if space.Surplus-space.LockedStock < 0 {
 			return errors.Wrapf(xerr.NewErrMsg("库存不足"), "")
 		}
-		space.Surplus, space.LockedStock = space.Surplus-in.Num, space.LockedStock-in.Num
+		space.Surplus = space.Surplus - in.Num
 		err = l.svcCtx.SpacesModel.UpdateWithVersion(sqlx.NewSessionFromTx(tx), space)
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrMsg("更新库存失败"), "DBERR: %v", err)

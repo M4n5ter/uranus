@@ -49,7 +49,6 @@ func (l *DeductStockBySpaceIDRollBackLogic) DeductStockBySpaceIDRollBack(in *pb.
 	}
 
 	if err := barrier.CallWithDB(db, func(tx *sql.Tx) error {
-		space.LockedStock = space.LockedStock - in.Num
 		space.Surplus = space.Surplus + in.Num
 		err = l.svcCtx.SpacesModel.UpdateWithVersion(sqlx.NewSessionFromTx(tx), space)
 		if err != nil {
