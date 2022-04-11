@@ -135,12 +135,25 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 		Num:      1,
 	}
 
+	stockServer, err := l.svcCtx.Config.StockRpcConf.BuildTarget()
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("获取库存服务地址失败"), "err: %v", err)
+	}
+	usercenterServer, err := l.svcCtx.Config.UserCenterRpcConf.BuildTarget()
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("获取用户中心服务地址失败"), "err: %v", err)
+	}
+	paymentServer, err := l.svcCtx.Config.PaymentRpcConf.BuildTarget()
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("获取支付服务地址失败"), "err: %v", err)
+	}
+
 	gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
 	saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
-		Add(l.svcCtx.Config.StockRpcConf.Target+"/pb.stock/DeductStockByTicketID", l.svcCtx.Config.StockRpcConf.Target+"/pb.stock/DeductStockByTicketIDRollBack", deductReq).
-		Add(l.svcCtx.Config.UserCenterRpcConf.Target+"/pb.usercenter/DeductMoney", l.svcCtx.Config.UserCenterRpcConf.Target+"/pb.usercenter/DeductMontyRollBack", updateUserWalletReq).
-		Add(l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeState", l.svcCtx.Config.PaymentRpcConf.Target+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq).
-		Add(l.svcCtx.Config.StockRpcConf.Target+"/pb.stock/ReleaseStockByTicketID", l.svcCtx.Config.StockRpcConf.Target+"/pb.stock/ReleaseStockByTicketIDRollBack", releaseReq)
+		Add(stockServer+"/pb.stock/DeductStockByTicketID", stockServer+"/pb.stock/DeductStockByTicketIDRollBack", deductReq).
+		Add(usercenterServer+"/pb.usercenter/DeductMoney", usercenterServer+"/pb.usercenter/DeductMontyRollBack", updateUserWalletReq).
+		Add(paymentServer+"/pb.payment/UpdateTradeState", paymentServer+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq).
+		Add(stockServer+"/pb.stock/ReleaseStockByTicketID", stockServer+"/pb.stock/ReleaseStockByTicketIDRollBack", releaseReq)
 	err = saga.Submit()
 	logger.FatalIfError(err)
 	if err != nil {
