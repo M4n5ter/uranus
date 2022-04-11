@@ -135,6 +135,7 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 		Num:      1,
 	}
 
+	// 从配置文件生产服务地址
 	stockServer, err := l.svcCtx.Config.StockRpcConf.BuildTarget()
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("获取库存服务地址失败"), "err: %v", err)
@@ -148,6 +149,7 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 		return nil, errors.Wrapf(xerr.NewErrMsg("获取支付服务地址失败"), "err: %v", err)
 	}
 
+	// 执行事务
 	gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
 	saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
 		Add(stockServer+"/pb.stock/DeductStockByTicketID", stockServer+"/pb.stock/DeductStockByTicketIDRollBack", deductReq).
