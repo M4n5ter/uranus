@@ -58,6 +58,6 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 	//初始化resp，避免空指针错误
 	resp = &types.QuireBySetOutDateStartPositionEndPositionResp{}
 	resp.Flightinfos = make([]*types.Flightinfo, len(rpcResp.FlightInfos))
-	copyFlightInfosRpcRespToApiResp(resp.Flightinfos, rpcResp.FlightInfos)
+	l.svcCtx.CopyFlightInfosRpcRespToApiResp(resp.Flightinfos, rpcResp.FlightInfos)
 	return
 }

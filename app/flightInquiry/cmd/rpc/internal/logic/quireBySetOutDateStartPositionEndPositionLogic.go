@@ -27,7 +27,6 @@ func NewQuireBySetOutDateStartPositionEndPositionLogic(ctx context.Context, svcC
 
 // QuireBySetOutDateStartPositionEndPosition 通过给定日期、出发地、目的地进行航班查询请求
 func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartPositionEndPosition(in *pb.QuireBySetOutDateStartPositionEndPositionReq) (*pb.QuireBySetOutDateStartPositionEndPositionResp, error) {
-	resp := &pb.QuireBySetOutDateStartPositionEndPositionResp{}
 	//查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
 	flightInfos, err := l.svcCtx.FlightInfosModel.FindListBySetOutDateAndPosition(l.svcCtx.FlightInfosModel.RowBuilder(), in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition)
 	if err != nil {
@@ -37,10 +36,11 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 			return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate : SetOutTime->%v, DepartPosition->%s, ArrivePosition->%s, ERR: %v\n", in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition, err)
 		}
 	}
-	v, err := (*FlightQuirer)(l).combineAllInfos(flightInfos, resp, false)
-	resp, ok := v.(*pb.QuireBySetOutDateStartPositionEndPositionResp)
-	if !ok {
-		return &pb.QuireBySetOutDateStartPositionEndPositionResp{}, nil
+
+	v, err := l.svcCtx.CombineAllInfos(flightInfos)
+	if err != nil {
+		return nil, err
 	}
-	return resp, err
+
+	return &pb.QuireBySetOutDateStartPositionEndPositionResp{FlightInfos: v}, err
 }
