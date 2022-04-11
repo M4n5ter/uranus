@@ -13,12 +13,15 @@ import (
 )
 
 type (
-	AddStockBySpaceIDReq     = pb.AddStockBySpaceIDReq
-	AddStockByTicketIDReq    = pb.AddStockByTicketIDReq
-	AddStockResp             = pb.AddStockResp
-	DeductStockBySpaceIDReq  = pb.DeductStockBySpaceIDReq
-	DeductStockByTicketIDReq = pb.DeductStockByTicketIDReq
-	DeductStockResp          = pb.DeductStockResp
+	AddStockBySpaceIDReq      = pb.AddStockBySpaceIDReq
+	AddStockByTicketIDReq     = pb.AddStockByTicketIDReq
+	AddStockResp              = pb.AddStockResp
+	DeductStockBySpaceIDReq   = pb.DeductStockBySpaceIDReq
+	DeductStockByTicketIDReq  = pb.DeductStockByTicketIDReq
+	DeductStockResp           = pb.DeductStockResp
+	ReleaseStockBySpaceIDReq  = pb.ReleaseStockBySpaceIDReq
+	ReleaseStockByTicketIDReq = pb.ReleaseStockByTicketIDReq
+	ReleaseStockResp          = pb.ReleaseStockResp
 
 	Stock interface {
 		// 通过 ticketID 加库存
@@ -37,6 +40,14 @@ type (
 		DeductStockBySpaceID(ctx context.Context, in *DeductStockBySpaceIDReq, opts ...grpc.CallOption) (*DeductStockResp, error)
 		// 通过 spaceID 扣库存 rollback
 		DeductStockBySpaceIDRollBack(ctx context.Context, in *DeductStockBySpaceIDReq, opts ...grpc.CallOption) (*DeductStockResp, error)
+		// 通过 ticketID 释放锁定的库存
+		ReleaseStockByTicketID(ctx context.Context, in *ReleaseStockByTicketIDReq, opts ...grpc.CallOption) (*ReleaseStockResp, error)
+		// 通过 ticketID 释放锁定的库存 rollback
+		ReleaseStockByTicketIDRollBack(ctx context.Context, in *ReleaseStockByTicketIDReq, opts ...grpc.CallOption) (*ReleaseStockResp, error)
+		// 通过 spaceID 释放锁定的库存
+		ReleaseStockBySpaceID(ctx context.Context, in *ReleaseStockBySpaceIDReq, opts ...grpc.CallOption) (*ReleaseStockResp, error)
+		// 通过 spaceID 释放锁定的库存 rollback
+		ReleaseStockBySpaceIDRollBack(ctx context.Context, in *ReleaseStockBySpaceIDReq, opts ...grpc.CallOption) (*ReleaseStockResp, error)
 	}
 
 	defaultStock struct {
@@ -96,4 +107,28 @@ func (m *defaultStock) DeductStockBySpaceID(ctx context.Context, in *DeductStock
 func (m *defaultStock) DeductStockBySpaceIDRollBack(ctx context.Context, in *DeductStockBySpaceIDReq, opts ...grpc.CallOption) (*DeductStockResp, error) {
 	client := pb.NewStockClient(m.cli.Conn())
 	return client.DeductStockBySpaceIDRollBack(ctx, in, opts...)
+}
+
+// 通过 ticketID 释放锁定的库存
+func (m *defaultStock) ReleaseStockByTicketID(ctx context.Context, in *ReleaseStockByTicketIDReq, opts ...grpc.CallOption) (*ReleaseStockResp, error) {
+	client := pb.NewStockClient(m.cli.Conn())
+	return client.ReleaseStockByTicketID(ctx, in, opts...)
+}
+
+// 通过 ticketID 释放锁定的库存 rollback
+func (m *defaultStock) ReleaseStockByTicketIDRollBack(ctx context.Context, in *ReleaseStockByTicketIDReq, opts ...grpc.CallOption) (*ReleaseStockResp, error) {
+	client := pb.NewStockClient(m.cli.Conn())
+	return client.ReleaseStockByTicketIDRollBack(ctx, in, opts...)
+}
+
+// 通过 spaceID 释放锁定的库存
+func (m *defaultStock) ReleaseStockBySpaceID(ctx context.Context, in *ReleaseStockBySpaceIDReq, opts ...grpc.CallOption) (*ReleaseStockResp, error) {
+	client := pb.NewStockClient(m.cli.Conn())
+	return client.ReleaseStockBySpaceID(ctx, in, opts...)
+}
+
+// 通过 spaceID 释放锁定的库存 rollback
+func (m *defaultStock) ReleaseStockBySpaceIDRollBack(ctx context.Context, in *ReleaseStockBySpaceIDReq, opts ...grpc.CallOption) (*ReleaseStockResp, error) {
+	client := pb.NewStockClient(m.cli.Conn())
+	return client.ReleaseStockBySpaceIDRollBack(ctx, in, opts...)
 }

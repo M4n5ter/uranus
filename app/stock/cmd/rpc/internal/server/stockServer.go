@@ -69,3 +69,27 @@ func (s *StockServer) DeductStockBySpaceIDRollBack(ctx context.Context, in *pb.D
 	l := logic.NewDeductStockBySpaceIDRollBackLogic(ctx, s.svcCtx)
 	return l.DeductStockBySpaceIDRollBack(in)
 }
+
+// 通过 ticketID 释放锁定的库存
+func (s *StockServer) ReleaseStockByTicketID(ctx context.Context, in *pb.ReleaseStockByTicketIDReq) (*pb.ReleaseStockResp, error) {
+	l := logic.NewReleaseStockByTicketIDLogic(ctx, s.svcCtx)
+	return l.ReleaseStockByTicketID(in)
+}
+
+// 通过 ticketID 释放锁定的库存 rollback
+func (s *StockServer) ReleaseStockByTicketIDRollBack(ctx context.Context, in *pb.ReleaseStockByTicketIDReq) (*pb.ReleaseStockResp, error) {
+	l := logic.NewReleaseStockByTicketIDRollBackLogic(ctx, s.svcCtx)
+	return l.ReleaseStockByTicketIDRollBack(in)
+}
+
+// 通过 spaceID 释放锁定的库存
+func (s *StockServer) ReleaseStockBySpaceID(ctx context.Context, in *pb.ReleaseStockBySpaceIDReq) (*pb.ReleaseStockResp, error) {
+	l := logic.NewReleaseStockBySpaceIDLogic(ctx, s.svcCtx)
+	return l.ReleaseStockBySpaceID(in)
+}
+
+// 通过 spaceID 释放锁定的库存 rollback
+func (s *StockServer) ReleaseStockBySpaceIDRollBack(ctx context.Context, in *pb.ReleaseStockBySpaceIDReq) (*pb.ReleaseStockResp, error) {
+	l := logic.NewReleaseStockBySpaceIDRollBackLogic(ctx, s.svcCtx)
+	return l.ReleaseStockBySpaceIDRollBack(in)
+}

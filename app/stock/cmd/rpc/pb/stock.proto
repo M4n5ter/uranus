@@ -28,8 +28,23 @@ message DeductStockBySpaceIDReq {
 message DeductStockResp {}
 // 扣库存
 
+// 释放锁定的库存
+message ReleaseStockByTicketIDReq {
+  int64 ticketID  = 1;
+  int64 num       = 2;
+}
+message ReleaseStockBySpaceIDReq {
+  int64 spaceID   = 1;
+  int64 num       = 2;
+}
+message ReleaseStockResp {}
+// 释放锁定的库存
+
 
 service stock {
+
+  // 加库存--------------------------------------------------------------------------------
+
   //通过 ticketID 加库存
   rpc AddStockByTicketID(AddStockByTicketIDReq) returns(AddStockResp);
   //通过 ticketID 加库存 rollback
@@ -39,6 +54,11 @@ service stock {
   //通过 spaceID 加库存 rollback
   rpc AddStockBySpaceIDRollBack(AddStockBySpaceIDReq) returns(AddStockResp);
 
+  // 加库存--------------------------------------------------------------------------------
+
+
+  // 扣库存--------------------------------------------------------------------------------
+
   //通过 ticketID 扣库存
   rpc DeductStockByTicketID(DeductStockByTicketIDReq) returns(DeductStockResp);
   //通过 ticketID 扣库存 rollback
@@ -47,4 +67,20 @@ service stock {
   rpc DeductStockBySpaceID(DeductStockBySpaceIDReq) returns(DeductStockResp);
   //通过 spaceID 扣库存 rollback
   rpc DeductStockBySpaceIDRollBack(DeductStockBySpaceIDReq) returns(DeductStockResp);
+
+  // 扣库存--------------------------------------------------------------------------------
+
+
+  // 释放锁定的库存--------------------------------------------------------------------------------
+
+  //通过 ticketID 释放锁定的库存
+  rpc ReleaseStockByTicketID(ReleaseStockByTicketIDReq) returns(ReleaseStockResp);
+  //通过 ticketID 释放锁定的库存 rollback
+  rpc ReleaseStockByTicketIDRollBack(ReleaseStockByTicketIDReq) returns(ReleaseStockResp);
+  //通过 spaceID 释放锁定的库存
+  rpc ReleaseStockBySpaceID(ReleaseStockBySpaceIDReq) returns(ReleaseStockResp);
+  //通过 spaceID 释放锁定的库存 rollback
+  rpc ReleaseStockBySpaceIDRollBack(ReleaseStockBySpaceIDReq) returns(ReleaseStockResp);
+
+  // 释放锁定的库存--------------------------------------------------------------------------------
 }
