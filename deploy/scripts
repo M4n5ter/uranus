@@ -19,3 +19,4 @@ kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -part
 
 
 kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic uranus-log
+kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic payment-update-paystatus-topic
