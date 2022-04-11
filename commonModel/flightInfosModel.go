@@ -426,7 +426,6 @@ func (m *defaultFlightInfosModel) FindListByNumber(rowBuilder squirrel.SelectBui
 func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sod time.Time) ([]*FlightInfos, error) {
 
 	if len(number) > 0 && !sod.IsZero() {
-		sod = sod.Local()
 		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
 		rowBuilder = rowBuilder.Where(" flight_number = ? AND set_out_date = ? ", number, sod.Format("2006-01-02 15:04:05"))
 	} else {
