@@ -14,6 +14,8 @@ type Config struct {
 	FlightInquiryRpcConf zrpc.RpcClientConf
 	OrderRpcConf         zrpc.RpcClientConf
 	PaymentRpcConf       zrpc.RpcClientConf
+	StockRpcConf         zrpc.RpcClientConf
+	UserCenterRpcConf    zrpc.RpcClientConf
 	DtmServer            struct {
 		Target string
 	}

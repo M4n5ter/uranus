@@ -32,6 +32,14 @@ PaymentRpcConf:
     - 127.0.0.1:9009
   NonBlock: true
 
+StockRpcConf:
+  Target: 127.0.0.1:9015
+  NonBlock: true
+
+UserCenterRpcConf:
+  Target: 127.0.0.1:9013
+  NonBlock: true
+
 DtmServer:
   Target: 127.0.0.1:36790
 
