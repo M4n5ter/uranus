@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"uranus/app/order/model"
+	"uranus/common/xerr"
 
 	"uranus/app/order/cmd/rpc/internal/svc"
 	"uranus/app/order/cmd/rpc/pb"
@@ -41,11 +42,14 @@ func (l *UserFlightOrderListLogic) UserFlightOrderList(in *pb.UserFlightOrderLis
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.Wrapf(ERRDBERR, "获取用户机票订单失败, err: %v, in: %+v", err, in)
 	}
+	if list == nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("没有对应状态的订单"), "Not Found err: %v", err)
+	}
 
 	var resp []*pb.FlightOrder
 	if len(list) > 0 {
 		for _, order := range list {
-			var fltOrder pb.FlightOrder
+			fltOrder := pb.FlightOrder{}
 			_ = copier.Copy(&fltOrder, order)
 			fltOrder.DepartTime = timestamppb.New(order.DepartTime)
 			fltOrder.ArriveTime = timestamppb.New(order.ArriveTime)
