@@ -33,8 +33,8 @@ message BookAirTicketsResp {
 message RefundAirTicketsReq {
   // 用户的id
   int64                     UserID         = 1;
-  // 用户拥有的对应票id
-  uint64                    TicketID       = 2;
+  // 订单号
+  string                    OrderSn        = 2;
 }
 // 退票响应
 message RefundAirTicketsResp {
@@ -45,8 +45,8 @@ message RefundAirTicketsResp {
 message ChangeAirTicketsReq {
   // 用户的id
   int64                     UserID         = 1;
-  // 用户拥有的对应票id
-  uint64                    TicketID       = 2;
+  // 用户拥有的对应订单号
+  string                    OrderSn        = 2;
   // 目标舱位id
   uint64                    SpaceID        = 3;
 }
