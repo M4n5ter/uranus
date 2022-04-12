@@ -83,15 +83,15 @@ type (
 		TicketId   int64     `db:"ticket_id"` // 对应的票ID
 		IsRefund   int64     `db:"is_refund"` // 1为退订，0为改票
 		Time1      time.Time `db:"time1"`     // 时间1
-		Fee1       int64     `db:"fee1"`      // 符合时间1时需要的费用(￥/人)
+		Fee1       int64     `db:"fee1"`      // 符合时间1时需要的费用(分/人)
 		Time2      time.Time `db:"time2"`     // 时间2
-		Fee2       int64     `db:"fee2"`      // 符合时间2时需要的费用(￥/人)
+		Fee2       int64     `db:"fee2"`      // 符合时间2时需要的费用(分/人)
 		Time3      time.Time `db:"time3"`     // 时间3
-		Fee3       int64     `db:"fee3"`      // 符合时间3时需要的费用(￥/人)
+		Fee3       int64     `db:"fee3"`      // 符合时间3时需要的费用(分/人)
 		Time4      time.Time `db:"time4"`     // 时间4
-		Fee4       int64     `db:"fee4"`      // 符合时间4时需要的费用(￥/人)
+		Fee4       int64     `db:"fee4"`      // 符合时间4时需要的费用(分/人)
 		Time5      time.Time `db:"time5"`     // 时间5
-		Fee5       int64     `db:"fee5"`      // 符合时间5时需要的费用(￥/人)
+		Fee5       int64     `db:"fee5"`      // 符合时间5时需要的费用(分/人)
 	}
 )
 
