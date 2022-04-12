@@ -120,6 +120,7 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 			}
 
 			resp = append(resp, &pb.FlightInfo{
+				FlightInfoID:   info.Id,
 				FlightNumber:   info.FlightNumber,
 				SetOutDate:     timestamppb.New(info.SetOutDate),
 				IsFirstClass:   ifc,

@@ -44,6 +44,7 @@ func (s *ServiceContext) CopyFlightInfosRpcRespToApiResp(resp []*types.Flightinf
 				Fee:  f,
 			})
 		}
+		resp[i].FlightInfoID = rpcResp[i].FlightInfoID
 		resp[i].FlightNumber = rpcResp[i].FlightNumber
 		resp[i].FlightType = rpcResp[i].FlightType
 		resp[i].SetOutDate = strings.Split(strings.Split(rpcResp[i].SetOutDate.AsTime().Local().String(), " +")[0], " ")[0]

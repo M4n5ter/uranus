@@ -24,6 +24,8 @@ type (
 
     //航班信息
     Flightinfo {
+        // 航班信息ID
+        FlightInfoID    int64       `json:"flightInfoId"`
         //航班号，例如MU5735
         FlightNumber    string      `json:"flightNumber"`
         //机型
