@@ -59,9 +59,9 @@ service flightReservation {
   // BookAirTickets 给定： 用户的平台唯一id 航班号 出发日期 是否为头等舱/商务舱 起飞地点/时间 降落地点/时间 来预定机票
   rpc BookAirTickets(BookAirTicketsReq) returns(BookAirTicketsResp);
 
-  // RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
+  // RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应订单号 来退订机票
   rpc RefundAirTickets(RefundAirTicketsReq) returns(RefundAirTicketsResp);
 
-  // ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
+  // ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应订单号 目标舱位id
   rpc ChangeAirTickets(ChangeAirTicketsReq) returns(ChangeAirTicketsResp);
 }

@@ -23,7 +23,7 @@ func NewChangeAirTicketsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-// ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
+// ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应订单号 目标舱位id
 func (l *ChangeAirTicketsLogic) ChangeAirTickets(in *pb.ChangeAirTicketsReq) (*pb.ChangeAirTicketsResp, error) {
 	// todo: add your logic here and delete this line
 

@@ -99,6 +99,8 @@ func (l *PaymentUpdateStatusMq) getOrderTradeStateByPaymentTradeState(paymentPay
 		return model.FlightOrderTradeStateWaitUse
 	case paymentModel.CommonPayRefund:
 		return model.FlightOrderTradeStateRefund
+	case paymentModel.CommonPayDiscard:
+		return model.FlightOrderTradeStateCancel
 	default:
 		return -99
 	}

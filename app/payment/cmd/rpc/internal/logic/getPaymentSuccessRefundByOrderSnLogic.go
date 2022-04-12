@@ -36,7 +36,7 @@ func (l *GetPaymentSuccessRefundByOrderSnLogic) GetPaymentSuccessRefundByOrderSn
 	}
 
 	whereBuilder := l.svcCtx.PaymentModel.RowBuilder().Where(
-		"order_sn = ? AND (trade_state = ? OR trade_state = ?)",
+		"order_sn = ? AND (pay_status = ? OR pay_status = ?)",
 		in.OrderSn, model.CommonPaySuccess, model.CommonPayRefund)
 
 	payment, err := l.svcCtx.PaymentModel.FindOneByQuery(whereBuilder)
@@ -44,7 +44,7 @@ func (l *GetPaymentSuccessRefundByOrderSnLogic) GetPaymentSuccessRefundByOrderSn
 		return nil, errors.Wrapf(ERRDBERR, "DBERR: 根据订单sn查询支付流水失败, err: %v, in: %+v", err, in)
 	}
 
-	var resp pb.PaymentDetail
+	resp := pb.PaymentDetail{}
 	if payment != nil {
 		_ = copier.Copy(&resp, payment)
 		resp.CreateTime = timestamppb.New(payment.CreateTime)

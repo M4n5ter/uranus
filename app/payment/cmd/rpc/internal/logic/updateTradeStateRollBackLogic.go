@@ -8,6 +8,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"uranus/app/mqueue/cmd/rpc/mqueue"
 	"uranus/app/payment/model"
 	"uranus/common/xerr"
 
@@ -35,8 +36,8 @@ func NewUpdateTradeStateRollBackLogic(ctx context.Context, svcCtx *svc.ServiceCo
 func (l *UpdateTradeStateRollBackLogic) UpdateTradeStateRollBack(in *pb.UpdateTradeStateReq) (*pb.UpdateTradeStateResp, error) {
 
 	// 检查输入合法性
-	if len(in.TradeStateDesc) == 0 || len(in.TradeType) == 0 || len(in.Sn) == 0 || len(in.TransactionId) == 0 ||
-		in.PayStatus < -1 || in.PayStatus > 2 || !in.PayTime.IsValid() {
+	if len(in.Sn) == 0 ||
+		in.PayStatus < -1 || in.PayStatus > 3 || !in.PayTime.IsValid() {
 		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input : %+v", in)
 	}
 
@@ -69,5 +70,15 @@ func (l *UpdateTradeStateRollBackLogic) UpdateTradeStateRollBack(in *pb.UpdateTr
 		// 回滚失败就重试回滚
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+
+	// 通知其他服务
+	_, err = l.svcCtx.MqueueClient.KqPaymentStatusUpdate(l.ctx, &mqueue.KqPaymentStatusUpdateReq{
+		OrderSn:   payment.OrderSn,
+		PayStatus: payment.PayStatus,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrMsg("支付流水状态变更发送到kq失败"), "支付流水状态变更发送到kq失败")
+	}
+
 	return &pb.UpdateTradeStateResp{}, nil
 }
