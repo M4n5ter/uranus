@@ -102,6 +102,7 @@ service usercenter {
   rpc GetUserMoney(GetUserMoneyReq) returns(GetUserMoneyResp);
   rpc UpdateUserWallet(UpdateUserWalletReq) returns(UpdateUserWalletResp);
   rpc AddMoney(AddMoneyReq) returns(AddMoneyResp);
+  rpc AddMoneyRollback(AddMoneyReq) returns(AddMoneyResp);
   rpc DeductMoney(DeductMoneyReq) returns(DeductMoneyResp);
   rpc DeductMontyRollBack(DeductMoneyReq) returns(DeductMoneyResp);
 }

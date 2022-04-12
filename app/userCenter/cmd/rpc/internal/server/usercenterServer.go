@@ -62,6 +62,11 @@ func (s *UsercenterServer) AddMoney(ctx context.Context, in *pb.AddMoneyReq) (*p
 	return l.AddMoney(in)
 }
 
+func (s *UsercenterServer) AddMoneyRollback(ctx context.Context, in *pb.AddMoneyReq) (*pb.AddMoneyResp, error) {
+	l := logic.NewAddMoneyRollbackLogic(ctx, s.svcCtx)
+	return l.AddMoneyRollback(in)
+}
+
 func (s *UsercenterServer) DeductMoney(ctx context.Context, in *pb.DeductMoneyReq) (*pb.DeductMoneyResp, error) {
 	l := logic.NewDeductMoneyLogic(ctx, s.svcCtx)
 	return l.DeductMoney(in)

@@ -43,6 +43,7 @@ type (
 		GetUserMoney(ctx context.Context, in *GetUserMoneyReq, opts ...grpc.CallOption) (*GetUserMoneyResp, error)
 		UpdateUserWallet(ctx context.Context, in *UpdateUserWalletReq, opts ...grpc.CallOption) (*UpdateUserWalletResp, error)
 		AddMoney(ctx context.Context, in *AddMoneyReq, opts ...grpc.CallOption) (*AddMoneyResp, error)
+		AddMoneyRollback(ctx context.Context, in *AddMoneyReq, opts ...grpc.CallOption) (*AddMoneyResp, error)
 		DeductMoney(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
 		DeductMontyRollBack(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
 	}
@@ -96,6 +97,11 @@ func (m *defaultUsercenter) UpdateUserWallet(ctx context.Context, in *UpdateUser
 func (m *defaultUsercenter) AddMoney(ctx context.Context, in *AddMoneyReq, opts ...grpc.CallOption) (*AddMoneyResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.AddMoney(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) AddMoneyRollback(ctx context.Context, in *AddMoneyReq, opts ...grpc.CallOption) (*AddMoneyResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.AddMoneyRollback(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) DeductMoney(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error) {
