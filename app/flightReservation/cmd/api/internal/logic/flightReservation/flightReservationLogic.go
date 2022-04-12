@@ -69,7 +69,8 @@ func (l *FlightReservationLogic) FlightReservation(req *types.FlightReservationR
 		ArriveTime:     timestamppb.New(arriveTime),
 	})
 	if err != nil {
-		return nil, errors.Wrapf(ERRBookFail, "Rpc ERR in l.svcCtx.FlightReservationRpcClient.BookAirTickets: err: %v, req: %+v", err, req)
+		//return nil, errors.Wrapf(ERRBookFail, "Rpc ERR in l.svcCtx.FlightReservationRpcClient.BookAirTickets: err: %v, req: %+v", err, req)
+		return nil, err
 	}
 
 	resp = &types.FlightReservationResp{}

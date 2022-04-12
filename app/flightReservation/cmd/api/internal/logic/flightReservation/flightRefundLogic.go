@@ -2,13 +2,10 @@ package flightReservation
 
 import (
 	"context"
-	"github.com/pkg/errors"
-	"uranus/app/flightReservation/cmd/rpc/flightreservation"
-	"uranus/common/ctxdata"
-	"uranus/common/xerr"
-
 	"uranus/app/flightReservation/cmd/api/internal/svc"
 	"uranus/app/flightReservation/cmd/api/internal/types"
+	"uranus/app/flightReservation/cmd/rpc/flightreservation"
+	"uranus/common/ctxdata"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,8 +33,8 @@ func (l *FlightRefundLogic) FlightRefund(req *types.FlightRefundReq) (resp *type
 		OrderSn: req.OrderSn,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("退票失败"), "err: %+v", err)
+		return nil, err
 	}
 
-	return &types.FlightRefundResp{}, nil
+	return &types.FlightRefundResp{Message: "退票成功"}, nil
 }
