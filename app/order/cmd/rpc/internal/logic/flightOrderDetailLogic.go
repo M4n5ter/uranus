@@ -39,7 +39,7 @@ func (l *FlightOrderDetailLogic) FlightOrderDetail(in *pb.FlightOrderDetailReq) 
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "flightOrderModel  FindOne err : %v , sn : %s", err, in.Sn)
 	}
 
-	var resp pb.FlightOrder
+	resp := pb.FlightOrder{}
 	if flightOrder != nil {
 		_ = copier.Copy(&resp, flightOrder)
 		resp.CreateTime = timestamppb.New(flightOrder.CreateTime)
