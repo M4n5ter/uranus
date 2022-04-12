@@ -25,6 +25,15 @@ FlightInquiryRpcConf:
 OrderRpcConf:
   Endpoints:
     - 127.0.0.1:9006
+  NonBlock: true
+
+PaymentRpcConf:
+  Endpoints:
+    - 127.0.0.1:9009
+  NonBlock: true
+
+DtmServer:
+  Target: 127.0.0.1:36790
 
 #监控
 Prometheus:
