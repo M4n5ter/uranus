@@ -150,8 +150,9 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	}
 
 	// 执行事务
-	gid := dtmgrpc.MustGenGid(l.svcCtx.Config.DtmServer.Target)
-	saga := dtmgrpc.NewSagaGrpc(l.svcCtx.Config.DtmServer.Target, gid).
+	dtmServer := l.svcCtx.Config.DtmServer.Target
+	gid := dtmgrpc.MustGenGid(dtmServer)
+	saga := dtmgrpc.NewSagaGrpc(dtmServer, gid).
 		Add(stockServer+"/pb.stock/DeductStockByTicketID", stockServer+"/pb.stock/DeductStockByTicketIDRollBack", deductReq).
 		Add(usercenterServer+"/pb.usercenter/DeductMoney", usercenterServer+"/pb.usercenter/DeductMontyRollBack", updateUserWalletReq).
 		Add(paymentServer+"/pb.payment/UpdateTradeState", paymentServer+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq).
