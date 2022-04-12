@@ -90,7 +90,12 @@ func (l *UpdateFlightOrderTradeStateLogic) verifyOrderTradeState(newTradeState, 
 	case model.FlightOrderTradeStateUsed:
 		if oldTradeState != model.FlightOrderTradeStateWaitUse {
 			return errors.Wrapf(xerr.NewErrMsg("只有未使用的订单才能更改为此状态"),
-				"只有未使用的订单才能更改为退款状态 newTradeState: %d, oldTradeState: %d", newTradeState, oldTradeState)
+				"只有未使用的订单才能更改为已使用状态 newTradeState: %d, oldTradeState: %d", newTradeState, oldTradeState)
+		}
+	case model.FlightOrderTradeStateRefund:
+		if oldTradeState != model.FlightOrderTradeStateWaitUse {
+			return errors.Wrapf(xerr.NewErrMsg("只有未使用的订单才能更改为此状态"),
+				"只有未使用的订单才能更改为已退款状态 newTradeState: %d, oldTradeState: %d", newTradeState, oldTradeState)
 		}
 	case model.FlightOrderTradeStateExpire:
 		if oldTradeState != model.FlightOrderTradeStateWaitUse {
