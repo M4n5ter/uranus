@@ -124,6 +124,7 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 				FlightNumber:   info.FlightNumber,
 				SetOutDate:     timestamppb.New(info.SetOutDate),
 				IsFirstClass:   ifc,
+				SpaceID:        space.Id,
 				Price:          uint64(ticket.Price),
 				Discount:       ticket.Discount,
 				Surplus:        space.Surplus,

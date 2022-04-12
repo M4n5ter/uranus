@@ -34,6 +34,8 @@ type (
         SetOutDate      string      `json:"setOutDate"`
         //是否为头等舱/商务舱
         IsFirstClass    bool        `json:"isFirstClass"`
+        //舱位ID
+        SpaceID         int64       `json:"spaceId"`
         //票价(￥)
         Price uint64                `json:"price"`
         //折扣(-n%)

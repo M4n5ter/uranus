@@ -20,6 +20,7 @@ type Flightinfo struct {
 	FlightType     string     `json:"flightType"`
 	SetOutDate     string     `json:"setOutDate"`
 	IsFirstClass   bool       `json:"isFirstClass"`
+	SpaceID        int64      `json:"spaceId"`
 	Price          uint64     `json:"price"`
 	Discount       int64      `json:"discount"`
 	Surplus        int64      `json:"surplus"`

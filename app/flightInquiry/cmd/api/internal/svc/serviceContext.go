@@ -57,5 +57,6 @@ func (s *ServiceContext) CopyFlightInfosRpcRespToApiResp(resp []*types.Flightinf
 		resp[i].Punctuality = rpcResp[i].Punctuality
 		resp[i].Discount = rpcResp[i].Discount
 		resp[i].IsFirstClass = rpcResp[i].IsFirstClass
+		resp[i].SpaceID = rpcResp[i].SpaceID
 	}
 }

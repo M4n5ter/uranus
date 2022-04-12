@@ -15,30 +15,32 @@ message FlightInfo {
   google.protobuf.Timestamp SetOutDate    = 2;
   // 是否为头等舱/商务舱
   bool                      IsFirstClass  = 3;
+  // 舱位ID
+  int64                     SpaceID        = 4;
   // 票价(￥)
-  uint64                    Price         = 4;
+  uint64                    Price         = 5;
   // 折扣(-n%)
-  int64                     Discount      = 5;
+  int64                     Discount      = 6;
   // 剩余量(由于有超卖可能性，可能为负)
-  int64                     Surplus       = 6;
+  int64                     Surplus       = 7;
   // 准点率(例如97，表示97%)
-  uint32                    Punctuality   = 7;
+  uint32                    Punctuality   = 8;
   // 起飞地点
-  string                    DepartPosition = 8;
+  string                    DepartPosition = 9;
   // 起飞时间
-  google.protobuf.Timestamp DepartTime     = 9;
+  google.protobuf.Timestamp DepartTime     = 10;
   // 降落地点
-  string                    ArrivePosition = 10;
+  string                    ArrivePosition = 11;
   // 降落时间
-  google.protobuf.Timestamp ArriveTime     = 11;
+  google.protobuf.Timestamp ArriveTime     = 12;
   // 退票信息
-  RefundInfo                RefundInfo     = 12;
+  RefundInfo                RefundInfo     = 13;
   // 改票信息
-  ChangeInfo                ChangeInfo     = 13;
+  ChangeInfo                ChangeInfo     = 14;
   // 托运行李额(KG)
-  int64                     Cba            = 14;
+  int64                     Cba            = 15;
   // 机型
-  string                    FlightType     = 15;
+  string                    FlightType     = 17;
 }
 
 // 时间-费用
