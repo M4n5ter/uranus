@@ -43,12 +43,12 @@ func (l *AddMoneyLogic) AddMoney(in *pb.AddMoneyReq) (*pb.AddMoneyResp, error) {
 		if err == model.ErrNotFound {
 			return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "Not Found userID: %d", in.UserId).Error())
 		}
-		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
+		return nil, status.Error(codes.Internal, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
 	}
 	// 检查用户是否有钱包
 	wallet, err := l.svcCtx.WalletModel.FindOneByUserId(in.UserId)
 	if err != nil && err != model.ErrNotFound {
-		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
+		return nil, status.Error(codes.Internal, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
 	}
 
 	if wallet == nil {

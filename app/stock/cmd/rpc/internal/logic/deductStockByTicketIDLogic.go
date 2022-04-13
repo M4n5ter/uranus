@@ -38,6 +38,9 @@ func (l *DeductStockByTicketIDLogic) DeductStockByTicketID(in *pb.DeductStockByT
 
 	space, err := l.svcCtx.GetSpaceByTicketID(in.TicketID)
 	if err != nil {
+		if err.(*xerr.CodeError).GetErrCode() == xerr.DB_ERROR {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
 		return nil, status.Error(codes.Aborted, err.Error())
 	}
 

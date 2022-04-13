@@ -36,7 +36,7 @@ func (l *AddMoneyRollbackLogic) AddMoneyRollback(in *pb.AddMoneyReq) (*pb.AddMon
 	// 检查用户是否有钱包
 	wallet, err := l.svcCtx.WalletModel.FindOneByUserId(in.UserId)
 	if err != nil && err != model.ErrNotFound {
-		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
+		return nil, status.Error(codes.Internal, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
 	}
 
 	if wallet == nil {

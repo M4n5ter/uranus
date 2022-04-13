@@ -34,25 +34,25 @@ func NewDeductMontyRollBackLogic(ctx context.Context, svcCtx *svc.ServiceContext
 func (l *DeductMontyRollBackLogic) DeductMontyRollBack(in *pb.DeductMoneyReq) (*pb.DeductMoneyResp, error) {
 	// 检查输入
 	if in.Money < 0 {
-		return nil, errors.Wrapf(xerr.NewErrMsg("增加的钱不能小于 0 "), "")
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("增加的钱不能小于 0 "), "").Error())
 	}
 
 	// 检查用户是否存在
 	_, err := l.svcCtx.UserModel.FindOne(in.UserId)
 	if err != nil {
 		if err == model.ErrNotFound {
-			return nil, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "Not Found userID: %d", in.UserId)
+			return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "Not Found userID: %d", in.UserId).Error())
 		}
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+		return nil, status.Error(codes.Internal, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
 	}
 	// 检查用户是否有钱包
 	wallet, err := l.svcCtx.WalletModel.FindOneByUserId(in.UserId)
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+		return nil, status.Error(codes.Internal, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
 	}
 
 	if wallet == nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("该用户没有钱包"), "userID: %d", in.UserId)
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("该用户没有钱包"), "userID: %d", in.UserId).Error())
 	}
 
 	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)

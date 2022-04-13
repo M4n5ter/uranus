@@ -40,7 +40,7 @@ func (l *DeductStockBySpaceIDLogic) DeductStockBySpaceID(in *pb.DeductStockBySpa
 
 	space, err := l.svcCtx.SpacesModel.FindOne(in.SpaceID)
 	if err != nil && err != commonModel.ErrNotFound {
-		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
+		return nil, status.Error(codes.Internal, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err).Error())
 	}
 	if space == nil {
 		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("找不到对应舱位"), "spaceID: %d", in.SpaceID).Error())

@@ -36,18 +36,17 @@ func NewUpdateTradeStateRollBackLogic(ctx context.Context, svcCtx *svc.ServiceCo
 func (l *UpdateTradeStateRollBackLogic) UpdateTradeStateRollBack(in *pb.UpdateTradeStateReq) (*pb.UpdateTradeStateResp, error) {
 
 	// 检查输入合法性
-	if len(in.Sn) == 0 ||
-		in.PayStatus < -1 || in.PayStatus > 3 || !in.PayTime.IsValid() {
-		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input : %+v", in)
+	if len(in.Sn) == 0 || in.PayStatus < -1 || in.PayStatus > 3 || !in.PayTime.IsValid() {
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input : %+v", in).Error())
 	}
 
 	//1、流水记录确认.
 	payment, err := l.svcCtx.PaymentModel.FindOneBySn(in.Sn)
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(ERRDBERR, "DBERR: 确认流水记录失败, err: %v, Sn: %s", err, in.Sn)
+		return nil, status.Error(codes.Internal, errors.Wrapf(ERRDBERR, "DBERR: 确认流水记录失败, err: %v, Sn: %s", err, in.Sn).Error())
 	}
 	if payment == nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("流水记录不存在"), "Not Found: Sn: %s", in.Sn)
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("流水记录不存在"), "Not Found: Sn: %s", in.Sn).Error())
 	}
 
 	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)
@@ -77,7 +76,7 @@ func (l *UpdateTradeStateRollBackLogic) UpdateTradeStateRollBack(in *pb.UpdateTr
 		PayStatus: payment.PayStatus,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("支付流水状态变更发送到kq失败"), "支付流水状态变更发送到kq失败")
+		return nil, status.Error(codes.Internal, errors.Wrapf(xerr.NewErrMsg("支付流水状态变更发送到kq失败"), "支付流水状态变更发送到kq失败").Error())
 	}
 
 	return &pb.UpdateTradeStateResp{}, nil

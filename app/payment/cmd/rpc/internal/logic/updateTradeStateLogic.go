@@ -43,26 +43,26 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 	//1、流水记录确认.
 	payment, err := l.svcCtx.PaymentModel.FindOneBySn(in.Sn)
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(ERRDBERR, "DBERR: 确认流水记录失败, err: %v, Sn: %s", err, in.Sn)
+		return nil, status.Error(codes.Internal, errors.Wrapf(ERRDBERR, "DBERR: 确认流水记录失败, err: %v, Sn: %s", err, in.Sn).Error())
 	}
 	if payment == nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("流水记录不存在"), "Not Found: Sn: %s", in.Sn)
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("流水记录不存在"), "Not Found: Sn: %s", in.Sn).Error())
 	}
 	//2、判断状态
 	if in.PayStatus == model.CommonPayFAIL || in.PayStatus == model.CommonPaySuccess {
 		// 想要修改为支付失败或者支付成功的情况
 
 		if payment.PayStatus != model.CommonPayWait {
-			return nil, errors.Wrapf(xerr.NewErrMsg("只有待支付的订单可以修改为支付失败状态或者支付成功状态"), "当前流水状态非待支付状态，不可修改为支付成功或失败, in: %+v", in)
+			return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("只有待支付的订单可以修改为支付失败状态或者支付成功状态"), "当前流水状态非待支付状态，不可修改为支付成功或失败, in: %+v", in).Error())
 		}
 
 	} else if in.PayStatus == model.CommonPayRefund {
 		// 要修改为退款成功的情况
 		if payment.PayStatus != model.CommonPaySuccess {
-			return nil, errors.Wrapf(xerr.NewErrMsg("只有付款成功的订单才能退款"), "修改支付流水记录为退款失败，当前支付流水未支付成功无法退款 in : %+v", in)
+			return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("只有付款成功的订单才能退款"), "修改支付流水记录为退款失败，当前支付流水未支付成功无法退款 in : %+v", in).Error())
 		}
 	} else {
-		return nil, errors.Wrapf(xerr.NewErrMsg("当前不支持该状态"), "不支持的支付流水状态: %+v", in)
+		return nil, status.Error(codes.Aborted, errors.Wrapf(xerr.NewErrMsg("当前不支持该状态"), "不支持的支付流水状态: %+v", in).Error())
 	}
 	//3、更新.
 
@@ -100,7 +100,7 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 		PayStatus: payment.PayStatus,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("支付流水状态变更发送到kq失败"), "支付流水状态变更发送到kq失败")
+		return nil, status.Error(codes.Internal, errors.Wrapf(xerr.NewErrMsg("支付流水状态变更发送到kq失败"), "支付流水状态变更发送到kq失败").Error())
 	}
 	return &pb.UpdateTradeStateResp{}, nil
 }

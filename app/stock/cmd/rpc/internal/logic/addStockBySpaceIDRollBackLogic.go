@@ -39,7 +39,7 @@ func (l *AddStockBySpaceIDRollBackLogic) AddStockBySpaceIDRollBack(in *pb.AddSto
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if space == nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, status.Error(codes.Aborted, err.Error())
 	}
 
 	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)

@@ -35,7 +35,10 @@ func (l *AddStockByTicketIDRollBackLogic) AddStockByTicketIDRollBack(in *pb.AddS
 
 	space, err := l.svcCtx.GetSpaceByTicketID(in.TicketID)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		if err.(*xerr.CodeError).GetErrCode() == xerr.DB_ERROR {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
+		return nil, status.Error(codes.Aborted, err.Error())
 	}
 
 	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)
