@@ -119,8 +119,9 @@ func (l *RefundAirTicketsLogic) RefundAirTickets(in *pb.RefundAirTicketsReq) (*p
 	gid := dtmgrpc.MustGenGid(dtmServer)
 	saga := dtmgrpc.NewSagaGrpc(dtmServer, gid).
 		Add(paymentServer+"/pb.payment/UpdateTradeState", paymentServer+"/pb.payment/UpdateTradeStateRollBack", updateTradeStateReq).
-		Add(usercenterServer+"/pb.usercenter/AddMoney", usercenterServer+"/pb.usercenter/AddMoneyRollBack", addMoneyReq).
-		Add(stockServer+"/pb.stock/AddStockByTicketID", stockServer+"/pb.stock/AddStockByTicketIDRollBack", addStockReq)
+		Add(stockServer+"/pb.stock/AddStockByTicketID", stockServer+"/pb.stock/AddStockByTicketIDRollBack", addStockReq).
+		Add(usercenterServer+"/pb.usercenter/AddMoney", usercenterServer+"/pb.usercenter/AddMoneyRollBack", addMoneyReq)
+	saga.EnableConcurrent()
 	err = saga.Submit()
 	logger.FatalIfError(err)
 	if err != nil {

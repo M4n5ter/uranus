@@ -153,10 +153,11 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	dtmServer := l.svcCtx.Config.DtmServer.Target
 	gid := dtmgrpc.MustGenGid(dtmServer)
 	saga := dtmgrpc.NewSagaGrpc(dtmServer, gid).
-		Add(stockServer+"/pb.stock/DeductStockByTicketID", stockServer+"/pb.stock/DeductStockByTicketIDRollBack", deductReq).
 		Add(usercenterServer+"/pb.usercenter/DeductMoney", usercenterServer+"/pb.usercenter/DeductMontyRollBack", updateUserWalletReq).
 		Add(paymentServer+"/pb.payment/UpdateTradeState", paymentServer+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq).
+		Add(stockServer+"/pb.stock/DeductStockByTicketID", stockServer+"/pb.stock/DeductStockByTicketIDRollBack", deductReq).
 		Add(stockServer+"/pb.stock/ReleaseStockByTicketID", stockServer+"/pb.stock/ReleaseStockByTicketIDRollBack", releaseReq)
+	saga.EnableConcurrent()
 	err = saga.Submit()
 	logger.FatalIfError(err)
 	if err != nil {
