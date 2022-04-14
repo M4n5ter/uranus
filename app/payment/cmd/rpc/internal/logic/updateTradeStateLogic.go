@@ -41,7 +41,7 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 	//}
 
 	//1、流水记录确认.
-	payment, err := l.svcCtx.PaymentModel.FindOneBySn(in.Sn)
+	payment, err := l.svcCtx.PaymentModel.FindOneBySn(l.ctx, in.Sn)
 	if err != nil && err != model.ErrNotFound {
 		return nil, status.Error(codes.Internal, errors.Wrapf(ERRDBERR, "DBERR: 确认流水记录失败, err: %v, Sn: %s", err, in.Sn).Error())
 	}
@@ -84,7 +84,7 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 		payment.PayStatus = in.PayStatus
 		payment.PayTime = in.PayTime.AsTime()
 		payment.PayMode = in.PayMode
-		err = l.svcCtx.PaymentModel.UpdateWithVersion(sqlx.NewSessionFromTx(tx), payment)
+		err = l.svcCtx.PaymentModel.UpdateWithVersion(l.ctx, sqlx.NewSessionFromTx(tx), payment)
 		if err != nil {
 			return errors.Wrapf(ERRDBERR, "更新支付流水失败: payment: %+v", payment)
 		}

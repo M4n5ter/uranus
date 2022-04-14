@@ -37,7 +37,7 @@ func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreateP
 		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "invalid input %+v", in)
 	}
 
-	p, err := l.svcCtx.PaymentModel.FindOneByOrderSn(in.OrderSn)
+	p, err := l.svcCtx.PaymentModel.FindOneByOrderSn(l.ctx, in.OrderSn)
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
 	}
@@ -54,7 +54,7 @@ func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreateP
 	data.PayTotal = in.PayTotal
 	data.PayTime = time.Now()
 
-	_, err = l.svcCtx.PaymentModel.Insert(nil, data)
+	_, err = l.svcCtx.PaymentModel.Insert(l.ctx, nil, data)
 	if err != nil {
 		return nil, errors.Wrapf(ERRDBERR, "DBERR: 创建支付流水记录失败: err: %v, data: %+v", err, data)
 	}

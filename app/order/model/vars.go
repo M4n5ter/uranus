@@ -21,3 +21,6 @@ var FlightOrderTradeStateRefund int64 = 3
 
 // FlightOrderTradeStateExpire 订单过期
 var FlightOrderTradeStateExpire int64 = 4
+
+// FlightOrderTradeStateDiscard 废弃订单
+var FlightOrderTradeStateDiscard int64 = -2

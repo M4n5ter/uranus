@@ -39,7 +39,7 @@ func (l *GetPaymentSuccessRefundByOrderSnLogic) GetPaymentSuccessRefundByOrderSn
 		"order_sn = ? AND (pay_status = ? OR pay_status = ?)",
 		in.OrderSn, model.CommonPaySuccess, model.CommonPayRefund)
 
-	payment, err := l.svcCtx.PaymentModel.FindOneByQuery(whereBuilder)
+	payment, err := l.svcCtx.PaymentModel.FindOneByQuery(l.ctx, whereBuilder)
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.Wrapf(ERRDBERR, "DBERR: 根据订单sn查询支付流水失败, err: %v, in: %+v", err, in)
 	}

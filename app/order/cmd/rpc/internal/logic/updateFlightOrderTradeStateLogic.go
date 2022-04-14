@@ -102,6 +102,8 @@ func (l *UpdateFlightOrderTradeStateLogic) verifyOrderTradeState(newTradeState, 
 			return errors.Wrapf(xerr.NewErrMsg("只有未使用的订单才能更改为此状态"),
 				"只有未使用的订单才能更改为已过期状态 newTradeState: %d, oldTradeState: %d", newTradeState, oldTradeState)
 		}
+	case model.FlightOrderTradeStateDiscard:
+		// 订单废弃
 	}
 
 	return nil

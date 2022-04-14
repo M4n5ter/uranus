@@ -41,7 +41,7 @@ func (l *UpdateTradeStateRollBackLogic) UpdateTradeStateRollBack(in *pb.UpdateTr
 	}
 
 	//1、流水记录确认.
-	payment, err := l.svcCtx.PaymentModel.FindOneBySn(in.Sn)
+	payment, err := l.svcCtx.PaymentModel.FindOneBySn(l.ctx, in.Sn)
 	if err != nil && err != model.ErrNotFound {
 		return nil, status.Error(codes.Internal, errors.Wrapf(ERRDBERR, "DBERR: 确认流水记录失败, err: %v, Sn: %s", err, in.Sn).Error())
 	}
@@ -58,7 +58,7 @@ func (l *UpdateTradeStateRollBackLogic) UpdateTradeStateRollBack(in *pb.UpdateTr
 	if err := barrier.CallWithDB(db, func(tx *sql.Tx) error {
 		// 废弃交易
 		payment.PayStatus = model.CommonPayDiscard
-		err := l.svcCtx.PaymentModel.UpdateWithVersion(sqlx.NewSessionFromTx(tx), payment)
+		err := l.svcCtx.PaymentModel.UpdateWithVersion(l.ctx, sqlx.NewSessionFromTx(tx), payment)
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrMsg("回滚失败"), "err: %v", err)
 		}
