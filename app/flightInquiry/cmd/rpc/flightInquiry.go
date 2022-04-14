@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 
+	_ "go.uber.org/automaxprocs"
+
 	"uranus/app/flightInquiry/cmd/rpc/internal/config"
 	"uranus/app/flightInquiry/cmd/rpc/internal/server"
 	"uranus/app/flightInquiry/cmd/rpc/internal/svc"

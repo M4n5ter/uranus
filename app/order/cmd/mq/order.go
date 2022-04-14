@@ -7,6 +7,7 @@ import (
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
+	_ "go.uber.org/automaxprocs"
 )
 
 var configFile = flag.String("f", "etc/order.yaml", "Specify the config file")

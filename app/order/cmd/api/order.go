@@ -11,6 +11,7 @@ import (
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
+	_ "go.uber.org/automaxprocs"
 )
 
 var configFile = flag.String("f", "etc/order.yaml", "the config file")

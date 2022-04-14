@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 
+	_ "go.uber.org/automaxprocs"
+
 	{{.imports}}
 	"uranus/common/interceptor/rpcserver"
 

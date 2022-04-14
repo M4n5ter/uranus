@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"uranus/common/middleware"
 
+	_ "go.uber.org/automaxprocs"
 	"uranus/app/flightInquiry/cmd/api/internal/config"
 	"uranus/app/flightInquiry/cmd/api/internal/handler"
 	"uranus/app/flightInquiry/cmd/api/internal/svc"

@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 
+	_ "go.uber.org/automaxprocs"
+
 	"uranus/app/payment/cmd/rpc/internal/config"
 	"uranus/app/payment/cmd/rpc/internal/server"
 	"uranus/app/payment/cmd/rpc/internal/svc"

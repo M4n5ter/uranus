@@ -18,6 +18,7 @@ require (
 	github.com/wechatpay-apiv3/wechatpay-go v0.2.11
 	github.com/zeromicro/go-queue v1.1.3
 	github.com/zeromicro/go-zero v1.3.2
+	go.uber.org/automaxprocs v1.5.1
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.28.0
 	gorm.io/driver/mysql v1.3.3
@@ -99,7 +100,6 @@ require (
 	go.opentelemetry.io/otel/sdk v1.3.0 // indirect
 	go.opentelemetry.io/otel/trace v1.6.3 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/automaxprocs v1.5.1 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 // indirect
