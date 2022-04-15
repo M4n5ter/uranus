@@ -62,6 +62,9 @@ func (l *LocalPayLogic) LocalPay(req *types.LocalPaymentReq) (resp *types.LocalP
 	//	}
 	//	return nil, errors.Wrapf(err, "支付失败, err: %v", err)
 	//}
+	if err != nil {
+		return nil, err
+	}
 
 	return
 }

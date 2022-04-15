@@ -24,6 +24,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: flightInquiry.QuireBySetOutDateStartPositionEndPositionHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/flightInquiry/v1"),
 	)
 }

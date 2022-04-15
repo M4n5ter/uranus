@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
-	"uranus/app/uranusAuth/cmd/rpc/auth"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/app/userCenter/model"
 	"uranus/common/tool"
 	"uranus/common/xerr"
@@ -39,15 +39,18 @@ func (l *LoginLogic) Login(in *pb.LoginReq) (*pb.LoginResp, error) {
 	if user == nil {
 		return nil, errors.Wrapf(ErrLoginErr, "mobile doesn't exist, req: %+v", in)
 	}
+
 	resp := &pb.LoginResp{}
+
 	if user.Password == tool.Md5ByString(in.Password) {
-		authResp, err := l.svcCtx.AuthRpcClient.GenerateToken(l.ctx, &auth.GenerateTokenReq{UserId: user.Id})
+		generateTokenLogic := NewGenerateTokenLogic(l.ctx, l.svcCtx)
+		tokenResp, err := generateTokenLogic.GenerateToken(&usercenter.GenerateTokenReq{UserId: user.Id})
 		if err != nil {
 			return nil, err
 		}
-		_ = copier.Copy(resp, authResp)
+		_ = copier.Copy(resp, tokenResp)
 	} else {
-		return nil, errors.Wrapf(xerr.NewErrMsg("密码错误"), "invalid password")
+		return nil, errors.Wrapf(ErrLoginErr, "invalid password")
 	}
 
 	return resp, nil

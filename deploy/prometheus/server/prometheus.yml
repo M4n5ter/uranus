@@ -87,20 +87,6 @@ scrape_configs:
           job: payment-api
           app: payment-api
           env: dev
-  - job_name: 'auth-rpc'
-    static_configs:
-      - targets: ['uranus:3012']
-        labels:
-          job: auth-rpc
-          app: auth-rpc
-          env: dev
-  - job_name: 'auth-api'
-    static_configs:
-      - targets: ['uranus:3013']
-        labels:
-          job: auth-api
-          app: auth-api
-          env: dev
   - job_name: 'usercenter-rpc'
     static_configs:
       - targets: [ 'uranus:3014' ]

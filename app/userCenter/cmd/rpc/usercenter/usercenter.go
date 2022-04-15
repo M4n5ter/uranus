@@ -17,6 +17,8 @@ type (
 	AddMoneyResp             = pb.AddMoneyResp
 	DeductMoneyReq           = pb.DeductMoneyReq
 	DeductMoneyResp          = pb.DeductMoneyResp
+	GenerateTokenReq         = pb.GenerateTokenReq
+	GenerateTokenResp        = pb.GenerateTokenResp
 	GetUserAuthByAuthKeyReq  = pb.GetUserAuthByAuthKeyReq
 	GetUserAuthByAuthKeyResp = pb.GetUserAuthByAuthKeyResp
 	GetUserAuthByUserIdReq   = pb.GetUserAuthByUserIdReq
@@ -37,6 +39,7 @@ type (
 	Usercenter interface {
 		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 		Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
+		GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error)
 		GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error)
 		GetUserAuthByUserId(ctx context.Context, in *GetUserAuthByUserIdReq, opts ...grpc.CallOption) (*GetUserAuthByUserIdResp, error)
 		GetUserAuthByAuthKey(ctx context.Context, in *GetUserAuthByAuthKeyReq, opts ...grpc.CallOption) (*GetUserAuthByAuthKeyResp, error)
@@ -67,6 +70,11 @@ func (m *defaultUsercenter) Login(ctx context.Context, in *LoginReq, opts ...grp
 func (m *defaultUsercenter) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.Register(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.GenerateToken(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error) {
