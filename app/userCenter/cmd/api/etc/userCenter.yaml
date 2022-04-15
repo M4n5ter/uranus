@@ -2,7 +2,8 @@ Name: usercenter-api
 Host: 0.0.0.0
 Port: 9014
 
-
+JwtAuth:
+  AccessSecret: qe6336r9-1278-8721-8e13-7a69dg305dk0
 
 #WxMiniConf
 WxMiniConf:

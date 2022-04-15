@@ -22,6 +22,14 @@ service userCenter {
 	@handler login
 	post /user/login      (LoginReq) returns (LoginResp)
 	
+}
+
+@server(
+	prefix: userCenter/v1
+	group:	user
+	jwt:	JwtAuth
+)
+service userCenter {
 	@doc "获取用户信息"
 	@handler detail
 	post /user/detail     (UserInfoReq) returns (UserInfoResp)
