@@ -9,10 +9,10 @@ import (
 	"uranus/app/payment/cmd/api/internal/svc"
 )
 
-func ThirdPaymentWxPayCallbackHandler(ctx *svc.ServiceContext) http.HandlerFunc {
+func ThirdPaymentWxPayCallbackHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		l := payment.NewThirdPaymentWxPayCallbackLogic(r.Context(), ctx)
+		l := payment.NewThirdPaymentWxPayCallbackLogic(r.Context(), svcCtx)
 		resp, err := l.ThirdPaymentWxPayCallback(w, r)
 		if err != nil {
 			logx.WithContext(r.Context()).Errorf("【API-ERR】 ThirdPaymentWxPayCallbackHandler : %+v ", err)
