@@ -24,7 +24,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.LoginHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/userCenter/v1"),
+		rest.WithPrefix("/usercenter/v1"),
 	)
 
 	server.AddRoutes(
@@ -46,6 +46,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
-		rest.WithPrefix("/userCenter/v1"),
+		rest.WithPrefix("/usercenter/v1"),
 	)
 }

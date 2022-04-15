@@ -10,10 +10,10 @@ info(
 import "user/user.api"
 
 @server(
-	prefix: userCenter/v1
+	prefix: usercenter/v1
 	group:  user
 )
-service userCenter {
+service usercenter {
 	@doc "注册"
 	@handler register
 	post /user/register   (RegisterReq) returns (RegisterResp)
@@ -25,11 +25,11 @@ service userCenter {
 }
 
 @server(
-	prefix: userCenter/v1
+	prefix: usercenter/v1
 	group:	user
 	jwt:	JwtAuth
 )
-service userCenter {
+service usercenter {
 	@doc "获取用户信息"
 	@handler detail
 	post /user/detail     (UserInfoReq) returns (UserInfoResp)

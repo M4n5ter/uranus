@@ -6,7 +6,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/silenceper/wechat/v2/cache"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
-	"uranus/app/uranusAuth/cmd/rpc/auth"
 	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/app/userCenter/model"
 	"uranus/common/tool"
@@ -78,7 +77,7 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req *types.WXMiniAuthReq) (resp *types.WXMi
 	} else {
 		// 用户已经绑定，登录:直接授权返回token
 		userId = rpcResp.UserAuth.UserId
-		tokenResp, err := l.svcCtx.AuthRpcClient.GenerateToken(l.ctx, &auth.GenerateTokenReq{UserId: userId})
+		tokenResp, err := l.svcCtx.UsercenterRpcClient.GenerateToken(l.ctx, &usercenter.GenerateTokenReq{UserId: userId})
 		if err != nil {
 			return nil, errors.Wrapf(ErrMiniAuthFailedErr, "authRpc.GenerateTokenReq err: %v, userId: %d", err, userId)
 		}
