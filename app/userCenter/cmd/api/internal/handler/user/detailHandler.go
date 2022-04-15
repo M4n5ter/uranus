@@ -2,7 +2,6 @@ package user
 
 import (
 	"net/http"
-
 	"uranus/common/result"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -18,7 +17,6 @@ func DetailHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			result.ParamErrorResult(r, w, err)
 			return
 		}
-
 		l := user.NewDetailLogic(r.Context(), svcCtx)
 		resp, err := l.Detail(&req)
 		result.HttpResult(r, w, resp, err)
