@@ -34,7 +34,7 @@ func (l *UserFlightOrderListLogic) UserFlightOrderList(in *pb.UserFlightOrderLis
 
 	whereBuilder := l.svcCtx.OrderModel.RowBuilder().Where(squirrel.Eq{"user_id": in.UserId})
 	// 有支持的状态则筛选，没有支持的状态则查所有状态
-	if in.TraderState >= model.FlightOrderTradeStateCancel && in.TraderState <= model.FlightOrderTradeStateExpire {
+	if in.TraderState >= model.FlightOrderTradeStateDiscard && in.TraderState <= model.FlightOrderTradeStateExpire {
 		whereBuilder = whereBuilder.Where(squirrel.Eq{"trade_state": in.TraderState})
 	}
 
