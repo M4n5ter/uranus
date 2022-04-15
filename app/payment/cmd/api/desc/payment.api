@@ -17,6 +17,7 @@ import(
 @server(
 	prefix: payment/v1
 	group: payment
+	jwt:	JwtAuth
 )
 service payment {
 	
@@ -28,6 +29,13 @@ service payment {
 	@handler thirdPaymentwxPay
 	post /payment/paymentWxPay (ThirdPaymentWxPayReq) returns (ThirdPaymentWxPayResp)
 	
+}
+
+@server(
+	prefix: payment/v1
+	group: payment
+)
+service payment {
 	@doc "第三方：微信支付回调"
 	@handler thirdPaymentWxPayCallback
 	post /payment/paymentWxPayCallback (ThirdPaymentWxPayCallbackReq) returns (ThirdPaymentWxPayCallbackResp)

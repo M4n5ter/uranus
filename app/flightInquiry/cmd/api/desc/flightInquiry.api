@@ -13,6 +13,7 @@ import "types/types.api"
 @server(
 	group: flightInquiry
 	prefix: flightInquiry/v1
+	jwt:	JwtAuth
 )
 service flightInquiry {
 	@doc "航班查询"

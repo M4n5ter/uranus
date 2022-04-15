@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
-	"uranus/app/uranusAuth/cmd/rpc/auth"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/app/userCenter/model"
 	"uranus/common/tool"
 	"uranus/common/xerr"
@@ -135,11 +135,13 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 	} else {
 		return nil, errors.Wrapf(ErrRegisterErr, "unkown authType: %s, req: %+v", in.AuthType, in)
 	}
-	authResp, err := l.svcCtx.AuthRpcClient.GenerateToken(l.ctx, &auth.GenerateTokenReq{UserId: userId})
+
+	generateTokenLogic := NewGenerateTokenLogic(l.ctx, l.svcCtx)
+	tokenResp, err := generateTokenLogic.GenerateToken(&usercenter.GenerateTokenReq{UserId: userId})
 	if err != nil {
 		return nil, err
 	}
 	resp := &pb.RegisterResp{}
-	_ = copier.Copy(resp, authResp)
+	_ = copier.Copy(resp, tokenResp)
 	return resp, nil
 }
