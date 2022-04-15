@@ -156,8 +156,9 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 		Add(usercenterServer+"/pb.usercenter/DeductMoney", usercenterServer+"/pb.usercenter/DeductMontyRollBack", updateUserWalletReq).
 		Add(paymentServer+"/pb.payment/UpdateTradeState", paymentServer+"/pb.payment/UpdateTradeStateRollBack", updatePaymentReq).
 		Add(stockServer+"/pb.stock/DeductStockByTicketID", stockServer+"/pb.stock/DeductStockByTicketIDRollBack", deductReq).
-		Add(stockServer+"/pb.stock/ReleaseStockByTicketID", stockServer+"/pb.stock/ReleaseStockByTicketIDRollBack", releaseReq)
-	saga.EnableConcurrent()
+		Add(stockServer+"/pb.stock/ReleaseStockByTicketID", stockServer+"/pb.stock/ReleaseStockByTicketIDRollBack", releaseReq).
+		EnableConcurrent().
+		AddBranchOrder(3, []int{2})
 	err = saga.Submit()
 	logger.FatalIfError(err)
 	if err != nil {
