@@ -60,7 +60,7 @@ services:
 
 #  #搜集kafka业务日志、存储prometheus监控数据
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     container_name: elasticsearch
     user: root
     environment:
@@ -78,7 +78,7 @@ services:
 
   #查看elasticsearch数据
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.13.4
+    image: docker.elastic.co/kibana/kibana:7.16.2
     container_name: kibana
     environment:
       - elasticsearch.hosts=http://elasticsearch:9200
@@ -111,7 +111,7 @@ services:
 
   #收集业务数据
   filebeat:
-    image: elastic/filebeat:7.13.4
+    image: elastic/filebeat:7.16.2
     container_name: filebeat
     environment:
       # 时区上海
