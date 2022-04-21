@@ -19,13 +19,13 @@ type FLI commonModel.FlightInfos
 // AddID 提供id存储
 func AddID(r redis.Redis, id int64, zset, prefix string) error {
 	bizFLICacheKey := fmt.Sprintf(prefix, zset)
-	// 过期时间为 12 小时
-	err := r.Expire(bizFLICacheKey, 43200)
+	_, err := r.Zadd(bizFLICacheKey, time.Now().UnixNano()/1e6, strconv.Itoa(int(id)))
 	if err != nil {
 		return err
 	}
 
-	_, err = r.Zadd(bizFLICacheKey, time.Now().UnixNano()/1e6, strconv.Itoa(int(id)))
+	// 过期时间为 12 小时
+	err = r.Expire(bizFLICacheKey, 43200)
 	return err
 }
 
