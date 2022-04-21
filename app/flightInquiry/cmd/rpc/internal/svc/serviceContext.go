@@ -82,12 +82,12 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 					logx.Errorf("ADD bizcache ERR: %v", err)
 				}
 			}
-		}
-
-		// 查到 bizcache 的情况
-		spaces, err = s.GetSpacesByIdList(spaceIdList)
-		if err != nil {
-			return nil, err
+		} else {
+			// 查到 bizcache 的情况
+			spaces, err = s.GetSpacesByIdList(spaceIdList)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		for _, space := range spaces {
