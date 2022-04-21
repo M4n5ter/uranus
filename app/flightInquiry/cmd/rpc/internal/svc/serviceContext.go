@@ -1,9 +1,13 @@
 package svc
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"uranus/app/flightInquiry/bizcache"
 	"uranus/app/flightInquiry/cmd/rpc/internal/config"
 	"uranus/app/flightInquiry/cmd/rpc/pb"
 	"uranus/common/xerr"
@@ -22,6 +26,7 @@ type ServiceContext struct {
 	SpacesModel               commonModel.SpacesModel
 	TicketsModel              commonModel.TicketsModel
 	RefundAndChangeInfosModel commonModel.RefundAndChangeInfosModel
+	Redis                     redis.Redis
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -32,6 +37,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		SpacesModel:               commonModel.NewSpacesModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		TicketsModel:              commonModel.NewTicketsModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		RefundAndChangeInfosModel: commonModel.NewRefundAndChangeInfosModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
+		Redis: *redis.New(c.Redis.Host, func(r *redis.Redis) {
+			r.Type = c.Redis.Type
+			r.Pass = c.Redis.Pass
+		}),
 	}
 }
 
@@ -47,14 +56,38 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 				return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.Flights.FindOneByNumber : FlightNumber:%s, err: %v\n", info.FlightNumber, err)
 			}
 		}
-		// 此处查询不走缓存，直接打到DB上
-		spaces, err := s.SpacesModel.FindListByFlightInfoID(s.SpacesModel.RowBuilder(), info.Id)
-		if err != nil {
-			if err == commonModel.ErrNotFound {
-				return nil, errors.Wrapf(ERRGetSpaces, "NOT FOUND: There is no corresponding space information for this flightInfo.FlightInfoID:%d\n", info.Id)
-			} else {
-				return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.SpacesModel.FindListByFlightInfoID : FlightInfoID:%d, err: %v\n", info.Id, err)
+
+		var spaces []*commonModel.Spaces
+		// 查 bizcache
+		zset := fmt.Sprintf("fliID_%d", info.Id)
+		spaceIdList, err := bizcache.ListAll(s.Redis, zset, bizcache.BizSpaceCachePrefix)
+		// 查不到 bizcache 的情况
+		if err != nil || spaceIdList == nil {
+			logx.Errorf("GET bizcache ERR: %v", err)
+
+			// 此处查询不走缓存，直接打到DB上
+			spaces, err = s.SpacesModel.FindListByFlightInfoID(s.SpacesModel.RowBuilder(), info.Id)
+			if err != nil {
+				if err == commonModel.ErrNotFound {
+					return nil, errors.Wrapf(ERRGetSpaces, "NOT FOUND: There is no corresponding space information for this flightInfo.FlightInfoID:%d\n", info.Id)
+				} else {
+					return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.SpacesModel.FindListByFlightInfoID : FlightInfoID:%d, err: %v\n", info.Id, err)
+				}
 			}
+
+			// 把 spaceID 列表加进 bizcache
+			for _, space := range spaces {
+				err := bizcache.AddID(s.Redis, space.Id, zset, bizcache.BizSpaceCachePrefix)
+				if err != nil {
+					logx.Errorf("ADD bizcache ERR: %v", err)
+				}
+			}
+		}
+
+		// 查到 bizcache 的情况
+		spaces, err = s.GetSpacesByIdList(spaceIdList)
+		if err != nil {
+			return nil, err
 		}
 
 		for _, space := range spaces {
@@ -184,4 +217,40 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 
 	}
 	return resp, nil
+}
+
+func (s *ServiceContext) GetFlightInfosByIdList(idList []int64) ([]*commonModel.FlightInfos, error) {
+	var ret []*commonModel.FlightInfos
+	for _, id := range idList {
+		fli, err := s.FlightInfosModel.FindOne(id)
+		if err != nil && err != commonModel.ErrNotFound {
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+		}
+
+		if fli == nil {
+			return nil, errors.Wrapf(xerr.NewErrMsg("未找到对应flightinfo"), "Not Found Err: flightInfo ID: %d", id)
+		}
+
+		ret = append(ret, fli)
+	}
+
+	return ret, nil
+}
+
+func (s *ServiceContext) GetSpacesByIdList(idList []int64) ([]*commonModel.Spaces, error) {
+	var ret []*commonModel.Spaces
+	for _, id := range idList {
+		space, err := s.SpacesModel.FindOne(id)
+		if err != nil && err != commonModel.ErrNotFound {
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+		}
+
+		if space == nil {
+			return nil, errors.Wrapf(xerr.NewErrMsg("未找到对应space"), "Not Found Err: flightInfo ID: %d", id)
+		}
+
+		ret = append(ret, space)
+	}
+
+	return ret, nil
 }
