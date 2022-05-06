@@ -140,7 +140,7 @@ services:
       TZ: Asia/Shanghai
     restart: always
     ports:
-      - "3181:2181"
+      - "2181:2181"
     networks:
       - uranus_net
 
@@ -186,6 +186,7 @@ services:
       TZ: Asia/Shanghai
       # root 密码
       MYSQL_ROOT_PASSWORD: Flight_1
+      MYSQL_ROOT_HOST: "%"
     ports:
       - "33069:3306"
     volumes:
