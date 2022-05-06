@@ -103,6 +103,20 @@ message GetUserMoneyResp {
   int64 money = 1;
 }
 
+// 上传头像
+message UploadAvatarReq {
+  int64  user_id  = 1;
+  string avatar   = 2;
+}
+message UploadAvatarResp {}
+
+// 修改头像
+message UpdateAvatarReq {
+  int64   user_id = 1;
+  string  avatar  = 2;
+}
+message UpdateAvatarResp {}
+
 service usercenter {
   rpc Login(LoginReq) returns(LoginResp);
   rpc Register(RegisterReq) returns(RegisterResp);
@@ -116,4 +130,6 @@ service usercenter {
   rpc AddMoneyRollback(AddMoneyReq) returns(AddMoneyResp);
   rpc DeductMoney(DeductMoneyReq) returns(DeductMoneyResp);
   rpc DeductMontyRollBack(DeductMoneyReq) returns(DeductMoneyResp);
+  rpc UploadAvatar(UploadAvatarReq) returns(UploadAvatarResp);
+  rpc UpdateAvatar(UpdateAvatarReq) returns(UpdateAvatarResp);
 }

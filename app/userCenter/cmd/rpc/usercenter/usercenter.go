@@ -31,8 +31,12 @@ type (
 	LoginResp                = pb.LoginResp
 	RegisterReq              = pb.RegisterReq
 	RegisterResp             = pb.RegisterResp
+	UpdateAvatarReq          = pb.UpdateAvatarReq
+	UpdateAvatarResp         = pb.UpdateAvatarResp
 	UpdateUserWalletReq      = pb.UpdateUserWalletReq
 	UpdateUserWalletResp     = pb.UpdateUserWalletResp
+	UploadAvatarReq          = pb.UploadAvatarReq
+	UploadAvatarResp         = pb.UploadAvatarResp
 	User                     = pb.User
 	UserAuth                 = pb.UserAuth
 
@@ -49,6 +53,8 @@ type (
 		AddMoneyRollback(ctx context.Context, in *AddMoneyReq, opts ...grpc.CallOption) (*AddMoneyResp, error)
 		DeductMoney(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
 		DeductMontyRollBack(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
+		UploadAvatar(ctx context.Context, in *UploadAvatarReq, opts ...grpc.CallOption) (*UploadAvatarResp, error)
+		UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -120,4 +126,14 @@ func (m *defaultUsercenter) DeductMoney(ctx context.Context, in *DeductMoneyReq,
 func (m *defaultUsercenter) DeductMontyRollBack(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.DeductMontyRollBack(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) UploadAvatar(ctx context.Context, in *UploadAvatarReq, opts ...grpc.CallOption) (*UploadAvatarResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.UploadAvatar(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.UpdateAvatar(ctx, in, opts...)
 }

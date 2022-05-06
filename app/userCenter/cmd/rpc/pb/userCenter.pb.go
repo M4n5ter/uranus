@@ -1237,6 +1237,194 @@ func (x *GetUserMoneyResp) GetMoney() int64 {
 	return 0
 }
 
+// 上传头像
+type UploadAvatarReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId int64  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Avatar string `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
+}
+
+func (x *UploadAvatarReq) Reset() {
+	*x = UploadAvatarReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[22]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UploadAvatarReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UploadAvatarReq) ProtoMessage() {}
+
+func (x *UploadAvatarReq) ProtoReflect() protoreflect.Message {
+	mi := &file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[22]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UploadAvatarReq.ProtoReflect.Descriptor instead.
+func (*UploadAvatarReq) Descriptor() ([]byte, []int) {
+	return file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *UploadAvatarReq) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *UploadAvatarReq) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
+type UploadAvatarResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *UploadAvatarResp) Reset() {
+	*x = UploadAvatarResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[23]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UploadAvatarResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UploadAvatarResp) ProtoMessage() {}
+
+func (x *UploadAvatarResp) ProtoReflect() protoreflect.Message {
+	mi := &file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[23]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UploadAvatarResp.ProtoReflect.Descriptor instead.
+func (*UploadAvatarResp) Descriptor() ([]byte, []int) {
+	return file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDescGZIP(), []int{23}
+}
+
+// 修改头像
+type UpdateAvatarReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId int64  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Avatar string `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
+}
+
+func (x *UpdateAvatarReq) Reset() {
+	*x = UpdateAvatarReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[24]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateAvatarReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateAvatarReq) ProtoMessage() {}
+
+func (x *UpdateAvatarReq) ProtoReflect() protoreflect.Message {
+	mi := &file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[24]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateAvatarReq.ProtoReflect.Descriptor instead.
+func (*UpdateAvatarReq) Descriptor() ([]byte, []int) {
+	return file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *UpdateAvatarReq) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *UpdateAvatarReq) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
+type UpdateAvatarResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *UpdateAvatarResp) Reset() {
+	*x = UpdateAvatarResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[25]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateAvatarResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateAvatarResp) ProtoMessage() {}
+
+func (x *UpdateAvatarResp) ProtoReflect() protoreflect.Message {
+	mi := &file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[25]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateAvatarResp.ProtoReflect.Descriptor instead.
+func (*UpdateAvatarResp) Descriptor() ([]byte, []int) {
+	return file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDescGZIP(), []int{25}
+}
+
 var File_app_userCenter_cmd_rpc_pb_userCenter_proto protoreflect.FileDescriptor
 
 var file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDesc = []byte{
@@ -1346,7 +1534,18 @@ var file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDesc = []byte{
 	0x01, 0x28, 0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x22, 0x28, 0x0a, 0x10, 0x47,
 	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x4d, 0x6f, 0x6e, 0x65, 0x79, 0x52, 0x65, 0x73, 0x70, 0x12,
 	0x14, 0x0a, 0x05, 0x6d, 0x6f, 0x6e, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05,
-	0x6d, 0x6f, 0x6e, 0x65, 0x79, 0x32, 0xda, 0x05, 0x0a, 0x0a, 0x75, 0x73, 0x65, 0x72, 0x63, 0x65,
+	0x6d, 0x6f, 0x6e, 0x65, 0x79, 0x22, 0x42, 0x0a, 0x0f, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x41,
+	0x76, 0x61, 0x74, 0x61, 0x72, 0x52, 0x65, 0x71, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72,
+	0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49,
+	0x64, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x76, 0x61, 0x74, 0x61, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x61, 0x76, 0x61, 0x74, 0x61, 0x72, 0x22, 0x12, 0x0a, 0x10, 0x55, 0x70, 0x6c,
+	0x6f, 0x61, 0x64, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x52, 0x65, 0x73, 0x70, 0x22, 0x42, 0x0a,
+	0x0f, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x52, 0x65, 0x71,
+	0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x76, 0x61,
+	0x74, 0x61, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x76, 0x61, 0x74, 0x61,
+	0x72, 0x22, 0x12, 0x0a, 0x10, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x76, 0x61, 0x74, 0x61,
+	0x72, 0x52, 0x65, 0x73, 0x70, 0x32, 0xd0, 0x06, 0x0a, 0x0a, 0x75, 0x73, 0x65, 0x72, 0x63, 0x65,
 	0x6e, 0x74, 0x65, 0x72, 0x12, 0x24, 0x0a, 0x05, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x0c, 0x2e,
 	0x70, 0x62, 0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x1a, 0x0d, 0x2e, 0x70, 0x62,
 	0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x12, 0x2d, 0x0a, 0x08, 0x52, 0x65,
@@ -1392,8 +1591,15 @@ var file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDesc = []byte{
 	0x79, 0x52, 0x6f, 0x6c, 0x6c, 0x42, 0x61, 0x63, 0x6b, 0x12, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x44,
 	0x65, 0x64, 0x75, 0x63, 0x74, 0x4d, 0x6f, 0x6e, 0x65, 0x79, 0x52, 0x65, 0x71, 0x1a, 0x13, 0x2e,
 	0x70, 0x62, 0x2e, 0x44, 0x65, 0x64, 0x75, 0x63, 0x74, 0x4d, 0x6f, 0x6e, 0x65, 0x79, 0x52, 0x65,
-	0x73, 0x70, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x73, 0x70, 0x12, 0x39, 0x0a, 0x0c, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x41, 0x76, 0x61, 0x74,
+	0x61, 0x72, 0x12, 0x13, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x41, 0x76,
+	0x61, 0x74, 0x61, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x6c,
+	0x6f, 0x61, 0x64, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x52, 0x65, 0x73, 0x70, 0x12, 0x39, 0x0a,
+	0x0c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x12, 0x13, 0x2e,
+	0x70, 0x62, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x52,
+	0x65, 0x71, 0x1a, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x76,
+	0x61, 0x74, 0x61, 0x72, 0x52, 0x65, 0x73, 0x70, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1408,7 +1614,7 @@ func file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDescGZIP() []byte {
 	return file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDescData
 }
 
-var file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_app_userCenter_cmd_rpc_pb_userCenter_proto_goTypes = []interface{}{
 	(*User)(nil),                     // 0: pb.User
 	(*UserAuth)(nil),                 // 1: pb.UserAuth
@@ -1432,6 +1638,10 @@ var file_app_userCenter_cmd_rpc_pb_userCenter_proto_goTypes = []interface{}{
 	(*DeductMoneyResp)(nil),          // 19: pb.DeductMoneyResp
 	(*GetUserMoneyReq)(nil),          // 20: pb.GetUserMoneyReq
 	(*GetUserMoneyResp)(nil),         // 21: pb.GetUserMoneyResp
+	(*UploadAvatarReq)(nil),          // 22: pb.UploadAvatarReq
+	(*UploadAvatarResp)(nil),         // 23: pb.UploadAvatarResp
+	(*UpdateAvatarReq)(nil),          // 24: pb.UpdateAvatarReq
+	(*UpdateAvatarResp)(nil),         // 25: pb.UpdateAvatarResp
 }
 var file_app_userCenter_cmd_rpc_pb_userCenter_proto_depIdxs = []int32{
 	0,  // 0: pb.GetUserInfoResp.user:type_name -> pb.User
@@ -1449,20 +1659,24 @@ var file_app_userCenter_cmd_rpc_pb_userCenter_proto_depIdxs = []int32{
 	16, // 12: pb.usercenter.AddMoneyRollback:input_type -> pb.AddMoneyReq
 	18, // 13: pb.usercenter.DeductMoney:input_type -> pb.DeductMoneyReq
 	18, // 14: pb.usercenter.DeductMontyRollBack:input_type -> pb.DeductMoneyReq
-	5,  // 15: pb.usercenter.Login:output_type -> pb.LoginResp
-	3,  // 16: pb.usercenter.Register:output_type -> pb.RegisterResp
-	13, // 17: pb.usercenter.GenerateToken:output_type -> pb.GenerateTokenResp
-	7,  // 18: pb.usercenter.GetUserInfo:output_type -> pb.GetUserInfoResp
-	9,  // 19: pb.usercenter.GetUserAuthByUserId:output_type -> pb.GetUserAuthByUserIdResp
-	11, // 20: pb.usercenter.GetUserAuthByAuthKey:output_type -> pb.GetUserAuthByAuthKeyResp
-	21, // 21: pb.usercenter.GetUserMoney:output_type -> pb.GetUserMoneyResp
-	15, // 22: pb.usercenter.UpdateUserWallet:output_type -> pb.UpdateUserWalletResp
-	17, // 23: pb.usercenter.AddMoney:output_type -> pb.AddMoneyResp
-	17, // 24: pb.usercenter.AddMoneyRollback:output_type -> pb.AddMoneyResp
-	19, // 25: pb.usercenter.DeductMoney:output_type -> pb.DeductMoneyResp
-	19, // 26: pb.usercenter.DeductMontyRollBack:output_type -> pb.DeductMoneyResp
-	15, // [15:27] is the sub-list for method output_type
-	3,  // [3:15] is the sub-list for method input_type
+	22, // 15: pb.usercenter.UploadAvatar:input_type -> pb.UploadAvatarReq
+	24, // 16: pb.usercenter.UpdateAvatar:input_type -> pb.UpdateAvatarReq
+	5,  // 17: pb.usercenter.Login:output_type -> pb.LoginResp
+	3,  // 18: pb.usercenter.Register:output_type -> pb.RegisterResp
+	13, // 19: pb.usercenter.GenerateToken:output_type -> pb.GenerateTokenResp
+	7,  // 20: pb.usercenter.GetUserInfo:output_type -> pb.GetUserInfoResp
+	9,  // 21: pb.usercenter.GetUserAuthByUserId:output_type -> pb.GetUserAuthByUserIdResp
+	11, // 22: pb.usercenter.GetUserAuthByAuthKey:output_type -> pb.GetUserAuthByAuthKeyResp
+	21, // 23: pb.usercenter.GetUserMoney:output_type -> pb.GetUserMoneyResp
+	15, // 24: pb.usercenter.UpdateUserWallet:output_type -> pb.UpdateUserWalletResp
+	17, // 25: pb.usercenter.AddMoney:output_type -> pb.AddMoneyResp
+	17, // 26: pb.usercenter.AddMoneyRollback:output_type -> pb.AddMoneyResp
+	19, // 27: pb.usercenter.DeductMoney:output_type -> pb.DeductMoneyResp
+	19, // 28: pb.usercenter.DeductMontyRollBack:output_type -> pb.DeductMoneyResp
+	23, // 29: pb.usercenter.UploadAvatar:output_type -> pb.UploadAvatarResp
+	25, // 30: pb.usercenter.UpdateAvatar:output_type -> pb.UpdateAvatarResp
+	17, // [17:31] is the sub-list for method output_type
+	3,  // [3:17] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name
 	3,  // [3:3] is the sub-list for extension extendee
 	0,  // [0:3] is the sub-list for field type_name
@@ -1738,6 +1952,54 @@ func file_app_userCenter_cmd_rpc_pb_userCenter_proto_init() {
 				return nil
 			}
 		}
+		file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UploadAvatarReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UploadAvatarResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateAvatarReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_userCenter_cmd_rpc_pb_userCenter_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateAvatarResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1745,7 +2007,7 @@ func file_app_userCenter_cmd_rpc_pb_userCenter_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_app_userCenter_cmd_rpc_pb_userCenter_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

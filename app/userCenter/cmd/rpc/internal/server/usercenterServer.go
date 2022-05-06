@@ -81,3 +81,13 @@ func (s *UsercenterServer) DeductMontyRollBack(ctx context.Context, in *pb.Deduc
 	l := logic.NewDeductMontyRollBackLogic(ctx, s.svcCtx)
 	return l.DeductMontyRollBack(in)
 }
+
+func (s *UsercenterServer) UploadAvatar(ctx context.Context, in *pb.UploadAvatarReq) (*pb.UploadAvatarResp, error) {
+	l := logic.NewUploadAvatarLogic(ctx, s.svcCtx)
+	return l.UploadAvatar(in)
+}
+
+func (s *UsercenterServer) UpdateAvatar(ctx context.Context, in *pb.UpdateAvatarReq) (*pb.UpdateAvatarResp, error) {
+	l := logic.NewUpdateAvatarLogic(ctx, s.svcCtx)
+	return l.UpdateAvatar(in)
+}

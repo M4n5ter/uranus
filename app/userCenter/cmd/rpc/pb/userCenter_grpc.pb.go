@@ -34,6 +34,8 @@ type UsercenterClient interface {
 	AddMoneyRollback(ctx context.Context, in *AddMoneyReq, opts ...grpc.CallOption) (*AddMoneyResp, error)
 	DeductMoney(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
 	DeductMontyRollBack(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
+	UploadAvatar(ctx context.Context, in *UploadAvatarReq, opts ...grpc.CallOption) (*UploadAvatarResp, error)
+	UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error)
 }
 
 type usercenterClient struct {
@@ -152,6 +154,24 @@ func (c *usercenterClient) DeductMontyRollBack(ctx context.Context, in *DeductMo
 	return out, nil
 }
 
+func (c *usercenterClient) UploadAvatar(ctx context.Context, in *UploadAvatarReq, opts ...grpc.CallOption) (*UploadAvatarResp, error) {
+	out := new(UploadAvatarResp)
+	err := c.cc.Invoke(ctx, "/pb.usercenter/UploadAvatar", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usercenterClient) UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error) {
+	out := new(UpdateAvatarResp)
+	err := c.cc.Invoke(ctx, "/pb.usercenter/UpdateAvatar", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsercenterServer is the server API for Usercenter service.
 // All implementations must embed UnimplementedUsercenterServer
 // for forward compatibility
@@ -168,6 +188,8 @@ type UsercenterServer interface {
 	AddMoneyRollback(context.Context, *AddMoneyReq) (*AddMoneyResp, error)
 	DeductMoney(context.Context, *DeductMoneyReq) (*DeductMoneyResp, error)
 	DeductMontyRollBack(context.Context, *DeductMoneyReq) (*DeductMoneyResp, error)
+	UploadAvatar(context.Context, *UploadAvatarReq) (*UploadAvatarResp, error)
+	UpdateAvatar(context.Context, *UpdateAvatarReq) (*UpdateAvatarResp, error)
 	mustEmbedUnimplementedUsercenterServer()
 }
 
@@ -210,6 +232,12 @@ func (UnimplementedUsercenterServer) DeductMoney(context.Context, *DeductMoneyRe
 }
 func (UnimplementedUsercenterServer) DeductMontyRollBack(context.Context, *DeductMoneyReq) (*DeductMoneyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeductMontyRollBack not implemented")
+}
+func (UnimplementedUsercenterServer) UploadAvatar(context.Context, *UploadAvatarReq) (*UploadAvatarResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadAvatar not implemented")
+}
+func (UnimplementedUsercenterServer) UpdateAvatar(context.Context, *UpdateAvatarReq) (*UpdateAvatarResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAvatar not implemented")
 }
 func (UnimplementedUsercenterServer) mustEmbedUnimplementedUsercenterServer() {}
 
@@ -440,6 +468,42 @@ func _Usercenter_DeductMontyRollBack_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Usercenter_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadAvatarReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).UploadAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.usercenter/UploadAvatar",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).UploadAvatar(ctx, req.(*UploadAvatarReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Usercenter_UpdateAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAvatarReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).UpdateAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.usercenter/UpdateAvatar",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).UpdateAvatar(ctx, req.(*UpdateAvatarReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Usercenter_ServiceDesc is the grpc.ServiceDesc for Usercenter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -494,6 +558,14 @@ var Usercenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeductMontyRollBack",
 			Handler:    _Usercenter_DeductMontyRollBack_Handler,
+		},
+		{
+			MethodName: "UploadAvatar",
+			Handler:    _Usercenter_UploadAvatar_Handler,
+		},
+		{
+			MethodName: "UpdateAvatar",
+			Handler:    _Usercenter_UpdateAvatar_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
