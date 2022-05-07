@@ -12,6 +12,13 @@ type Config struct {
 		AccessExpire int64
 	}
 
+	QiniuOSS struct {
+		AccessKey string
+		SecretKey string
+		Bucket    string
+		Domain    string
+	}
+
 	DB struct {
 		DataSource string
 	}

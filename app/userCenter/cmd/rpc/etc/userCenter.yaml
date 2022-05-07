@@ -6,6 +6,12 @@ JwtAuth:
   AccessSecret: qe6336r9-1278-8721-8e13-7a69dg305dk0
   AccessExpire: 31536000
 
+QiniuOSS:
+  AccessKey: SztvURzewrBgv5J5gv3K5OmvE6EXUPC41F9OvPHm
+  SecretKey: HLzvLKRz9bOSbrX22h4nxonSP48ypaXDS_bsHgnJ
+  Bucket: monstertc01
+  Domain: "https://space.91ei.cn"
+
 Log:
   ServiceName: usercenter-rpc
   Level: error

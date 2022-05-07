@@ -8,6 +8,7 @@ info(
 )
 
 import "user/user.api"
+import "qiniuoss.api"
 
 @server(
 	prefix: usercenter/v1
@@ -41,4 +42,16 @@ service usercenter {
 	@doc "微信小程序授权"
 	@handler wxMiniAuth
 	post /user/wxMiniAuth (WXMiniAuthReq) returns (WXMiniAuthResp)
+	
+	@doc "获取上传凭证"
+	@handler GetAvatarUpToken
+	get /user/avatar/getuptoken (GetAvatarUpTokenReq) returns (GetAvatarUpTokenResp)
+	
+	@doc "获取用户头像链接"
+	@handler GetAvatarSrc
+	get /user/avatar/getavatarsrc (GetAvatarSrcReq) returns (GetAvatarSrcResp)
+	
+	@doc "上传头像"
+	@handler UploadAvatar
+	get /user/avatar/upload (UploadAvatarReq) returns (UploadAvatarResp)
 }

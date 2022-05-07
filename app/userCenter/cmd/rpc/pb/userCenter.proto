@@ -110,12 +110,13 @@ message UploadAvatarReq {
 }
 message UploadAvatarResp {}
 
-// 修改头像
-message UpdateAvatarReq {
-  int64   user_id = 1;
-  string  avatar  = 2;
+// 获取用户头像地址
+message GetAvatarSrcReq {
+  int64 user_id   = 1;
 }
-message UpdateAvatarResp {}
+message GetAvatarSrcResp {
+  string avatar   = 1;
+}
 
 service usercenter {
   rpc Login(LoginReq) returns(LoginResp);
@@ -131,5 +132,5 @@ service usercenter {
   rpc DeductMoney(DeductMoneyReq) returns(DeductMoneyResp);
   rpc DeductMontyRollBack(DeductMoneyReq) returns(DeductMoneyResp);
   rpc UploadAvatar(UploadAvatarReq) returns(UploadAvatarResp);
-  rpc UpdateAvatar(UpdateAvatarReq) returns(UpdateAvatarResp);
+  rpc GetAvatarSrc(GetAvatarSrcReq) returns(GetAvatarSrcResp);
 }

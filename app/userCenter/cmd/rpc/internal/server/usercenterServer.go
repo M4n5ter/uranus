@@ -87,7 +87,7 @@ func (s *UsercenterServer) UploadAvatar(ctx context.Context, in *pb.UploadAvatar
 	return l.UploadAvatar(in)
 }
 
-func (s *UsercenterServer) UpdateAvatar(ctx context.Context, in *pb.UpdateAvatarReq) (*pb.UpdateAvatarResp, error) {
-	l := logic.NewUpdateAvatarLogic(ctx, s.svcCtx)
-	return l.UpdateAvatar(in)
+func (s *UsercenterServer) GetAvatarSrc(ctx context.Context, in *pb.GetAvatarSrcReq) (*pb.GetAvatarSrcResp, error) {
+	l := logic.NewGetAvatarSrcLogic(ctx, s.svcCtx)
+	return l.GetAvatarSrc(in)
 }

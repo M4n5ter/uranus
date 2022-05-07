@@ -44,6 +44,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/wxMiniAuth",
 				Handler: user.WxMiniAuthHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/avatar/getuptoken",
+				Handler: user.GetAvatarUpTokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/avatar/getavatarsrc",
+				Handler: user.GetAvatarSrcHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/avatar/upload",
+				Handler: user.UploadAvatarHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/usercenter/v1"),

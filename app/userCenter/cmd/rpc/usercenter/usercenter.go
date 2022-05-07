@@ -19,6 +19,8 @@ type (
 	DeductMoneyResp          = pb.DeductMoneyResp
 	GenerateTokenReq         = pb.GenerateTokenReq
 	GenerateTokenResp        = pb.GenerateTokenResp
+	GetAvatarSrcReq          = pb.GetAvatarSrcReq
+	GetAvatarSrcResp         = pb.GetAvatarSrcResp
 	GetUserAuthByAuthKeyReq  = pb.GetUserAuthByAuthKeyReq
 	GetUserAuthByAuthKeyResp = pb.GetUserAuthByAuthKeyResp
 	GetUserAuthByUserIdReq   = pb.GetUserAuthByUserIdReq
@@ -31,8 +33,6 @@ type (
 	LoginResp                = pb.LoginResp
 	RegisterReq              = pb.RegisterReq
 	RegisterResp             = pb.RegisterResp
-	UpdateAvatarReq          = pb.UpdateAvatarReq
-	UpdateAvatarResp         = pb.UpdateAvatarResp
 	UpdateUserWalletReq      = pb.UpdateUserWalletReq
 	UpdateUserWalletResp     = pb.UpdateUserWalletResp
 	UploadAvatarReq          = pb.UploadAvatarReq
@@ -54,7 +54,7 @@ type (
 		DeductMoney(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
 		DeductMontyRollBack(ctx context.Context, in *DeductMoneyReq, opts ...grpc.CallOption) (*DeductMoneyResp, error)
 		UploadAvatar(ctx context.Context, in *UploadAvatarReq, opts ...grpc.CallOption) (*UploadAvatarResp, error)
-		UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error)
+		GetAvatarSrc(ctx context.Context, in *GetAvatarSrcReq, opts ...grpc.CallOption) (*GetAvatarSrcResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -133,7 +133,7 @@ func (m *defaultUsercenter) UploadAvatar(ctx context.Context, in *UploadAvatarRe
 	return client.UploadAvatar(ctx, in, opts...)
 }
 
-func (m *defaultUsercenter) UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error) {
+func (m *defaultUsercenter) GetAvatarSrc(ctx context.Context, in *GetAvatarSrcReq, opts ...grpc.CallOption) (*GetAvatarSrcResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
-	return client.UpdateAvatar(ctx, in, opts...)
+	return client.GetAvatarSrc(ctx, in, opts...)
 }

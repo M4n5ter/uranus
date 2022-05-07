@@ -61,3 +61,24 @@ type SearchUserInfoReq struct {
 type SearchUserInfoResp struct {
 	UserInfo User `json:"userInfo"`
 }
+
+type GetAvatarUpTokenReq struct {
+}
+
+type GetAvatarUpTokenResp struct {
+	UpToken string `json:"upToken"`
+}
+
+type GetAvatarSrcReq struct {
+}
+
+type GetAvatarSrcResp struct {
+	AvatarSrc string `json:"avatarSrc"`
+}
+
+type UploadAvatarReq struct {
+	AvatarBasePath string `json:"avatarBasePath"`
+}
+
+type UploadAvatarResp struct {
+}

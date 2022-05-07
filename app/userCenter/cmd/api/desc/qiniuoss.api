@@ -1,0 +1,25 @@
+syntax = "v1"
+
+// 上传凭证
+type (
+    GetAvatarUpTokenReq {}
+    GetAvatarUpTokenResp {
+        upToken string  `json:"upToken"`
+    }
+)
+
+// 获取头像链接
+type (
+    GetAvatarSrcReq {}
+    GetAvatarSrcResp {
+        avatarSrc string    `json:"avatarSrc"`
+    }
+)
+
+// 上传头像
+type (
+    UploadAvatarReq {
+        avatarBasePath string   `json:"avatarBasePath"`
+    }
+    UploadAvatarResp {}
+)

@@ -15,5 +15,10 @@ type Config struct {
 		AppId  string
 		Secret string
 	}
+	QiniuOSS struct {
+		AccessKey string
+		SecretKey string
+		Bucket    string
+	}
 	//CasbinConf casbinTools.Conf
 }
