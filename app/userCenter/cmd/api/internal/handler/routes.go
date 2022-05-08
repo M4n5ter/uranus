@@ -55,7 +55,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.GetAvatarSrcHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/user/avatar/upload",
 				Handler: user.UploadAvatarHandler(serverCtx),
 			},

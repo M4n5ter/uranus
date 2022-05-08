@@ -53,5 +53,5 @@ service usercenter {
 	
 	@doc "上传头像"
 	@handler UploadAvatar
-	get /user/avatar/upload (UploadAvatarReq) returns (UploadAvatarResp)
+	post /user/avatar/upload (UploadAvatarReq) returns (UploadAvatarResp)
 }
