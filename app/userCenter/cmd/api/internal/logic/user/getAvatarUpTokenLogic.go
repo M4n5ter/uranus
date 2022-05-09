@@ -31,7 +31,9 @@ func (l *GetAvatarUpTokenLogic) GetAvatarUpToken(req *types.GetAvatarUpTokenReq)
 	bucket := l.svcCtx.Config.QiniuOSS.Bucket
 	mac := qbox.NewMac(accessKey, secretKey)
 	putPolicy := storage.PutPolicy{
-		Scope: bucket,
+		Scope:      bucket,
+		MimeLimit:  "image/jpeg;image/png",
+		FsizeLimit: 10_485_760,
 	}
 	upToken := putPolicy.UploadToken(mac)
 
