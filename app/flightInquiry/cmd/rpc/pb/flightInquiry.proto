@@ -103,6 +103,81 @@ message FlightDetailResp {
   FlightInfo FlightInfo = 3;
 }
 
+
+// 查询折扣航班
+message GetDiscountFlightsReq {
+  // 出发地(为空表示全部)
+  string  DepartPosition  = 1;
+  // 目的地(为空表示全部)
+  string  ArrivePosition  = 2;
+  // 天数(表示未来多少天内)
+  int64   Days            = 3;
+  // 指定需要的航班条数(0 代表全要)
+  int64   Num             = 4;
+}
+message GetDiscountFlightsResp {
+  repeated FlightInfo FlightInfos = 1;
+}
+
+// 查询指定价格区间的航班
+message GetFlightsByPriceRangeReq {
+  // 出发地(为空表示全部)
+  string  DepartPosition  = 1;
+  // 目的地(为空表示全部)
+  string  ArrivePosition  = 2;
+  // 最低价格
+  int64   MinPrice        = 3;
+  // 最高价格
+  int64   MaxPrice        = 4;
+  // 天数(表示未来多少天内)
+  int64   Days            = 5;
+  // 指定需要的航班条数(0 代表全要)
+  int64   Num             = 6;
+}
+message GetFlightsByPriceRangeResp {
+  repeated FlightInfo FlightInfos = 1;
+}
+
+// 根据航班号获取航班信息
+message GetFlightsByFlightNumberReq {
+  // 航班号
+  string  FlightNumber  = 1;
+  // 天数
+  int64   Days          = 2;
+  // 指定需要的航班条数
+  int64   Num           = 3;
+}
+message GetFlightsByFlightNumberResp {
+  repeated FlightInfo FlightInfos = 1;
+}
+
+// 中转航班查询
+
+// 表示一种中转方案(一种方案包含多条航班信息)
+message TransferFlightInfo {
+  repeated FlightInfo FlightInfos = 1;
+}
+message QuireTransferFlightsReq {
+  // 出发地(不能为空)
+  string  DepartPosition  = 1;
+  // 目的地(不能为空)
+  string  ArrivePosition  = 2;
+  // 天数(未来多少天内)
+  int64   Days            = 3;
+  // 需求的航班条数(0 代表全部)
+  int64   Num             = 4;
+}
+message QuireTransferFlightsResp {
+  repeated TransferFlightInfo TransferFlights = 1;
+}
+
+// 根据指定航班信息提供返程机票推荐
+message RecommendReturnJourneyByFlightInfoReq {
+  FlightInfo FlightInfo = 1;
+}
+message RecommendReturnJourneyByFlightInfoResp {
+  // todo
+}
 // req/resp
 
 service flightInquiry {
