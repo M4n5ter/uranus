@@ -1,6 +1,7 @@
 Name: usercenter-api
 Host: 0.0.0.0
 Port: 9014
+Timeout: 10000
 
 JwtAuth:
   AccessSecret: qe6336r9-1278-8721-8e13-7a69dg305dk0
