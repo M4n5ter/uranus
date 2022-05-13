@@ -76,6 +76,7 @@ func ListByRangeTime(r redis.Redis, zset, prefix string, start, end time.Time) (
 }
 
 func ListAll(r redis.Redis, zset, prefix string) (idList map[int64]struct{}, err error) {
+	idList = make(map[int64]struct{})
 	bizFLICacheKey := fmt.Sprintf(prefix, zset)
 	stringList, err := r.Zrange(bizFLICacheKey, 0, -1)
 	if err != nil {
