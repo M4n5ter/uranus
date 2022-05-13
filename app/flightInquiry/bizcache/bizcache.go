@@ -75,20 +75,19 @@ func ListByRangeTime(r redis.Redis, zset, prefix string, start, end time.Time) (
 	return list, nil
 }
 
-func ListAll(r redis.Redis, zset, prefix string) (idList []int64, err error) {
+func ListAll(r redis.Redis, zset, prefix string) (idList map[int64]struct{}, err error) {
 	bizFLICacheKey := fmt.Sprintf(prefix, zset)
 	stringList, err := r.Zrange(bizFLICacheKey, 0, -1)
 	if err != nil {
 		return nil, err
 	}
 
-	var list []int64
 	for _, s := range stringList {
 		id, _ := strconv.ParseInt(s, 10, 64)
-		list = append(list, id)
+		idList[id] = struct{}{}
 	}
 
-	return list, nil
+	return idList, nil
 }
 
 func ListByZrangeStartStop(r redis.Redis, zset, prefix string, start, stop int64) (idList []int64, err error) {
