@@ -71,6 +71,8 @@ type (
 		FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, sod time.Time, depart, arrive string) ([]*FlightInfos, error)
 		// FindOneByByNumberAndSetOutDateAndPosition 根据 航班号 出发日期 始末时间地点 锁定一条航班信息
 		FindOneByByNumberAndSetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, number string, sod time.Time, depart string, departTime time.Time, arrive string, arriveTime time.Time) (*FlightInfos, error)
+		// FindPageListByPositionAndDays 根据起始地点和距今日的日期差分页查询, limit <= 0 表示不分页
+		FindPageListByPositionAndDays(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, days int64, limit int64) ([]*FlightInfos, error)
 	}
 
 	defaultFlightInfosModel struct {
@@ -495,6 +497,43 @@ func (m *defaultFlightInfosModel) FindOneByByNumberAndSetOutDateAndPosition(rowB
 	switch err {
 	case nil:
 		return &resp, nil
+	default:
+		return nil, err
+	}
+}
+
+// FindPageListByPositionAndDays 根据起始地点和距今日的日期差分页查询, limit <= 0 表示不分页
+func (m *defaultFlightInfosModel) FindPageListByPositionAndDays(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, days int64, limit int64) ([]*FlightInfos, error) {
+	if len(departPosition) == 0 || len(arrivePosition) == 0 {
+		return nil, ErrNotFound
+	} else {
+		today := time.Now()
+		today, _ = time.Parse("2006-01-02", today.Format("2006-01-02"))
+		todayString := today.Format("2006-01-02 15:04:05")
+		lastDate := today.AddDate(0, 0, int(days))
+		lastDateString := lastDate.Format("2006-01-02 15:04:05")
+		rowBuilder = rowBuilder.Where(squirrel.Eq{"depart_position": departPosition, "arrive_position": arrivePosition})
+		if days < 0 {
+			rowBuilder = rowBuilder.Where("set_out_date between ? and ?", lastDateString, todayString)
+		} else if days > 0 {
+			rowBuilder = rowBuilder.Where("set_out_date between ? and ?", todayString, lastDateString)
+		}
+
+		if limit > 0 {
+			rowBuilder = rowBuilder.Limit(uint64(limit))
+		}
+	}
+
+	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*FlightInfos
+	err = m.QueryRowsNoCache(&resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
 	default:
 		return nil, err
 	}
