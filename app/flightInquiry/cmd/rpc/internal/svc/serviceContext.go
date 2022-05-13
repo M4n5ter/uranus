@@ -63,7 +63,6 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 		spaceIdList, err := bizcache.ListAll(s.Redis, zset, bizcache.BizSpaceCachePrefix)
 		// 查不到 bizcache 的情况
 		if err != nil || len(spaceIdList) == 0 {
-			logx.Errorf("GET bizcache ERR: %v", err)
 
 			// 此处查询不走缓存，直接打到DB上
 			spaces, err = s.SpacesModel.FindListByFlightInfoID(s.SpacesModel.RowBuilder(), info.Id)
