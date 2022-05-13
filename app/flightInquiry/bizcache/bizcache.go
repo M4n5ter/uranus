@@ -59,20 +59,20 @@ func unCompress(v string) (*FLI, error) {
 }
 
 // ListByRangeTime 提供根据时间段进行数据查询
-func ListByRangeTime(r redis.Redis, zset, prefix string, start, end time.Time) ([]int64, error) {
+func ListByRangeTime(r redis.Redis, zset, prefix string, start, end time.Time) (map[int64]struct{}, error) {
+	idList := make(map[int64]struct{})
 	bizFLICacheKey := fmt.Sprintf(prefix, zset)
 	kvs, err := r.ZrangebyscoreWithScores(bizFLICacheKey, start.UnixNano()/1e6, end.UnixNano()/1e6)
 	if err != nil {
 		return nil, err
 	}
 
-	var list []int64
 	for _, kv := range kvs {
 		id, _ := strconv.ParseInt(kv.Key, 10, 64)
-		list = append(list, id)
+		idList[id] = struct{}{}
 	}
 
-	return list, nil
+	return idList, nil
 }
 
 func ListAll(r redis.Redis, zset, prefix string) (idList map[int64]struct{}, err error) {
@@ -91,20 +91,20 @@ func ListAll(r redis.Redis, zset, prefix string) (idList map[int64]struct{}, err
 	return idList, nil
 }
 
-func ListByZrangeStartStop(r redis.Redis, zset, prefix string, start, stop int64) (idList []int64, err error) {
+func ListByZrangeStartStop(r redis.Redis, zset, prefix string, start, stop int64) (idList map[int64]struct{}, err error) {
+	idList = make(map[int64]struct{})
 	bizFLICacheKey := fmt.Sprintf(prefix, zset)
 	stringList, err := r.Zrange(bizFLICacheKey, start, stop)
 	if err != nil {
 		return nil, err
 	}
 
-	var list []int64
 	for _, s := range stringList {
 		id, _ := strconv.ParseInt(s, 10, 64)
-		list = append(list, id)
+		idList[id] = struct{}{}
 	}
 
-	return list, nil
+	return idList, nil
 
 }
 
