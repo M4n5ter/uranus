@@ -28,6 +28,16 @@ type FlightInquiryClient interface {
 	QuireBySetOutDateStartPositionEndPosition(ctx context.Context, in *QuireBySetOutDateStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutDateStartPositionEndPositionResp, error)
 	//FlightDetail 通过给定 票id 来获取航班详情
 	FlightDetail(ctx context.Context, in *FlightDetailReq, opts ...grpc.CallOption) (*FlightDetailResp, error)
+	//GetDiscountFlights 查询折扣航班
+	GetDiscountFlights(ctx context.Context, in *GetDiscountFlightsReq, opts ...grpc.CallOption) (*GetDiscountFlightsResp, error)
+	//GetFlightsByPriceRange 查询指定价格区间的航班
+	GetFlightsByPriceRange(ctx context.Context, in *GetFlightsByPriceRangeReq, opts ...grpc.CallOption) (*GetFlightsByPriceRangeResp, error)
+	//GetFlightsByFlightNumber 根据航班号获取航班信息
+	GetFlightsByFlightNumber(ctx context.Context, in *GetFlightsByFlightNumberReq, opts ...grpc.CallOption) (*GetFlightsByFlightNumberResp, error)
+	//QuireTransferFlights 中转航班查询
+	QuireTransferFlights(ctx context.Context, in *QuireTransferFlightsReq, opts ...grpc.CallOption) (*QuireTransferFlightsResp, error)
+	// 根据指定航班信息提供返程机票推荐(仅支持直飞)
+	RecommendReturnJourneyByFlightInfo(ctx context.Context, in *RecommendReturnJourneyByFlightInfoReq, opts ...grpc.CallOption) (*RecommendReturnJourneyByFlightInfoResp, error)
 }
 
 type flightInquiryClient struct {
@@ -65,6 +75,51 @@ func (c *flightInquiryClient) FlightDetail(ctx context.Context, in *FlightDetail
 	return out, nil
 }
 
+func (c *flightInquiryClient) GetDiscountFlights(ctx context.Context, in *GetDiscountFlightsReq, opts ...grpc.CallOption) (*GetDiscountFlightsResp, error) {
+	out := new(GetDiscountFlightsResp)
+	err := c.cc.Invoke(ctx, "/pb.flightInquiry/GetDiscountFlights", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *flightInquiryClient) GetFlightsByPriceRange(ctx context.Context, in *GetFlightsByPriceRangeReq, opts ...grpc.CallOption) (*GetFlightsByPriceRangeResp, error) {
+	out := new(GetFlightsByPriceRangeResp)
+	err := c.cc.Invoke(ctx, "/pb.flightInquiry/GetFlightsByPriceRange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *flightInquiryClient) GetFlightsByFlightNumber(ctx context.Context, in *GetFlightsByFlightNumberReq, opts ...grpc.CallOption) (*GetFlightsByFlightNumberResp, error) {
+	out := new(GetFlightsByFlightNumberResp)
+	err := c.cc.Invoke(ctx, "/pb.flightInquiry/GetFlightsByFlightNumber", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *flightInquiryClient) QuireTransferFlights(ctx context.Context, in *QuireTransferFlightsReq, opts ...grpc.CallOption) (*QuireTransferFlightsResp, error) {
+	out := new(QuireTransferFlightsResp)
+	err := c.cc.Invoke(ctx, "/pb.flightInquiry/QuireTransferFlights", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *flightInquiryClient) RecommendReturnJourneyByFlightInfo(ctx context.Context, in *RecommendReturnJourneyByFlightInfoReq, opts ...grpc.CallOption) (*RecommendReturnJourneyByFlightInfoResp, error) {
+	out := new(RecommendReturnJourneyByFlightInfoResp)
+	err := c.cc.Invoke(ctx, "/pb.flightInquiry/RecommendReturnJourneyByFlightInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FlightInquiryServer is the server API for FlightInquiry service.
 // All implementations must embed UnimplementedFlightInquiryServer
 // for forward compatibility
@@ -75,6 +130,16 @@ type FlightInquiryServer interface {
 	QuireBySetOutDateStartPositionEndPosition(context.Context, *QuireBySetOutDateStartPositionEndPositionReq) (*QuireBySetOutDateStartPositionEndPositionResp, error)
 	//FlightDetail 通过给定 票id 来获取航班详情
 	FlightDetail(context.Context, *FlightDetailReq) (*FlightDetailResp, error)
+	//GetDiscountFlights 查询折扣航班
+	GetDiscountFlights(context.Context, *GetDiscountFlightsReq) (*GetDiscountFlightsResp, error)
+	//GetFlightsByPriceRange 查询指定价格区间的航班
+	GetFlightsByPriceRange(context.Context, *GetFlightsByPriceRangeReq) (*GetFlightsByPriceRangeResp, error)
+	//GetFlightsByFlightNumber 根据航班号获取航班信息
+	GetFlightsByFlightNumber(context.Context, *GetFlightsByFlightNumberReq) (*GetFlightsByFlightNumberResp, error)
+	//QuireTransferFlights 中转航班查询
+	QuireTransferFlights(context.Context, *QuireTransferFlightsReq) (*QuireTransferFlightsResp, error)
+	// 根据指定航班信息提供返程机票推荐(仅支持直飞)
+	RecommendReturnJourneyByFlightInfo(context.Context, *RecommendReturnJourneyByFlightInfoReq) (*RecommendReturnJourneyByFlightInfoResp, error)
 	mustEmbedUnimplementedFlightInquiryServer()
 }
 
@@ -90,6 +155,21 @@ func (UnimplementedFlightInquiryServer) QuireBySetOutDateStartPositionEndPositio
 }
 func (UnimplementedFlightInquiryServer) FlightDetail(context.Context, *FlightDetailReq) (*FlightDetailResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FlightDetail not implemented")
+}
+func (UnimplementedFlightInquiryServer) GetDiscountFlights(context.Context, *GetDiscountFlightsReq) (*GetDiscountFlightsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDiscountFlights not implemented")
+}
+func (UnimplementedFlightInquiryServer) GetFlightsByPriceRange(context.Context, *GetFlightsByPriceRangeReq) (*GetFlightsByPriceRangeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFlightsByPriceRange not implemented")
+}
+func (UnimplementedFlightInquiryServer) GetFlightsByFlightNumber(context.Context, *GetFlightsByFlightNumberReq) (*GetFlightsByFlightNumberResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFlightsByFlightNumber not implemented")
+}
+func (UnimplementedFlightInquiryServer) QuireTransferFlights(context.Context, *QuireTransferFlightsReq) (*QuireTransferFlightsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QuireTransferFlights not implemented")
+}
+func (UnimplementedFlightInquiryServer) RecommendReturnJourneyByFlightInfo(context.Context, *RecommendReturnJourneyByFlightInfoReq) (*RecommendReturnJourneyByFlightInfoResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RecommendReturnJourneyByFlightInfo not implemented")
 }
 func (UnimplementedFlightInquiryServer) mustEmbedUnimplementedFlightInquiryServer() {}
 
@@ -158,6 +238,96 @@ func _FlightInquiry_FlightDetail_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FlightInquiry_GetDiscountFlights_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDiscountFlightsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlightInquiryServer).GetDiscountFlights(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.flightInquiry/GetDiscountFlights",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlightInquiryServer).GetDiscountFlights(ctx, req.(*GetDiscountFlightsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FlightInquiry_GetFlightsByPriceRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFlightsByPriceRangeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlightInquiryServer).GetFlightsByPriceRange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.flightInquiry/GetFlightsByPriceRange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlightInquiryServer).GetFlightsByPriceRange(ctx, req.(*GetFlightsByPriceRangeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FlightInquiry_GetFlightsByFlightNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFlightsByFlightNumberReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlightInquiryServer).GetFlightsByFlightNumber(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.flightInquiry/GetFlightsByFlightNumber",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlightInquiryServer).GetFlightsByFlightNumber(ctx, req.(*GetFlightsByFlightNumberReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FlightInquiry_QuireTransferFlights_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuireTransferFlightsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlightInquiryServer).QuireTransferFlights(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.flightInquiry/QuireTransferFlights",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlightInquiryServer).QuireTransferFlights(ctx, req.(*QuireTransferFlightsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FlightInquiry_RecommendReturnJourneyByFlightInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecommendReturnJourneyByFlightInfoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlightInquiryServer).RecommendReturnJourneyByFlightInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.flightInquiry/RecommendReturnJourneyByFlightInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlightInquiryServer).RecommendReturnJourneyByFlightInfo(ctx, req.(*RecommendReturnJourneyByFlightInfoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FlightInquiry_ServiceDesc is the grpc.ServiceDesc for FlightInquiry service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +346,26 @@ var FlightInquiry_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FlightDetail",
 			Handler:    _FlightInquiry_FlightDetail_Handler,
+		},
+		{
+			MethodName: "GetDiscountFlights",
+			Handler:    _FlightInquiry_GetDiscountFlights_Handler,
+		},
+		{
+			MethodName: "GetFlightsByPriceRange",
+			Handler:    _FlightInquiry_GetFlightsByPriceRange_Handler,
+		},
+		{
+			MethodName: "GetFlightsByFlightNumber",
+			Handler:    _FlightInquiry_GetFlightsByFlightNumber_Handler,
+		},
+		{
+			MethodName: "QuireTransferFlights",
+			Handler:    _FlightInquiry_QuireTransferFlights_Handler,
+		},
+		{
+			MethodName: "RecommendReturnJourneyByFlightInfo",
+			Handler:    _FlightInquiry_RecommendReturnJourneyByFlightInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

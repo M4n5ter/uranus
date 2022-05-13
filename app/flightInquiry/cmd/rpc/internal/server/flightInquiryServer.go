@@ -39,3 +39,33 @@ func (s *FlightInquiryServer) FlightDetail(ctx context.Context, in *pb.FlightDet
 	l := logic.NewFlightDetailLogic(ctx, s.svcCtx)
 	return l.FlightDetail(in)
 }
+
+// GetDiscountFlights 查询折扣航班
+func (s *FlightInquiryServer) GetDiscountFlights(ctx context.Context, in *pb.GetDiscountFlightsReq) (*pb.GetDiscountFlightsResp, error) {
+	l := logic.NewGetDiscountFlightsLogic(ctx, s.svcCtx)
+	return l.GetDiscountFlights(in)
+}
+
+// GetFlightsByPriceRange 查询指定价格区间的航班
+func (s *FlightInquiryServer) GetFlightsByPriceRange(ctx context.Context, in *pb.GetFlightsByPriceRangeReq) (*pb.GetFlightsByPriceRangeResp, error) {
+	l := logic.NewGetFlightsByPriceRangeLogic(ctx, s.svcCtx)
+	return l.GetFlightsByPriceRange(in)
+}
+
+// GetFlightsByFlightNumber 根据航班号获取航班信息
+func (s *FlightInquiryServer) GetFlightsByFlightNumber(ctx context.Context, in *pb.GetFlightsByFlightNumberReq) (*pb.GetFlightsByFlightNumberResp, error) {
+	l := logic.NewGetFlightsByFlightNumberLogic(ctx, s.svcCtx)
+	return l.GetFlightsByFlightNumber(in)
+}
+
+// QuireTransferFlights 中转航班查询
+func (s *FlightInquiryServer) QuireTransferFlights(ctx context.Context, in *pb.QuireTransferFlightsReq) (*pb.QuireTransferFlightsResp, error) {
+	l := logic.NewQuireTransferFlightsLogic(ctx, s.svcCtx)
+	return l.QuireTransferFlights(in)
+}
+
+//  根据指定航班信息提供返程机票推荐(仅支持直飞)
+func (s *FlightInquiryServer) RecommendReturnJourneyByFlightInfo(ctx context.Context, in *pb.RecommendReturnJourneyByFlightInfoReq) (*pb.RecommendReturnJourneyByFlightInfoResp, error) {
+	l := logic.NewRecommendReturnJourneyByFlightInfoLogic(ctx, s.svcCtx)
+	return l.RecommendReturnJourneyByFlightInfo(in)
+}

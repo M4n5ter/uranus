@@ -686,6 +686,649 @@ func (x *FlightDetailResp) GetFlightInfo() *FlightInfo {
 	return nil
 }
 
+// 查询折扣航班
+type GetDiscountFlightsReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 出发地(为空表示全部)
+	DepartPosition string `protobuf:"bytes,1,opt,name=DepartPosition,proto3" json:"DepartPosition,omitempty"`
+	// 目的地(为空表示全部)
+	ArrivePosition string `protobuf:"bytes,2,opt,name=ArrivePosition,proto3" json:"ArrivePosition,omitempty"`
+	// 天数(表示未来多少天内)
+	Days int64 `protobuf:"varint,3,opt,name=Days,proto3" json:"Days,omitempty"`
+	// 指定需要的航班条数(0 代表全要)
+	Num int64 `protobuf:"varint,4,opt,name=Num,proto3" json:"Num,omitempty"`
+}
+
+func (x *GetDiscountFlightsReq) Reset() {
+	*x = GetDiscountFlightsReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetDiscountFlightsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDiscountFlightsReq) ProtoMessage() {}
+
+func (x *GetDiscountFlightsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDiscountFlightsReq.ProtoReflect.Descriptor instead.
+func (*GetDiscountFlightsReq) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetDiscountFlightsReq) GetDepartPosition() string {
+	if x != nil {
+		return x.DepartPosition
+	}
+	return ""
+}
+
+func (x *GetDiscountFlightsReq) GetArrivePosition() string {
+	if x != nil {
+		return x.ArrivePosition
+	}
+	return ""
+}
+
+func (x *GetDiscountFlightsReq) GetDays() int64 {
+	if x != nil {
+		return x.Days
+	}
+	return 0
+}
+
+func (x *GetDiscountFlightsReq) GetNum() int64 {
+	if x != nil {
+		return x.Num
+	}
+	return 0
+}
+
+type GetDiscountFlightsResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos,omitempty"`
+}
+
+func (x *GetDiscountFlightsResp) Reset() {
+	*x = GetDiscountFlightsResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetDiscountFlightsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDiscountFlightsResp) ProtoMessage() {}
+
+func (x *GetDiscountFlightsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDiscountFlightsResp.ProtoReflect.Descriptor instead.
+func (*GetDiscountFlightsResp) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetDiscountFlightsResp) GetFlightInfos() []*FlightInfo {
+	if x != nil {
+		return x.FlightInfos
+	}
+	return nil
+}
+
+// 查询指定价格区间的航班
+type GetFlightsByPriceRangeReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 出发地(为空表示全部)
+	DepartPosition string `protobuf:"bytes,1,opt,name=DepartPosition,proto3" json:"DepartPosition,omitempty"`
+	// 目的地(为空表示全部)
+	ArrivePosition string `protobuf:"bytes,2,opt,name=ArrivePosition,proto3" json:"ArrivePosition,omitempty"`
+	// 最低价格
+	MinPrice int64 `protobuf:"varint,3,opt,name=MinPrice,proto3" json:"MinPrice,omitempty"`
+	// 最高价格
+	MaxPrice int64 `protobuf:"varint,4,opt,name=MaxPrice,proto3" json:"MaxPrice,omitempty"`
+	// 天数(表示未来多少天内)
+	Days int64 `protobuf:"varint,5,opt,name=Days,proto3" json:"Days,omitempty"`
+	// 指定需要的航班条数(0 代表全要)
+	Num int64 `protobuf:"varint,6,opt,name=Num,proto3" json:"Num,omitempty"`
+}
+
+func (x *GetFlightsByPriceRangeReq) Reset() {
+	*x = GetFlightsByPriceRangeReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFlightsByPriceRangeReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFlightsByPriceRangeReq) ProtoMessage() {}
+
+func (x *GetFlightsByPriceRangeReq) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFlightsByPriceRangeReq.ProtoReflect.Descriptor instead.
+func (*GetFlightsByPriceRangeReq) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetFlightsByPriceRangeReq) GetDepartPosition() string {
+	if x != nil {
+		return x.DepartPosition
+	}
+	return ""
+}
+
+func (x *GetFlightsByPriceRangeReq) GetArrivePosition() string {
+	if x != nil {
+		return x.ArrivePosition
+	}
+	return ""
+}
+
+func (x *GetFlightsByPriceRangeReq) GetMinPrice() int64 {
+	if x != nil {
+		return x.MinPrice
+	}
+	return 0
+}
+
+func (x *GetFlightsByPriceRangeReq) GetMaxPrice() int64 {
+	if x != nil {
+		return x.MaxPrice
+	}
+	return 0
+}
+
+func (x *GetFlightsByPriceRangeReq) GetDays() int64 {
+	if x != nil {
+		return x.Days
+	}
+	return 0
+}
+
+func (x *GetFlightsByPriceRangeReq) GetNum() int64 {
+	if x != nil {
+		return x.Num
+	}
+	return 0
+}
+
+type GetFlightsByPriceRangeResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos,omitempty"`
+}
+
+func (x *GetFlightsByPriceRangeResp) Reset() {
+	*x = GetFlightsByPriceRangeResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFlightsByPriceRangeResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFlightsByPriceRangeResp) ProtoMessage() {}
+
+func (x *GetFlightsByPriceRangeResp) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFlightsByPriceRangeResp.ProtoReflect.Descriptor instead.
+func (*GetFlightsByPriceRangeResp) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *GetFlightsByPriceRangeResp) GetFlightInfos() []*FlightInfo {
+	if x != nil {
+		return x.FlightInfos
+	}
+	return nil
+}
+
+// 根据航班号获取航班信息
+type GetFlightsByFlightNumberReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 航班号
+	FlightNumber string `protobuf:"bytes,1,opt,name=FlightNumber,proto3" json:"FlightNumber,omitempty"`
+	// 天数
+	Days int64 `protobuf:"varint,2,opt,name=Days,proto3" json:"Days,omitempty"`
+	// 指定需要的航班条数
+	Num int64 `protobuf:"varint,3,opt,name=Num,proto3" json:"Num,omitempty"`
+}
+
+func (x *GetFlightsByFlightNumberReq) Reset() {
+	*x = GetFlightsByFlightNumberReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFlightsByFlightNumberReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFlightsByFlightNumberReq) ProtoMessage() {}
+
+func (x *GetFlightsByFlightNumberReq) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFlightsByFlightNumberReq.ProtoReflect.Descriptor instead.
+func (*GetFlightsByFlightNumberReq) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetFlightsByFlightNumberReq) GetFlightNumber() string {
+	if x != nil {
+		return x.FlightNumber
+	}
+	return ""
+}
+
+func (x *GetFlightsByFlightNumberReq) GetDays() int64 {
+	if x != nil {
+		return x.Days
+	}
+	return 0
+}
+
+func (x *GetFlightsByFlightNumberReq) GetNum() int64 {
+	if x != nil {
+		return x.Num
+	}
+	return 0
+}
+
+type GetFlightsByFlightNumberResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos,omitempty"`
+}
+
+func (x *GetFlightsByFlightNumberResp) Reset() {
+	*x = GetFlightsByFlightNumberResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFlightsByFlightNumberResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFlightsByFlightNumberResp) ProtoMessage() {}
+
+func (x *GetFlightsByFlightNumberResp) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFlightsByFlightNumberResp.ProtoReflect.Descriptor instead.
+func (*GetFlightsByFlightNumberResp) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetFlightsByFlightNumberResp) GetFlightInfos() []*FlightInfo {
+	if x != nil {
+		return x.FlightInfos
+	}
+	return nil
+}
+
+// 表示一种中转方案(一种方案包含多条航班信息)
+type TransferFlightInfo struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos,omitempty"`
+}
+
+func (x *TransferFlightInfo) Reset() {
+	*x = TransferFlightInfo{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TransferFlightInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TransferFlightInfo) ProtoMessage() {}
+
+func (x *TransferFlightInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TransferFlightInfo.ProtoReflect.Descriptor instead.
+func (*TransferFlightInfo) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *TransferFlightInfo) GetFlightInfos() []*FlightInfo {
+	if x != nil {
+		return x.FlightInfos
+	}
+	return nil
+}
+
+type QuireTransferFlightsReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 出发地(不能为空)
+	DepartPosition string `protobuf:"bytes,1,opt,name=DepartPosition,proto3" json:"DepartPosition,omitempty"`
+	// 目的地(不能为空)
+	ArrivePosition string `protobuf:"bytes,2,opt,name=ArrivePosition,proto3" json:"ArrivePosition,omitempty"`
+	// 天数(未来多少天内)
+	Days int64 `protobuf:"varint,3,opt,name=Days,proto3" json:"Days,omitempty"`
+	// 需求的航班条数(0 代表全部)
+	Num int64 `protobuf:"varint,4,opt,name=Num,proto3" json:"Num,omitempty"`
+}
+
+func (x *QuireTransferFlightsReq) Reset() {
+	*x = QuireTransferFlightsReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *QuireTransferFlightsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QuireTransferFlightsReq) ProtoMessage() {}
+
+func (x *QuireTransferFlightsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QuireTransferFlightsReq.ProtoReflect.Descriptor instead.
+func (*QuireTransferFlightsReq) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *QuireTransferFlightsReq) GetDepartPosition() string {
+	if x != nil {
+		return x.DepartPosition
+	}
+	return ""
+}
+
+func (x *QuireTransferFlightsReq) GetArrivePosition() string {
+	if x != nil {
+		return x.ArrivePosition
+	}
+	return ""
+}
+
+func (x *QuireTransferFlightsReq) GetDays() int64 {
+	if x != nil {
+		return x.Days
+	}
+	return 0
+}
+
+func (x *QuireTransferFlightsReq) GetNum() int64 {
+	if x != nil {
+		return x.Num
+	}
+	return 0
+}
+
+type QuireTransferFlightsResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TransferFlights []*TransferFlightInfo `protobuf:"bytes,1,rep,name=TransferFlights,proto3" json:"TransferFlights,omitempty"`
+}
+
+func (x *QuireTransferFlightsResp) Reset() {
+	*x = QuireTransferFlightsResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *QuireTransferFlightsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QuireTransferFlightsResp) ProtoMessage() {}
+
+func (x *QuireTransferFlightsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QuireTransferFlightsResp.ProtoReflect.Descriptor instead.
+func (*QuireTransferFlightsResp) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *QuireTransferFlightsResp) GetTransferFlights() []*TransferFlightInfo {
+	if x != nil {
+		return x.TransferFlights
+	}
+	return nil
+}
+
+// 根据指定航班信息提供返程机票推荐(仅支持直飞)
+type RecommendReturnJourneyByFlightInfoReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	FlightInfo *FlightInfo `protobuf:"bytes,1,opt,name=FlightInfo,proto3" json:"FlightInfo,omitempty"`
+}
+
+func (x *RecommendReturnJourneyByFlightInfoReq) Reset() {
+	*x = RecommendReturnJourneyByFlightInfoReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[19]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RecommendReturnJourneyByFlightInfoReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecommendReturnJourneyByFlightInfoReq) ProtoMessage() {}
+
+func (x *RecommendReturnJourneyByFlightInfoReq) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[19]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecommendReturnJourneyByFlightInfoReq.ProtoReflect.Descriptor instead.
+func (*RecommendReturnJourneyByFlightInfoReq) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *RecommendReturnJourneyByFlightInfoReq) GetFlightInfo() *FlightInfo {
+	if x != nil {
+		return x.FlightInfo
+	}
+	return nil
+}
+
+type RecommendReturnJourneyByFlightInfoResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	FlightInfos []*FlightInfo `protobuf:"bytes,1,rep,name=FlightInfos,proto3" json:"FlightInfos,omitempty"`
+}
+
+func (x *RecommendReturnJourneyByFlightInfoResp) Reset() {
+	*x = RecommendReturnJourneyByFlightInfoResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[20]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RecommendReturnJourneyByFlightInfoResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecommendReturnJourneyByFlightInfoResp) ProtoMessage() {}
+
+func (x *RecommendReturnJourneyByFlightInfoResp) ProtoReflect() protoreflect.Message {
+	mi := &file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[20]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecommendReturnJourneyByFlightInfoResp.ProtoReflect.Descriptor instead.
+func (*RecommendReturnJourneyByFlightInfoResp) Descriptor() ([]byte, []int) {
+	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *RecommendReturnJourneyByFlightInfoResp) GetFlightInfos() []*FlightInfo {
+	if x != nil {
+		return x.FlightInfos
+	}
+	return nil
+}
+
 var File_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto protoreflect.FileDescriptor
 
 var file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDesc = []byte{
@@ -787,7 +1430,81 @@ var file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDesc = []byte{
 	0x12, 0x2e, 0x0a, 0x0a, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x18, 0x03,
 	0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74,
 	0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0a, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f,
-	0x32, 0xd4, 0x02, 0x0a, 0x0d, 0x66, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x71, 0x75, 0x69,
+	0x22, 0x8d, 0x01, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x75, 0x6e, 0x74,
+	0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x52, 0x65, 0x71, 0x12, 0x26, 0x0a, 0x0e, 0x44, 0x65,
+	0x70, 0x61, 0x72, 0x74, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0e, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69,
+	0x6f, 0x6e, 0x12, 0x26, 0x0a, 0x0e, 0x41, 0x72, 0x72, 0x69, 0x76, 0x65, 0x50, 0x6f, 0x73, 0x69,
+	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x41, 0x72, 0x72, 0x69,
+	0x76, 0x65, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x12, 0x0a, 0x04, 0x44, 0x61,
+	0x79, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x44, 0x61, 0x79, 0x73, 0x12, 0x10,
+	0x0a, 0x03, 0x4e, 0x75, 0x6d, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x03, 0x4e, 0x75, 0x6d,
+	0x22, 0x4a, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x46,
+	0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x12, 0x30, 0x0a, 0x0b, 0x46, 0x6c,
+	0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52,
+	0x0b, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x22, 0xc9, 0x01, 0x0a,
+	0x19, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42, 0x79, 0x50, 0x72, 0x69,
+	0x63, 0x65, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x71, 0x12, 0x26, 0x0a, 0x0e, 0x44, 0x65,
+	0x70, 0x61, 0x72, 0x74, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0e, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69,
+	0x6f, 0x6e, 0x12, 0x26, 0x0a, 0x0e, 0x41, 0x72, 0x72, 0x69, 0x76, 0x65, 0x50, 0x6f, 0x73, 0x69,
+	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x41, 0x72, 0x72, 0x69,
+	0x76, 0x65, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x1a, 0x0a, 0x08, 0x4d, 0x69,
+	0x6e, 0x50, 0x72, 0x69, 0x63, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x08, 0x4d, 0x69,
+	0x6e, 0x50, 0x72, 0x69, 0x63, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x4d, 0x61, 0x78, 0x50, 0x72, 0x69,
+	0x63, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x08, 0x4d, 0x61, 0x78, 0x50, 0x72, 0x69,
+	0x63, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x44, 0x61, 0x79, 0x73, 0x18, 0x05, 0x20, 0x01, 0x28, 0x03,
+	0x52, 0x04, 0x44, 0x61, 0x79, 0x73, 0x12, 0x10, 0x0a, 0x03, 0x4e, 0x75, 0x6d, 0x18, 0x06, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x03, 0x4e, 0x75, 0x6d, 0x22, 0x4e, 0x0a, 0x1a, 0x47, 0x65, 0x74, 0x46,
+	0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42, 0x79, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x61, 0x6e,
+	0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x30, 0x0a, 0x0b, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74,
+	0x49, 0x6e, 0x66, 0x6f, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x70, 0x62,
+	0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0b, 0x46, 0x6c, 0x69,
+	0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x22, 0x67, 0x0a, 0x1b, 0x47, 0x65, 0x74, 0x46,
+	0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42, 0x79, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4e, 0x75,
+	0x6d, 0x62, 0x65, 0x72, 0x52, 0x65, 0x71, 0x12, 0x22, 0x0a, 0x0c, 0x46, 0x6c, 0x69, 0x67, 0x68,
+	0x74, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x46,
+	0x6c, 0x69, 0x67, 0x68, 0x74, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x44,
+	0x61, 0x79, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x44, 0x61, 0x79, 0x73, 0x12,
+	0x10, 0x0a, 0x03, 0x4e, 0x75, 0x6d, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x03, 0x4e, 0x75,
+	0x6d, 0x22, 0x50, 0x0a, 0x1c, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42,
+	0x79, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x52, 0x65, 0x73,
+	0x70, 0x12, 0x30, 0x0a, 0x0b, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x73,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67,
+	0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0b, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e,
+	0x66, 0x6f, 0x73, 0x22, 0x46, 0x0a, 0x12, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x46,
+	0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x30, 0x0a, 0x0b, 0x46, 0x6c, 0x69,
+	0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e,
+	0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0b,
+	0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x22, 0x8f, 0x01, 0x0a, 0x17,
+	0x51, 0x75, 0x69, 0x72, 0x65, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x46, 0x6c, 0x69,
+	0x67, 0x68, 0x74, 0x73, 0x52, 0x65, 0x71, 0x12, 0x26, 0x0a, 0x0e, 0x44, 0x65, 0x70, 0x61, 0x72,
+	0x74, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0e, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12,
+	0x26, 0x0a, 0x0e, 0x41, 0x72, 0x72, 0x69, 0x76, 0x65, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f,
+	0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x41, 0x72, 0x72, 0x69, 0x76, 0x65, 0x50,
+	0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x12, 0x0a, 0x04, 0x44, 0x61, 0x79, 0x73, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x44, 0x61, 0x79, 0x73, 0x12, 0x10, 0x0a, 0x03, 0x4e,
+	0x75, 0x6d, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x03, 0x4e, 0x75, 0x6d, 0x22, 0x5c, 0x0a,
+	0x18, 0x51, 0x75, 0x69, 0x72, 0x65, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x46, 0x6c,
+	0x69, 0x67, 0x68, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x12, 0x40, 0x0a, 0x0f, 0x54, 0x72, 0x61,
+	0x6e, 0x73, 0x66, 0x65, 0x72, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03,
+	0x28, 0x0b, 0x32, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72,
+	0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0f, 0x54, 0x72, 0x61, 0x6e,
+	0x73, 0x66, 0x65, 0x72, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x22, 0x57, 0x0a, 0x25, 0x52,
+	0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x4a, 0x6f,
+	0x75, 0x72, 0x6e, 0x65, 0x79, 0x42, 0x79, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66,
+	0x6f, 0x52, 0x65, 0x71, 0x12, 0x2e, 0x0a, 0x0a, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e,
+	0x66, 0x6f, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c,
+	0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0a, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74,
+	0x49, 0x6e, 0x66, 0x6f, 0x22, 0x5a, 0x0a, 0x26, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e,
+	0x64, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x4a, 0x6f, 0x75, 0x72, 0x6e, 0x65, 0x79, 0x42, 0x79,
+	0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x12, 0x30,
+	0x0a, 0x0b, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x18, 0x01, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49,
+	0x6e, 0x66, 0x6f, 0x52, 0x0b, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x73,
+	0x32, 0xa9, 0x06, 0x0a, 0x0d, 0x66, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x71, 0x75, 0x69,
 	0x72, 0x79, 0x12, 0x75, 0x0a, 0x20, 0x51, 0x75, 0x69, 0x72, 0x65, 0x42, 0x79, 0x53, 0x65, 0x74,
 	0x4f, 0x75, 0x74, 0x44, 0x61, 0x74, 0x65, 0x41, 0x6e, 0x64, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74,
 	0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x12, 0x27, 0x2e, 0x70, 0x62, 0x2e, 0x51, 0x75, 0x69, 0x72,
@@ -808,8 +1525,37 @@ var file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDesc = []byte{
 	0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x12, 0x13, 0x2e, 0x70,
 	0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x52, 0x65,
 	0x71, 0x1a, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x44, 0x65, 0x74,
-	0x61, 0x69, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x61, 0x69, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x12, 0x4b, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x44, 0x69,
+	0x73, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x12, 0x19, 0x2e,
+	0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x46, 0x6c,
+	0x69, 0x67, 0x68, 0x74, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65,
+	0x74, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73,
+	0x52, 0x65, 0x73, 0x70, 0x12, 0x57, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68,
+	0x74, 0x73, 0x42, 0x79, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x12, 0x1d,
+	0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42, 0x79,
+	0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x1e, 0x2e,
+	0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42, 0x79, 0x50,
+	0x72, 0x69, 0x63, 0x65, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x5d, 0x0a,
+	0x18, 0x47, 0x65, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42, 0x79, 0x46, 0x6c, 0x69,
+	0x67, 0x68, 0x74, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x12, 0x1f, 0x2e, 0x70, 0x62, 0x2e, 0x47,
+	0x65, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42, 0x79, 0x46, 0x6c, 0x69, 0x67, 0x68,
+	0x74, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x20, 0x2e, 0x70, 0x62, 0x2e,
+	0x47, 0x65, 0x74, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x42, 0x79, 0x46, 0x6c, 0x69, 0x67,
+	0x68, 0x74, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x12, 0x51, 0x0a, 0x14,
+	0x51, 0x75, 0x69, 0x72, 0x65, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x46, 0x6c, 0x69,
+	0x67, 0x68, 0x74, 0x73, 0x12, 0x1b, 0x2e, 0x70, 0x62, 0x2e, 0x51, 0x75, 0x69, 0x72, 0x65, 0x54,
+	0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x52, 0x65,
+	0x71, 0x1a, 0x1c, 0x2e, 0x70, 0x62, 0x2e, 0x51, 0x75, 0x69, 0x72, 0x65, 0x54, 0x72, 0x61, 0x6e,
+	0x73, 0x66, 0x65, 0x72, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x12,
+	0x7b, 0x0a, 0x22, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x74, 0x75,
+	0x72, 0x6e, 0x4a, 0x6f, 0x75, 0x72, 0x6e, 0x65, 0x79, 0x42, 0x79, 0x46, 0x6c, 0x69, 0x67, 0x68,
+	0x74, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x29, 0x2e, 0x70, 0x62, 0x2e, 0x52, 0x65, 0x63, 0x6f, 0x6d,
+	0x6d, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x4a, 0x6f, 0x75, 0x72, 0x6e, 0x65,
+	0x79, 0x42, 0x79, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71,
+	0x1a, 0x2a, 0x2e, 0x70, 0x62, 0x2e, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x52,
+	0x65, 0x74, 0x75, 0x72, 0x6e, 0x4a, 0x6f, 0x75, 0x72, 0x6e, 0x65, 0x79, 0x42, 0x79, 0x46, 0x6c,
+	0x69, 0x67, 0x68, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x42, 0x06, 0x5a, 0x04,
+	0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -824,7 +1570,7 @@ func file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescGZIP() []byte 
 	return file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDescData
 }
 
-var file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_goTypes = []interface{}{
 	(*FlightInfo)(nil), // 0: pb.FlightInfo
 	(*TimeFee)(nil),    // 1: pb.TimeFee
@@ -836,33 +1582,61 @@ var file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_goTypes = []interface{
 	(*QuireBySetOutDateStartPositionEndPositionResp)(nil), // 7: pb.QuireBySetOutDateStartPositionEndPositionResp
 	(*FlightDetailReq)(nil),                               // 8: pb.FlightDetailReq
 	(*FlightDetailResp)(nil),                              // 9: pb.FlightDetailResp
-	(*timestamppb.Timestamp)(nil),                         // 10: google.protobuf.Timestamp
+	(*GetDiscountFlightsReq)(nil),                         // 10: pb.GetDiscountFlightsReq
+	(*GetDiscountFlightsResp)(nil),                        // 11: pb.GetDiscountFlightsResp
+	(*GetFlightsByPriceRangeReq)(nil),                     // 12: pb.GetFlightsByPriceRangeReq
+	(*GetFlightsByPriceRangeResp)(nil),                    // 13: pb.GetFlightsByPriceRangeResp
+	(*GetFlightsByFlightNumberReq)(nil),                   // 14: pb.GetFlightsByFlightNumberReq
+	(*GetFlightsByFlightNumberResp)(nil),                  // 15: pb.GetFlightsByFlightNumberResp
+	(*TransferFlightInfo)(nil),                            // 16: pb.TransferFlightInfo
+	(*QuireTransferFlightsReq)(nil),                       // 17: pb.QuireTransferFlightsReq
+	(*QuireTransferFlightsResp)(nil),                      // 18: pb.QuireTransferFlightsResp
+	(*RecommendReturnJourneyByFlightInfoReq)(nil),         // 19: pb.RecommendReturnJourneyByFlightInfoReq
+	(*RecommendReturnJourneyByFlightInfoResp)(nil),        // 20: pb.RecommendReturnJourneyByFlightInfoResp
+	(*timestamppb.Timestamp)(nil),                         // 21: google.protobuf.Timestamp
 }
 var file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_depIdxs = []int32{
-	10, // 0: pb.FlightInfo.SetOutDate:type_name -> google.protobuf.Timestamp
-	10, // 1: pb.FlightInfo.DepartTime:type_name -> google.protobuf.Timestamp
-	10, // 2: pb.FlightInfo.ArriveTime:type_name -> google.protobuf.Timestamp
+	21, // 0: pb.FlightInfo.SetOutDate:type_name -> google.protobuf.Timestamp
+	21, // 1: pb.FlightInfo.DepartTime:type_name -> google.protobuf.Timestamp
+	21, // 2: pb.FlightInfo.ArriveTime:type_name -> google.protobuf.Timestamp
 	2,  // 3: pb.FlightInfo.RefundInfo:type_name -> pb.RefundInfo
 	3,  // 4: pb.FlightInfo.ChangeInfo:type_name -> pb.ChangeInfo
-	10, // 5: pb.TimeFee.Time:type_name -> google.protobuf.Timestamp
+	21, // 5: pb.TimeFee.Time:type_name -> google.protobuf.Timestamp
 	1,  // 6: pb.RefundInfo.TimeFees:type_name -> pb.TimeFee
 	1,  // 7: pb.ChangeInfo.TimeFees:type_name -> pb.TimeFee
-	10, // 8: pb.QuireBySetOutDateAndFlightNumberReq.SetOutDate:type_name -> google.protobuf.Timestamp
+	21, // 8: pb.QuireBySetOutDateAndFlightNumberReq.SetOutDate:type_name -> google.protobuf.Timestamp
 	0,  // 9: pb.QuireBySetOutDateAndFlightNumberResp.FlightInfos:type_name -> pb.FlightInfo
-	10, // 10: pb.QuireBySetOutDateStartPositionEndPositionReq.SetOutDate:type_name -> google.protobuf.Timestamp
+	21, // 10: pb.QuireBySetOutDateStartPositionEndPositionReq.SetOutDate:type_name -> google.protobuf.Timestamp
 	0,  // 11: pb.QuireBySetOutDateStartPositionEndPositionResp.FlightInfos:type_name -> pb.FlightInfo
 	0,  // 12: pb.FlightDetailResp.FlightInfo:type_name -> pb.FlightInfo
-	4,  // 13: pb.flightInquiry.QuireBySetOutDateAndFlightNumber:input_type -> pb.QuireBySetOutDateAndFlightNumberReq
-	6,  // 14: pb.flightInquiry.QuireBySetOutDateStartPositionEndPosition:input_type -> pb.QuireBySetOutDateStartPositionEndPositionReq
-	8,  // 15: pb.flightInquiry.FlightDetail:input_type -> pb.FlightDetailReq
-	5,  // 16: pb.flightInquiry.QuireBySetOutDateAndFlightNumber:output_type -> pb.QuireBySetOutDateAndFlightNumberResp
-	7,  // 17: pb.flightInquiry.QuireBySetOutDateStartPositionEndPosition:output_type -> pb.QuireBySetOutDateStartPositionEndPositionResp
-	9,  // 18: pb.flightInquiry.FlightDetail:output_type -> pb.FlightDetailResp
-	16, // [16:19] is the sub-list for method output_type
-	13, // [13:16] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	0,  // 13: pb.GetDiscountFlightsResp.FlightInfos:type_name -> pb.FlightInfo
+	0,  // 14: pb.GetFlightsByPriceRangeResp.FlightInfos:type_name -> pb.FlightInfo
+	0,  // 15: pb.GetFlightsByFlightNumberResp.FlightInfos:type_name -> pb.FlightInfo
+	0,  // 16: pb.TransferFlightInfo.FlightInfos:type_name -> pb.FlightInfo
+	16, // 17: pb.QuireTransferFlightsResp.TransferFlights:type_name -> pb.TransferFlightInfo
+	0,  // 18: pb.RecommendReturnJourneyByFlightInfoReq.FlightInfo:type_name -> pb.FlightInfo
+	0,  // 19: pb.RecommendReturnJourneyByFlightInfoResp.FlightInfos:type_name -> pb.FlightInfo
+	4,  // 20: pb.flightInquiry.QuireBySetOutDateAndFlightNumber:input_type -> pb.QuireBySetOutDateAndFlightNumberReq
+	6,  // 21: pb.flightInquiry.QuireBySetOutDateStartPositionEndPosition:input_type -> pb.QuireBySetOutDateStartPositionEndPositionReq
+	8,  // 22: pb.flightInquiry.FlightDetail:input_type -> pb.FlightDetailReq
+	10, // 23: pb.flightInquiry.GetDiscountFlights:input_type -> pb.GetDiscountFlightsReq
+	12, // 24: pb.flightInquiry.GetFlightsByPriceRange:input_type -> pb.GetFlightsByPriceRangeReq
+	14, // 25: pb.flightInquiry.GetFlightsByFlightNumber:input_type -> pb.GetFlightsByFlightNumberReq
+	17, // 26: pb.flightInquiry.QuireTransferFlights:input_type -> pb.QuireTransferFlightsReq
+	19, // 27: pb.flightInquiry.RecommendReturnJourneyByFlightInfo:input_type -> pb.RecommendReturnJourneyByFlightInfoReq
+	5,  // 28: pb.flightInquiry.QuireBySetOutDateAndFlightNumber:output_type -> pb.QuireBySetOutDateAndFlightNumberResp
+	7,  // 29: pb.flightInquiry.QuireBySetOutDateStartPositionEndPosition:output_type -> pb.QuireBySetOutDateStartPositionEndPositionResp
+	9,  // 30: pb.flightInquiry.FlightDetail:output_type -> pb.FlightDetailResp
+	11, // 31: pb.flightInquiry.GetDiscountFlights:output_type -> pb.GetDiscountFlightsResp
+	13, // 32: pb.flightInquiry.GetFlightsByPriceRange:output_type -> pb.GetFlightsByPriceRangeResp
+	15, // 33: pb.flightInquiry.GetFlightsByFlightNumber:output_type -> pb.GetFlightsByFlightNumberResp
+	18, // 34: pb.flightInquiry.QuireTransferFlights:output_type -> pb.QuireTransferFlightsResp
+	20, // 35: pb.flightInquiry.RecommendReturnJourneyByFlightInfo:output_type -> pb.RecommendReturnJourneyByFlightInfoResp
+	28, // [28:36] is the sub-list for method output_type
+	20, // [20:28] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_init() }
@@ -991,6 +1765,138 @@ func file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_init() {
 				return nil
 			}
 		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetDiscountFlightsReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetDiscountFlightsResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetFlightsByPriceRangeReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetFlightsByPriceRangeResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetFlightsByFlightNumberReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetFlightsByFlightNumberResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TransferFlightInfo); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*QuireTransferFlightsReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*QuireTransferFlightsResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*RecommendReturnJourneyByFlightInfoReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*RecommendReturnJourneyByFlightInfoResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -998,7 +1904,7 @@ func file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_app_flightInquiry_cmd_rpc_pb_flightInquiry_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

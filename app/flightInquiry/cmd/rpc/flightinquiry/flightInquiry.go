@@ -17,12 +17,23 @@ type (
 	FlightDetailReq                               = pb.FlightDetailReq
 	FlightDetailResp                              = pb.FlightDetailResp
 	FlightInfo                                    = pb.FlightInfo
+	GetDiscountFlightsReq                         = pb.GetDiscountFlightsReq
+	GetDiscountFlightsResp                        = pb.GetDiscountFlightsResp
+	GetFlightsByFlightNumberReq                   = pb.GetFlightsByFlightNumberReq
+	GetFlightsByFlightNumberResp                  = pb.GetFlightsByFlightNumberResp
+	GetFlightsByPriceRangeReq                     = pb.GetFlightsByPriceRangeReq
+	GetFlightsByPriceRangeResp                    = pb.GetFlightsByPriceRangeResp
 	QuireBySetOutDateAndFlightNumberReq           = pb.QuireBySetOutDateAndFlightNumberReq
 	QuireBySetOutDateAndFlightNumberResp          = pb.QuireBySetOutDateAndFlightNumberResp
 	QuireBySetOutDateStartPositionEndPositionReq  = pb.QuireBySetOutDateStartPositionEndPositionReq
 	QuireBySetOutDateStartPositionEndPositionResp = pb.QuireBySetOutDateStartPositionEndPositionResp
+	QuireTransferFlightsReq                       = pb.QuireTransferFlightsReq
+	QuireTransferFlightsResp                      = pb.QuireTransferFlightsResp
+	RecommendReturnJourneyByFlightInfoReq         = pb.RecommendReturnJourneyByFlightInfoReq
+	RecommendReturnJourneyByFlightInfoResp        = pb.RecommendReturnJourneyByFlightInfoResp
 	RefundInfo                                    = pb.RefundInfo
 	TimeFee                                       = pb.TimeFee
+	TransferFlightInfo                            = pb.TransferFlightInfo
 
 	FlightInquiry interface {
 		// QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
@@ -31,6 +42,16 @@ type (
 		QuireBySetOutDateStartPositionEndPosition(ctx context.Context, in *QuireBySetOutDateStartPositionEndPositionReq, opts ...grpc.CallOption) (*QuireBySetOutDateStartPositionEndPositionResp, error)
 		// FlightDetail 通过给定 票id 来获取航班详情
 		FlightDetail(ctx context.Context, in *FlightDetailReq, opts ...grpc.CallOption) (*FlightDetailResp, error)
+		// GetDiscountFlights 查询折扣航班
+		GetDiscountFlights(ctx context.Context, in *GetDiscountFlightsReq, opts ...grpc.CallOption) (*GetDiscountFlightsResp, error)
+		// GetFlightsByPriceRange 查询指定价格区间的航班
+		GetFlightsByPriceRange(ctx context.Context, in *GetFlightsByPriceRangeReq, opts ...grpc.CallOption) (*GetFlightsByPriceRangeResp, error)
+		// GetFlightsByFlightNumber 根据航班号获取航班信息
+		GetFlightsByFlightNumber(ctx context.Context, in *GetFlightsByFlightNumberReq, opts ...grpc.CallOption) (*GetFlightsByFlightNumberResp, error)
+		// QuireTransferFlights 中转航班查询
+		QuireTransferFlights(ctx context.Context, in *QuireTransferFlightsReq, opts ...grpc.CallOption) (*QuireTransferFlightsResp, error)
+		//  根据指定航班信息提供返程机票推荐(仅支持直飞)
+		RecommendReturnJourneyByFlightInfo(ctx context.Context, in *RecommendReturnJourneyByFlightInfoReq, opts ...grpc.CallOption) (*RecommendReturnJourneyByFlightInfoResp, error)
 	}
 
 	defaultFlightInquiry struct {
@@ -60,4 +81,34 @@ func (m *defaultFlightInquiry) QuireBySetOutDateStartPositionEndPosition(ctx con
 func (m *defaultFlightInquiry) FlightDetail(ctx context.Context, in *FlightDetailReq, opts ...grpc.CallOption) (*FlightDetailResp, error) {
 	client := pb.NewFlightInquiryClient(m.cli.Conn())
 	return client.FlightDetail(ctx, in, opts...)
+}
+
+// GetDiscountFlights 查询折扣航班
+func (m *defaultFlightInquiry) GetDiscountFlights(ctx context.Context, in *GetDiscountFlightsReq, opts ...grpc.CallOption) (*GetDiscountFlightsResp, error) {
+	client := pb.NewFlightInquiryClient(m.cli.Conn())
+	return client.GetDiscountFlights(ctx, in, opts...)
+}
+
+// GetFlightsByPriceRange 查询指定价格区间的航班
+func (m *defaultFlightInquiry) GetFlightsByPriceRange(ctx context.Context, in *GetFlightsByPriceRangeReq, opts ...grpc.CallOption) (*GetFlightsByPriceRangeResp, error) {
+	client := pb.NewFlightInquiryClient(m.cli.Conn())
+	return client.GetFlightsByPriceRange(ctx, in, opts...)
+}
+
+// GetFlightsByFlightNumber 根据航班号获取航班信息
+func (m *defaultFlightInquiry) GetFlightsByFlightNumber(ctx context.Context, in *GetFlightsByFlightNumberReq, opts ...grpc.CallOption) (*GetFlightsByFlightNumberResp, error) {
+	client := pb.NewFlightInquiryClient(m.cli.Conn())
+	return client.GetFlightsByFlightNumber(ctx, in, opts...)
+}
+
+// QuireTransferFlights 中转航班查询
+func (m *defaultFlightInquiry) QuireTransferFlights(ctx context.Context, in *QuireTransferFlightsReq, opts ...grpc.CallOption) (*QuireTransferFlightsResp, error) {
+	client := pb.NewFlightInquiryClient(m.cli.Conn())
+	return client.QuireTransferFlights(ctx, in, opts...)
+}
+
+//  根据指定航班信息提供返程机票推荐(仅支持直飞)
+func (m *defaultFlightInquiry) RecommendReturnJourneyByFlightInfo(ctx context.Context, in *RecommendReturnJourneyByFlightInfoReq, opts ...grpc.CallOption) (*RecommendReturnJourneyByFlightInfoResp, error) {
+	client := pb.NewFlightInquiryClient(m.cli.Conn())
+	return client.RecommendReturnJourneyByFlightInfo(ctx, in, opts...)
 }

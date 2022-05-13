@@ -189,4 +189,19 @@ service flightInquiry {
 
   //FlightDetail 通过给定 票id 来获取航班详情
   rpc FlightDetail(FlightDetailReq) returns(FlightDetailResp);
+
+  //GetDiscountFlights 查询折扣航班
+  rpc GetDiscountFlights(GetDiscountFlightsReq) returns(GetDiscountFlightsResp);
+
+  //GetFlightsByPriceRange 查询指定价格区间的航班
+  rpc GetFlightsByPriceRange(GetFlightsByPriceRangeReq) returns(GetFlightsByPriceRangeResp);
+
+  //GetFlightsByFlightNumber 根据航班号获取航班信息
+  rpc GetFlightsByFlightNumber(GetFlightsByFlightNumberReq) returns(GetFlightsByFlightNumberResp);
+
+  //QuireTransferFlights 中转航班查询
+  rpc QuireTransferFlights(QuireTransferFlightsReq) returns(QuireTransferFlightsResp);
+
+  // 根据指定航班信息提供返程机票推荐(仅支持直飞)
+  rpc RecommendReturnJourneyByFlightInfo(RecommendReturnJourneyByFlightInfoReq) returns(RecommendReturnJourneyByFlightInfoResp);
 }
