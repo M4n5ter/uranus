@@ -63,8 +63,8 @@ type (
 		CountBuilder(field string) squirrel.SelectBuilder
 		// SumBuilder 暴露给logic，查询sum的builder
 		SumBuilder(field string) squirrel.SelectBuilder
-		// FindListByNumber 根据航班号查询数据
-		FindListByNumber(rowBuilder squirrel.SelectBuilder, number string) ([]*FlightInfos, error)
+		// FindPageListByNumberAndDays 根据航班号查询数据
+		FindPageListByNumberAndDays(rowBuilder squirrel.SelectBuilder, number string, days, limit int64) ([]*FlightInfos, error)
 		// FindListByNumberAndSetOutDate 根据航班号和出发日期查询数据
 		FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sot time.Time) ([]*FlightInfos, error)
 		// FindListBySetOutDateAndPosition 通过给定日期、出发地、目的地进行航班查询
@@ -400,13 +400,30 @@ func (m *defaultFlightInfosModel) queryPrimary(conn sqlx.SqlConn, v, primary int
 
 //!!!!! 其他自定义方法，从此处开始写,此处上方不要写自定义方法!!!!!
 
-// FindListByNumber 根据航班号查询数据
-func (m *defaultFlightInfosModel) FindListByNumber(rowBuilder squirrel.SelectBuilder, number string) ([]*FlightInfos, error) {
+// FindPageListByNumberAndDays 根据航班号查询数据
+func (m *defaultFlightInfosModel) FindPageListByNumberAndDays(rowBuilder squirrel.SelectBuilder, number string, days, limit int64) ([]*FlightInfos, error) {
 
 	if len(number) > 0 {
 		rowBuilder = rowBuilder.Where(" flight_number = ? ", number)
 	} else {
 		return nil, ErrNotFound
+	}
+
+	today := time.Now()
+	today, _ = time.Parse("2006-01-02", today.Format("2006-01-02"))
+	todayString := today.Format("2006-01-02 15:04:05")
+	lastDate := today.AddDate(0, 0, int(days))
+	lastDateString := lastDate.Format("2006-01-02 15:04:05")
+	if days < 0 {
+		rowBuilder = rowBuilder.Where("set_out_date between ? and ?", lastDateString, todayString)
+	} else if days > 0 {
+		rowBuilder = rowBuilder.Where("set_out_date between ? and ?", todayString, lastDateString)
+	} else {
+		rowBuilder = rowBuilder.Where(squirrel.Eq{"set_out_date": todayString})
+	}
+
+	if limit > 0 {
+		rowBuilder = rowBuilder.Limit(uint64(limit))
 	}
 
 	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
@@ -517,6 +534,8 @@ func (m *defaultFlightInfosModel) FindPageListByPositionAndDays(rowBuilder squir
 			rowBuilder = rowBuilder.Where("set_out_date between ? and ?", lastDateString, todayString)
 		} else if days > 0 {
 			rowBuilder = rowBuilder.Where("set_out_date between ? and ?", todayString, lastDateString)
+		} else {
+			rowBuilder = rowBuilder.Where(squirrel.Eq{"set_out_date": todayString})
 		}
 
 		if limit > 0 {
