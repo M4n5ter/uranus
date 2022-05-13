@@ -95,6 +95,10 @@ func (l *GetDiscountFlightsLogic) getDiscountFlights(flightList []*pb.FlightInfo
 		return futureFlightList
 	}
 
+	if len(futureFlightList) < int(n) {
+		return futureFlightList
+	}
+
 	return futureFlightList[:n]
 }
 
