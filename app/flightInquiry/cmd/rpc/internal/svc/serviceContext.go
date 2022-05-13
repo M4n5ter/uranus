@@ -219,9 +219,9 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 	return resp, nil
 }
 
-func (s *ServiceContext) GetFlightInfosByIdList(idList []int64) ([]*commonModel.FlightInfos, error) {
+func (s *ServiceContext) GetFlightInfosByIdList(idList map[int64]struct{}) ([]*commonModel.FlightInfos, error) {
 	var ret []*commonModel.FlightInfos
-	for _, id := range idList {
+	for id := range idList {
 		fli, err := s.FlightInfosModel.FindOne(id)
 		if err != nil && err != commonModel.ErrNotFound {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
@@ -237,9 +237,9 @@ func (s *ServiceContext) GetFlightInfosByIdList(idList []int64) ([]*commonModel.
 	return ret, nil
 }
 
-func (s *ServiceContext) GetSpacesByIdList(idList []int64) ([]*commonModel.Spaces, error) {
+func (s *ServiceContext) GetSpacesByIdList(idList map[int64]struct{}) ([]*commonModel.Spaces, error) {
 	var ret []*commonModel.Spaces
-	for _, id := range idList {
+	for id := range idList {
 		space, err := s.SpacesModel.FindOne(id)
 		if err != nil && err != commonModel.ErrNotFound {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
