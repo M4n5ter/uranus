@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"sort"
-	"time"
 	"uranus/app/flightInquiry/bizcache"
 	"uranus/common/xerr"
 	"uranus/commonModel"
@@ -44,8 +43,9 @@ func (l *GetDiscountFlightsLogic) GetDiscountFlights(in *pb.GetDiscountFlightsRe
 	// 从 bizcache 查 id 列表
 	zset := fmt.Sprintf("%s_%s", in.DepartPosition, in.ArrivePosition)
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
+
 	// 查不到 bizcache 的情况
-	if err != nil || idList == nil {
+	if err != nil || len(idList) == 0 {
 		flightInfos, err = l.svcCtx.FlightInfosModel.FindPageListByPositionAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.Days, -1)
 		if err != nil {
 			if err == commonModel.ErrNotFound {
@@ -57,14 +57,22 @@ func (l *GetDiscountFlightsLogic) GetDiscountFlights(in *pb.GetDiscountFlightsRe
 
 		// 把id列表加进bizcache
 		for _, info := range flightInfos {
-			idList[info.Id] = struct{}{}
 			err = bizcache.AddID(l.svcCtx.Redis, info.Id, zset, bizcache.BizFLICachePrefix)
 			if err != nil {
 				logx.Errorf("ADD bizcache ERR: %v", err)
 			}
 		}
-	}
 
+		// 组合成完整数据组
+		combinedInfos, err := l.svcCtx.CombineAllInfos(flightInfos)
+		if err != nil {
+			return nil, err
+		}
+
+		ret := l.getDiscountFlights(combinedInfos, in.Num)
+		return &pb.GetDiscountFlightsResp{FlightInfos: ret}, nil
+	}
+	// 查到 bizcache
 	flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
 	if err != nil {
 		return nil, err
@@ -82,24 +90,17 @@ func (l *GetDiscountFlightsLogic) GetDiscountFlights(in *pb.GetDiscountFlightsRe
 
 // 获取折扣最大的 n 条航班信息
 func (l *GetDiscountFlightsLogic) getDiscountFlights(flightList []*pb.FlightInfo, n int64) []*pb.FlightInfo {
-	futureFlightList := make([]*pb.FlightInfo, 0, len(flightList))
-	for i, info := range flightList {
-		if info.DepartTime.AsTime().After(time.Now()) {
-			futureFlightList[i] = info
-		}
-	}
-
 	// 降序排序
-	sort.Sort(CanBeSortedFLI(futureFlightList))
+	sort.Sort(CanBeSortedFLI(flightList))
 	if n <= 0 {
-		return futureFlightList
+		return flightList
 	}
 
-	if len(futureFlightList) < int(n) {
-		return futureFlightList
+	if len(flightList) < int(n) {
+		return flightList
 	}
 
-	return futureFlightList[:n]
+	return flightList[:n]
 }
 
 func (c CanBeSortedFLI) Len() int {
