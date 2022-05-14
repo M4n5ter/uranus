@@ -138,6 +138,8 @@ github.com/dtm-labs/dtmdriver-gozero v0.0.2/go.mod h1:5AAKwYok5f56e0kATOXvc+DAsf
 github.com/dtm-labs/dtmdriver-kratos v0.0.4/go.mod h1:MjrFIa2A191ATVb/xy2vnA2ZKqMK9zC/1m3pjxXwkac=
 github.com/dtm-labs/dtmdriver-polaris v0.0.4/go.mod h1:zwNFE3z0B7Ky35W2Ks9LkpMGiuIt9YFuocy4qaedCLE=
 github.com/dtm-labs/dtmdriver-protocol1 v0.0.1/go.mod h1:x3bRe8x7pAfHIIQBTK+LibVq96gBSzMzsgRYe85zxAc=
+github.com/duke-git/lancet/v2 v2.0.6 h1:HZKwz3Lcslh1wKYscKy21MhF1JOFrF9bbE1mKM54P/s=
+github.com/duke-git/lancet/v2 v2.0.6/go.mod h1:5Nawyf/bK783rCiHyVkZLx+jj8028oVVjLOrC21ZONA=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/eapache/go-resiliency v1.2.0/go.mod h1:kFI+JgMyC7bLPUVY133qvEBtVayf5mFgVsvEsIPBvNs=
 github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 h1:YEetp8/yCZMuEPMUDHG0CW/brkkEp8mzqk2+ODEitlw=
