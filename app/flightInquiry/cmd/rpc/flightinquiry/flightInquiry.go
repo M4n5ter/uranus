@@ -34,6 +34,7 @@ type (
 	RefundInfo                                    = pb.RefundInfo
 	TimeFee                                       = pb.TimeFee
 	TransferFlightInfo                            = pb.TransferFlightInfo
+	UniqFlightWithSpaces                          = pb.UniqFlightWithSpaces
 
 	FlightInquiry interface {
 		// QuireBySetOutDateAndFlightNumber 通过给定日期、航班号进行航班查询请求
