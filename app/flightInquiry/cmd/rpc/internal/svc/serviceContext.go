@@ -218,6 +218,30 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 	return resp, nil
 }
 
+func (s *ServiceContext) GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedFlightInfos []*pb.FlightInfo) []*pb.UniqFlightWithSpaces {
+	uniqFlightWithSpaces := make([]*pb.UniqFlightWithSpaces, 0)
+	fliIDMap := make(map[int64][]*pb.FlightInfo)
+	for _, info := range combinedFlightInfos {
+		if _, exist := fliIDMap[info.FlightInfoID]; exist {
+			// 已经存在同 flightInfoID 的情况
+			fliIDMap[info.FlightInfoID] = append(fliIDMap[info.FlightInfoID], info)
+		} else {
+			// 首次出现的 flightInfoID
+			fliIDMap[info.FlightInfoID] = []*pb.FlightInfo{info}
+		}
+	}
+
+	// 将 map 填充进 uniqFlightWithSpaces
+	for flightInfoID, spacesOfFlightInfo := range fliIDMap {
+		uniqFlightWithSpaces = append(uniqFlightWithSpaces, &pb.UniqFlightWithSpaces{
+			FlightInfoID:       flightInfoID,
+			SpacesOfFlightInfo: spacesOfFlightInfo,
+		})
+	}
+
+	return uniqFlightWithSpaces
+}
+
 func (s *ServiceContext) GetFlightInfosByIdList(idList map[int64]struct{}) ([]*commonModel.FlightInfos, error) {
 	var ret []*commonModel.FlightInfos
 	for id := range idList {
