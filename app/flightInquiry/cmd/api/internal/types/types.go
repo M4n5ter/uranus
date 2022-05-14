@@ -33,13 +33,18 @@ type Flightinfo struct {
 	ChangeInfo     RefundInfo `json:"changeInfo"`
 }
 
+type UniqFlightWithSpaces struct {
+	FlightInfoID       int64        `json:"flightInfoId"`
+	SpacesOfFlightInfo []Flightinfo `json:"spacesOfFlightInfo"`
+}
+
 type QuireBySetOutDateAndFlightNumberReq struct {
 	FlightNumber string `json:"flightNumber"`
 	SetOutDate   string `json:"setOutDate"`
 }
 
 type QuireBySetOutDateAndFlightNumberResp struct {
-	Flightinfos []*Flightinfo `json:"flightinfos"`
+	UniqFlightWithSpaces []*UniqFlightWithSpaces `json:"uniqFlightWithSpaces"`
 }
 
 type QuireBySetOutDateStartPositionEndPositionReq struct {
@@ -49,5 +54,5 @@ type QuireBySetOutDateStartPositionEndPositionReq struct {
 }
 
 type QuireBySetOutDateStartPositionEndPositionResp struct {
-	Flightinfos []*Flightinfo `json:"flightinfos"`
+	UniqFlightWithSpaces []*UniqFlightWithSpaces `json:"uniqFlightWithSpaces"`
 }

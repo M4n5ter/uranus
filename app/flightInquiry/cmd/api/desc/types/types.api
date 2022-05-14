@@ -57,6 +57,12 @@ type (
         //改票信息
         ChangeInfo  RefundInfo      `json:"changeInfo"`
     }
+
+    UniqFlightWithSpaces {
+        // 航班信息ID
+        FlightInfoID            int64           `json:"flightInfoId"`
+        SpacesOfFlightInfo      []Flightinfo    `json:"spacesOfFlightInfo"`
+    }
 )
 
 
@@ -70,7 +76,7 @@ type (
     }
     //QuireBySetOutDateAndFlightNumberResp 为 QuireBySetOutDateAndFlightNumberReq 的响应
     QuireBySetOutDateAndFlightNumberResp {
-        Flightinfos     []*Flightinfo`json:"flightinfos"`
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
     }
 )
 
@@ -86,7 +92,7 @@ type (
     }
         //QuireBySetOutDateStartPositionEndPositionResp 为 QuireBySetOutTimeStartPositionEndPositionReq 的响应
     QuireBySetOutDateStartPositionEndPositionResp {
-        Flightinfos     []*Flightinfo`json:"flightinfos"`
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
     }
 )
 
