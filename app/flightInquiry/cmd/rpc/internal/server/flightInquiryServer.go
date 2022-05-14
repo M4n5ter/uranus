@@ -64,7 +64,7 @@ func (s *FlightInquiryServer) QuireTransferFlights(ctx context.Context, in *pb.Q
 	return l.QuireTransferFlights(in)
 }
 
-//  根据指定航班信息提供返程机票推荐(仅支持直飞)
+// RecommendReturnJourneyByFlightInfo 根据指定航班信息提供返程机票推荐(仅支持直飞)
 func (s *FlightInquiryServer) RecommendReturnJourneyByFlightInfo(ctx context.Context, in *pb.RecommendReturnJourneyByFlightInfoReq) (*pb.RecommendReturnJourneyByFlightInfoResp, error) {
 	l := logic.NewRecommendReturnJourneyByFlightInfoLogic(ctx, s.svcCtx)
 	return l.RecommendReturnJourneyByFlightInfo(in)
