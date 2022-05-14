@@ -51,7 +51,7 @@ type (
 		GetFlightsByFlightNumber(ctx context.Context, in *GetFlightsByFlightNumberReq, opts ...grpc.CallOption) (*GetFlightsByFlightNumberResp, error)
 		// QuireTransferFlights 中转航班查询
 		QuireTransferFlights(ctx context.Context, in *QuireTransferFlightsReq, opts ...grpc.CallOption) (*QuireTransferFlightsResp, error)
-		//  根据指定航班信息提供返程机票推荐(仅支持直飞)
+		// RecommendReturnJourneyByFlightInfo 根据指定航班信息提供返程机票推荐(仅支持直飞)
 		RecommendReturnJourneyByFlightInfo(ctx context.Context, in *RecommendReturnJourneyByFlightInfoReq, opts ...grpc.CallOption) (*RecommendReturnJourneyByFlightInfoResp, error)
 	}
 
@@ -108,7 +108,7 @@ func (m *defaultFlightInquiry) QuireTransferFlights(ctx context.Context, in *Qui
 	return client.QuireTransferFlights(ctx, in, opts...)
 }
 
-//  根据指定航班信息提供返程机票推荐(仅支持直飞)
+// RecommendReturnJourneyByFlightInfo 根据指定航班信息提供返程机票推荐(仅支持直飞)
 func (m *defaultFlightInquiry) RecommendReturnJourneyByFlightInfo(ctx context.Context, in *RecommendReturnJourneyByFlightInfoReq, opts ...grpc.CallOption) (*RecommendReturnJourneyByFlightInfoResp, error) {
 	client := pb.NewFlightInquiryClient(m.cli.Conn())
 	return client.RecommendReturnJourneyByFlightInfo(ctx, in, opts...)
