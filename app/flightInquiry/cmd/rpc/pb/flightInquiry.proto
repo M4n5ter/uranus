@@ -78,7 +78,7 @@ message QuireBySetOutDateAndFlightNumberReq {
 // QuireBySetOutDateAndFlightNumberResp 为 QuireBySetOutDateAndFlightNumberReq 的响应
 message QuireBySetOutDateAndFlightNumberResp {
   // 查询结果
-  repeated FlightInfo FlightInfos = 1;
+  repeated UniqFlightWithSpaces UniqFlightWithSpaces  = 1;
 }
 
 
@@ -95,7 +95,7 @@ message QuireBySetOutDateStartPositionEndPositionReq {
 // QuireBySetOutDateStartPositionEndPositionResp 为 QuireBySetOutTimeStartPositionEndPositionReq 的响应
 message QuireBySetOutDateStartPositionEndPositionResp {
   // 查询结果
-  repeated FlightInfo FlightInfos = 1;
+  repeated UniqFlightWithSpaces UniqFlightWithSpaces  = 1;
 }
 
 
@@ -123,7 +123,7 @@ message GetDiscountFlightsReq {
   int64   Num             = 4;
 }
 message GetDiscountFlightsResp {
-  repeated FlightInfo FlightInfos = 1;
+  repeated UniqFlightWithSpaces UniqFlightWithSpaces  = 1;
 }
 
 // 查询指定价格区间的航班
@@ -142,7 +142,7 @@ message GetFlightsByPriceRangeReq {
   int64   Num             = 6;
 }
 message GetFlightsByPriceRangeResp {
-  repeated FlightInfo FlightInfos = 1;
+  repeated UniqFlightWithSpaces UniqFlightWithSpaces  = 1;
 }
 
 // 根据航班号获取航班信息

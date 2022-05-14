@@ -78,12 +78,13 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 		}
 
 		// 组合数据并返回
-		v, err := l.svcCtx.CombineAllInfos(flightInfos)
+		combinedResp, err := l.svcCtx.CombineAllInfos(flightInfos)
 		if err != nil {
 			return nil, err
 		}
 
-		return &pb.QuireBySetOutDateAndFlightNumberResp{FlightInfos: v}, err
+		ret := l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedResp)
+		return &pb.QuireBySetOutDateAndFlightNumberResp{UniqFlightWithSpaces: ret}, nil
 	}
 
 	// 查到bizcache的情况
@@ -93,12 +94,13 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 	}
 
 	// 组合数据并返回
-	v, err := l.svcCtx.CombineAllInfos(flightInfos)
+	combinedResp, err := l.svcCtx.CombineAllInfos(flightInfos)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.QuireBySetOutDateAndFlightNumberResp{FlightInfos: v}, err
+	ret := l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedResp)
+	return &pb.QuireBySetOutDateAndFlightNumberResp{UniqFlightWithSpaces: ret}, nil
 
 	//// 不走缓存查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
 	//flightInfos, err = l.svcCtx.FlightInfosModel.FindListByNumberAndSetOutDate(l.svcCtx.FlightInfosModel.RowBuilder(), in.FlightNumber, in.SetOutDate.AsTime())

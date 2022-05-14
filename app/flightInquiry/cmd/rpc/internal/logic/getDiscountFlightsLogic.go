@@ -69,8 +69,9 @@ func (l *GetDiscountFlightsLogic) GetDiscountFlights(in *pb.GetDiscountFlightsRe
 			return nil, err
 		}
 
-		ret := l.getDiscountFlights(combinedInfos, in.Num)
-		return &pb.GetDiscountFlightsResp{FlightInfos: ret}, nil
+		discountFlights := l.getDiscountFlights(combinedInfos, in.Num)
+		ret := l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(discountFlights)
+		return &pb.GetDiscountFlightsResp{UniqFlightWithSpaces: ret}, nil
 	}
 	// 查到 bizcache
 	flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
@@ -84,8 +85,9 @@ func (l *GetDiscountFlightsLogic) GetDiscountFlights(in *pb.GetDiscountFlightsRe
 		return nil, err
 	}
 
-	ret := l.getDiscountFlights(combinedInfos, in.Num)
-	return &pb.GetDiscountFlightsResp{FlightInfos: ret}, nil
+	discountFlights := l.getDiscountFlights(combinedInfos, in.Num)
+	ret := l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(discountFlights)
+	return &pb.GetDiscountFlightsResp{UniqFlightWithSpaces: ret}, nil
 }
 
 // 获取折扣最大的 n 条航班信息
