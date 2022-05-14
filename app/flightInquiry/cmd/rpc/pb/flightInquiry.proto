@@ -43,6 +43,13 @@ message FlightInfo {
   string                    FlightType     = 17;
 }
 
+message UniqFlightWithSpaces {
+  // 航班信息id
+  int64                     FlightInfoID        = 1;
+  // 同一条航班信息的不同仓位
+  repeated  FlightInfo      SpacesOfFlightInfo  = 2;
+}
+
 // 时间-费用
 message TimeFee {
   google.protobuf.Timestamp   Time         = 1;
@@ -148,7 +155,7 @@ message GetFlightsByFlightNumberReq {
   int64   Num           = 3;
 }
 message GetFlightsByFlightNumberResp {
-  repeated FlightInfo FlightInfos = 1;
+  repeated UniqFlightWithSpaces UniqFlightWithSpaces  = 1;
 }
 
 // 中转航班查询
@@ -202,6 +209,6 @@ service flightInquiry {
   //QuireTransferFlights 中转航班查询
   rpc QuireTransferFlights(QuireTransferFlightsReq) returns(QuireTransferFlightsResp);
 
-  // 根据指定航班信息提供返程机票推荐(仅支持直飞)
+  //RecommendReturnJourneyByFlightInfo 根据指定航班信息提供返程机票推荐(仅支持直飞)
   rpc RecommendReturnJourneyByFlightInfo(RecommendReturnJourneyByFlightInfoReq) returns(RecommendReturnJourneyByFlightInfoResp);
 }
