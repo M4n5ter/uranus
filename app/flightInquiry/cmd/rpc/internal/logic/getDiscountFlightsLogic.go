@@ -41,7 +41,7 @@ func (l *GetDiscountFlightsLogic) GetDiscountFlights(in *pb.GetDiscountFlightsRe
 	var flightInfos []*commonModel.FlightInfos
 
 	// 从 bizcache 查 id 列表
-	zset := fmt.Sprintf("%s_%s", in.DepartPosition, in.ArrivePosition)
+	zset := fmt.Sprintf("GetDiscountFlights-%s_%s", in.DepartPosition, in.ArrivePosition)
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 
 	// 查不到 bizcache 的情况
