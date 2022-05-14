@@ -42,9 +42,30 @@ func (l *GetFlightsByFlightNumberLogic) GetFlightsByFlightNumber(in *pb.GetFligh
 		return nil, errors.Wrapf(xerr.NewErrMsg("航班信息不存在"), "Err Not Found : flightNumber: %s", in.FlightNumber)
 	}
 
-	ret, err := l.svcCtx.CombineAllInfos(flightInfos)
+	combinedResp, err := l.svcCtx.CombineAllInfos(flightInfos)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetFlightsByFlightNumberResp{FlightInfos: ret}, nil
+
+	uniqFlightWithSpaces := make([]*pb.UniqFlightWithSpaces, 0)
+	fliIDMap := make(map[int64][]*pb.FlightInfo)
+	for _, info := range combinedResp {
+		if _, exist := fliIDMap[info.FlightInfoID]; exist {
+			// 已经存在同 flightInfoID 的情况
+			fliIDMap[info.FlightInfoID] = append(fliIDMap[info.FlightInfoID], info)
+		} else {
+			// 首次出现的 flightInfoID
+			fliIDMap[info.FlightInfoID] = []*pb.FlightInfo{info}
+		}
+	}
+
+	// 将 map 填充进 uniqFlightWithSpaces
+	for flightInfoID, spacesOfFlightInfo := range fliIDMap {
+		uniqFlightWithSpaces = append(uniqFlightWithSpaces, &pb.UniqFlightWithSpaces{
+			FlightInfoID:       flightInfoID,
+			SpacesOfFlightInfo: spacesOfFlightInfo,
+		})
+	}
+
+	return &pb.GetFlightsByFlightNumberResp{UniqFlightWithSpaces: uniqFlightWithSpaces}, nil
 }
