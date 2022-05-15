@@ -162,17 +162,17 @@ message GetFlightsByFlightNumberResp {
 
 // 表示一种中转方案(一种方案包含多条航班信息)
 message TransferFlightInfo {
-  repeated FlightInfo FlightInfos = 1;
+  repeated UniqFlightWithSpaces UniqFlightWithSpaces = 1;
 }
 message QuireTransferFlightsReq {
   // 出发地(不能为空)
-  string  DepartPosition  = 1;
+  string  DepartPosition                = 1;
   // 目的地(不能为空)
-  string  ArrivePosition  = 2;
-  // 天数(未来多少天内)
-  int64   Days            = 3;
+  string  ArrivePosition                = 2;
+  // 出发日期
+  google.protobuf.Timestamp SetOutDate  = 3;
   // 需求的航班条数(0 代表全部)
-  int64   Num             = 4;
+  int64   Num                           = 4;
 }
 message QuireTransferFlightsResp {
   repeated TransferFlightInfo TransferFlights = 1;
@@ -183,7 +183,7 @@ message RecommendReturnJourneyByFlightInfoReq {
   FlightInfo FlightInfo = 1;
 }
 message RecommendReturnJourneyByFlightInfoResp {
-  repeated FlightInfo FlightInfos = 1;
+  repeated UniqFlightWithSpaces UniqFlightWithSpaces = 1;
 }
 // req/resp
 
