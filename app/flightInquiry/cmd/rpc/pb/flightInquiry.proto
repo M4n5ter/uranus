@@ -171,8 +171,6 @@ message QuireTransferFlightsReq {
   string  ArrivePosition                = 2;
   // 出发日期
   google.protobuf.Timestamp SetOutDate  = 3;
-  // 需求的航班条数(0 代表全部)
-  int64   Num                           = 4;
 }
 message QuireTransferFlightsResp {
   repeated TransferFlightInfo TransferFlights = 1;
