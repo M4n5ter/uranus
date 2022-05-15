@@ -3,6 +3,7 @@ package commonModel
 import (
 	"database/sql"
 	"fmt"
+	"github.com/duke-git/lancet/v2/datetime"
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/zeromicro/go-zero/core/mr"
 	"strings"
@@ -609,6 +610,42 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 	if departSlice == nil || arriveSlice == nil {
 		return nil, ErrNotFound
 	}
+	// todo 逻辑有错误
 
+	// 存放 departSlice 中的 arrivePosition 与 arriveTime 的对应关系
+	departMap := make(map[string]struct {
+		t time.Time
+		f *FlightInfos
+	})
+	// 存放 arriveSlice 中的 departPosition 与 departTime 的对应关系
+	arriveMap := make(map[string]struct {
+		t time.Time
+		f *FlightInfos
+	})
+
+	for _, infos := range departSlice {
+		departMap[infos.ArrivePosition] = struct {
+			t time.Time
+			f *FlightInfos
+		}{t: infos.ArriveTime, f: infos}
+	}
+	for _, infos := range arriveSlice {
+		arriveMap[infos.DepartPosition] = struct {
+			t time.Time
+			f *FlightInfos
+		}{t: infos.ArriveTime, f: infos}
+	}
+
+	for depo, deti := range departMap {
+		if arti, exist := arriveMap[depo]; exist {
+			// 存在中转地点 depo, 比较到达中转地点的时间和终端地点的起飞时间(至少需要预留 1 个小时)
+			reservedTime := datetime.AddHour(deti.t, 1)
+			if reservedTime.Equal(arti.t) || reservedTime.Before(arti.t) {
+				// 聚合 todo
+				var transfers []Transfer
+
+			}
+		}
+	}
 	return slice.Intersection(departSlice, arriveSlice), nil
 }

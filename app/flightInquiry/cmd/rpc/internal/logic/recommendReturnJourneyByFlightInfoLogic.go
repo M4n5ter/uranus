@@ -23,7 +23,7 @@ func NewRecommendReturnJourneyByFlightInfoLogic(ctx context.Context, svcCtx *svc
 	}
 }
 
-//  根据指定航班信息提供返程机票推荐(仅支持直飞)
+// RecommendReturnJourneyByFlightInfo 根据指定航班信息提供返程机票推荐(仅支持直飞)
 func (l *RecommendReturnJourneyByFlightInfoLogic) RecommendReturnJourneyByFlightInfo(in *pb.RecommendReturnJourneyByFlightInfoReq) (*pb.RecommendReturnJourneyByFlightInfoResp, error) {
 	// todo: add your logic here and delete this line
 
