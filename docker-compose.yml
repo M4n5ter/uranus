@@ -243,7 +243,7 @@ services:
 
   #前端api + 业务rpc
   uranus:
-    image: lyumikael/gomodd:v1.0.0 # if you "macOs intel" or "linux amd"
+    image: mst1208/modd:v2.1.0 # if you "macOs intel" or "linux amd"
     #image: lyumikael/go-modd-env:v1.0.0  # if you macOs m1
     container_name: uranus
     environment:
@@ -251,6 +251,8 @@ services:
       TZ: Asia/Shanghai
       GOPROXY: https://goproxy.cn,direct
     working_dir: /go/uranus
+    ports:
+      - "7410:9001"
     volumes:
       - .:/go/uranus
     privileged: true
