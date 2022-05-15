@@ -3,8 +3,11 @@ package commonModel
 import (
 	"database/sql"
 	"fmt"
+	"github.com/duke-git/lancet/v2/slice"
+	"github.com/zeromicro/go-zero/core/mr"
 	"strings"
 	"time"
+	"uranus/common/timeTools"
 
 	"uranus/common/globalkey"
 	"uranus/common/xerr"
@@ -73,6 +76,8 @@ type (
 		FindOneByByNumberAndSetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, number string, sod time.Time, depart string, departTime time.Time, arrive string, arriveTime time.Time) (*FlightInfos, error)
 		// FindPageListByPositionAndDays 根据起始地点和距今日的日期差分页查询, limit <= 0 表示不分页
 		FindPageListByPositionAndDays(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, days int64, limit int64) ([]*FlightInfos, error)
+		// FindTransferFlightsByPlace 根据出发地、目的地、出发日期查询中转航班(中转航班)
+		FindTransferFlightsByPlace(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, sod time.Time) ([]*FlightInfos, error)
 	}
 
 	defaultFlightInfosModel struct {
@@ -410,7 +415,7 @@ func (m *defaultFlightInfosModel) FindPageListByNumberAndDays(rowBuilder squirre
 	}
 
 	today := time.Now()
-	today, _ = time.Parse("2006-01-02", today.Format("2006-01-02"))
+	today, _ = timeTools.Time2TimeYMD000(today)
 	todayString := today.Format("2006-01-02 15:04:05")
 	lastDate := today.AddDate(0, 0, int(days))
 	lastDateString := lastDate.Format("2006-01-02 15:04:05")
@@ -445,7 +450,7 @@ func (m *defaultFlightInfosModel) FindPageListByNumberAndDays(rowBuilder squirre
 func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squirrel.SelectBuilder, number string, sod time.Time) ([]*FlightInfos, error) {
 
 	if len(number) > 0 && !sod.IsZero() {
-		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
+		sod, _ = timeTools.Time2TimeYMD000(sod)
 		rowBuilder = rowBuilder.Where(" flight_number = ? AND set_out_date = ? ", number, sod.Format("2006-01-02 15:04:05"))
 	} else {
 		return nil, ErrNotFound
@@ -470,7 +475,7 @@ func (m *defaultFlightInfosModel) FindListByNumberAndSetOutDate(rowBuilder squir
 func (m *defaultFlightInfosModel) FindListBySetOutDateAndPosition(rowBuilder squirrel.SelectBuilder, sod time.Time, depart, arrive string) ([]*FlightInfos, error) {
 
 	if len(depart) > 0 && len(arrive) > 0 && !sod.IsZero() {
-		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
+		sod, _ = timeTools.Time2TimeYMD000(sod)
 		rowBuilder = rowBuilder.Where(" depart_position = ? AND arrive_position = ? AND set_out_date = ? ", depart, arrive, sod.Format("2006-01-02 15:04:05"))
 	} else {
 		return nil, ErrNotFound
@@ -497,7 +502,7 @@ func (m *defaultFlightInfosModel) FindOneByByNumberAndSetOutDateAndPosition(rowB
 	if len(number) == 0 || sod.IsZero() || len(depart) == 0 || departTime.IsZero() || len(arrive) == 0 || arriveTime.IsZero() {
 		return nil, ErrNotFound
 	} else {
-		sod, _ = time.Parse("2006-01-02", sod.Format("2006-01-02"))
+		sod, _ = timeTools.Time2TimeYMD000(sod)
 		sodString := sod.Format("2006-01-02 15:04:05")
 		departTimeString := strings.Split(departTime.String(), " +")[0]
 		arriveTimeString := strings.Split(arriveTime.String(), " +")[0]
@@ -525,7 +530,7 @@ func (m *defaultFlightInfosModel) FindPageListByPositionAndDays(rowBuilder squir
 		return nil, ErrNotFound
 	} else {
 		today := time.Now()
-		today, _ = time.Parse("2006-01-02", today.Format("2006-01-02"))
+		today, _ = timeTools.Time2TimeYMD000(today)
 		todayString := today.Format("2006-01-02 15:04:05")
 		lastDate := today.AddDate(0, 0, int(days))
 		lastDateString := lastDate.Format("2006-01-02 15:04:05")
@@ -556,4 +561,54 @@ func (m *defaultFlightInfosModel) FindPageListByPositionAndDays(rowBuilder squir
 	default:
 		return nil, err
 	}
+}
+
+// FindTransferFlightsByPlace 根据出发地、目的地、出发日期查询中转航班(中转航班)
+func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, sod time.Time) ([]*FlightInfos, error) {
+	if len(departPosition) == 0 || len(arrivePosition) == 0 || sod.IsZero() {
+		return nil, ErrNotFound
+	}
+
+	sod, _ = timeTools.Time2TimeYMD000(sod)
+
+	var departSlice []*FlightInfos
+	var arriveSlice []*FlightInfos
+	err := mr.Finish(func() (err error) {
+		// 构建出发地点是 departPosition 的 sql
+		rowBuilder = rowBuilder.Where(squirrel.Eq{"set_out_date": sod.Format("2006-01-02 15:04:05")})
+
+		departRowBuilder := rowBuilder.Where(squirrel.Eq{"depart_position": departPosition})
+
+		departQuery, departValues, err := departRowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+		if err != nil {
+			return err
+		}
+
+		err = m.QueryRowsNoCache(&departSlice, departQuery, departValues...)
+		return
+	}, func() (err error) {
+		// 构建出发地点是 arrivePosition 的 sql
+		// 中转航班允许跨一天
+		lateSOD := sod.AddDate(0, 0, 1)
+		rowBuilder = rowBuilder.Where("set_out_date = ? or set_out_date = ?", sod.Format("2006-01-02 15:04:05"), lateSOD.Format("2006-01-02 15:04:05"))
+		arriveRowBuilder := rowBuilder.Where(squirrel.Eq{"arrive_position": arrivePosition})
+
+		arriveQuery, arriveValues, err := arriveRowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+		if err != nil {
+			return err
+		}
+
+		err = m.QueryRowsNoCache(&arriveSlice, arriveQuery, arriveValues)
+		return
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if departSlice == nil || arriveSlice == nil {
+		return nil, ErrNotFound
+	}
+
+	return slice.Intersection(departSlice, arriveSlice), nil
 }
