@@ -2,7 +2,9 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
+	"uranus/app/flightInquiry/bizcache"
 	"uranus/common/xerr"
 	"uranus/commonModel"
 
@@ -35,15 +37,38 @@ func (l *QuireTransferFlightsLogic) QuireTransferFlights(in *pb.QuireTransferFli
 	var transfers []*commonModel.Transfer
 	var combinedTransfers []*pb.TransferFlightInfo
 
-	transfers, err := l.svcCtx.FlightInfosModel.FindTransferFlightsByPlace(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.SetOutDate.AsTime())
-	if err != nil && err != commonModel.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+	// 从 bizcache 查 id 列表
+	zset := fmt.Sprintf("QuireTransferFlights-%s_%s_%v", in.DepartPosition, in.ArrivePosition, in.SetOutDate)
+	transfers, err := bizcache.ListAllTransfers(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
+
+	// 查不到 bizcache
+	if len(transfers) == 0 || err != nil {
+		transfers, err = l.svcCtx.FlightInfosModel.FindTransferFlightsByPlace(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.SetOutDate.AsTime())
+		if err != nil && err != commonModel.ErrNotFound {
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+		}
+
+		if transfers == nil || len(transfers) == 0 {
+			return nil, errors.Wrapf(xerr.NewErrMsg("未找到航班信息"), "Err Not Found: departPosition: %s, arrivePosition: %s, err: %v", in.DepartPosition, in.ArrivePosition, err)
+		}
+
+		for _, transfer := range transfers {
+			err := bizcache.AddTransfer(l.svcCtx.Redis, *transfer, zset, bizcache.BizTransferCachePrefix)
+			logx.Errorf("ADD bizcache ERR: %v", err)
+		}
+
+		for _, transfer := range transfers {
+			combinedFLIs, err := l.svcCtx.CombineAllInfos(transfer.F)
+			if err != nil {
+				return nil, err
+			}
+
+			combinedTransfers = append(combinedTransfers, &pb.TransferFlightInfo{UniqFlightWithSpaces: l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedFLIs)})
+		}
+		return &pb.QuireTransferFlightsResp{TransferFlights: combinedTransfers}, nil
 	}
 
-	if transfers == nil || len(transfers) == 0 {
-		return nil, errors.Wrapf(xerr.NewErrMsg("未找到航班信息"), "Err Not Found: departPosition: %s, arrivePosition: %s, err: %v", in.DepartPosition, in.ArrivePosition, err)
-	}
-
+	// 查到 bizcache
 	for _, transfer := range transfers {
 		combinedFLIs, err := l.svcCtx.CombineAllInfos(transfer.F)
 		if err != nil {
