@@ -13,6 +13,7 @@ import (
 
 const BizFLICachePrefix = `biz:fli:cache:%s`
 const BizSpaceCachePrefix = `biz:space:cache:%s`
+const BizTransferCachePrefix = `biz:transfer:cache:%s`
 
 type FLI commonModel.FlightInfos
 
@@ -26,6 +27,23 @@ func AddID(r redis.Redis, id int64, zset, prefix string) error {
 
 	// 过期时间为 12 小时
 	err = r.Expire(bizFLICacheKey, 43200)
+	return err
+}
+
+func AddTransfer(r redis.Redis, transfer commonModel.Transfer, zset, prefix string) error {
+	bizTransferCacheKey := fmt.Sprintf(prefix, zset)
+	content, err := jsonx.Marshal(transfer)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.Zadd(bizTransferCacheKey, time.Now().UnixNano()/1e6, string(content))
+	if err != nil {
+		return err
+	}
+
+	// 过期时间为 6 小时
+	err = r.Expire(bizTransferCacheKey, 21600)
 	return err
 }
 
@@ -89,6 +107,27 @@ func ListAll(r redis.Redis, zset, prefix string) (idList map[int64]struct{}, err
 	}
 
 	return idList, nil
+}
+
+func ListAllTransfers(r redis.Redis, zset, prefix string) (transfers []*commonModel.Transfer, err error) {
+	bizTransferCacheKey := fmt.Sprintf(prefix, zset)
+	stringContent, err := r.Zrange(bizTransferCacheKey, 0, -1)
+	if err != nil {
+		return nil, err
+	}
+
+	transfers = make([]*commonModel.Transfer, 0)
+	for _, s := range stringContent {
+		transfer := &commonModel.Transfer{}
+		err := jsonx.UnmarshalFromString(s, transfer)
+		if err != nil {
+			return nil, err
+		}
+
+		transfers = append(transfers, transfer)
+	}
+
+	return transfers, nil
 }
 
 func ListByZrangeStartStop(r redis.Redis, zset, prefix string, start, stop int64) (idList map[int64]struct{}, err error) {
