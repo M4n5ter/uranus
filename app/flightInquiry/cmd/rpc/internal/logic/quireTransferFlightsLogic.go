@@ -32,23 +32,26 @@ func (l *QuireTransferFlightsLogic) QuireTransferFlights(in *pb.QuireTransferFli
 		return nil, errors.Wrapf(xerr.NewErrMsg("非法输入"), "")
 	}
 
-	var flightInfos []*commonModel.FlightInfos
+	var transfers []*commonModel.Transfer
+	var combinedTransfers []*pb.TransferFlightInfo
 
-	flightInfos, err := l.svcCtx.FlightInfosModel.FindTransferFlightsByPlace(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.SetOutDate.AsTime())
+	transfers, err := l.svcCtx.FlightInfosModel.FindTransferFlightsByPlace(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.SetOutDate.AsTime())
 	if err != nil && err != commonModel.ErrNotFound {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
 	}
 
-	if flightInfos == nil || len(flightInfos) == 0 {
+	if transfers == nil || len(transfers) == 0 {
 		return nil, errors.Wrapf(xerr.NewErrMsg("未找到航班信息"), "Err Not Found: departPosition: %s, arrivePosition: %s, err: %v", in.DepartPosition, in.ArrivePosition, err)
 	}
 
-	combinedFLIs, err := l.svcCtx.CombineAllInfos(flightInfos)
-	if err != nil {
-		return nil, err
+	for _, transfer := range transfers {
+		combinedFLIs, err := l.svcCtx.CombineAllInfos(transfer.F)
+		if err != nil {
+			return nil, err
+		}
+
+		combinedTransfers = append(combinedTransfers, &pb.TransferFlightInfo{UniqFlightWithSpaces: l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedFLIs)})
 	}
 
-	l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedFLIs)
-
-	return &pb.QuireTransferFlightsResp{}, nil
+	return &pb.QuireTransferFlightsResp{TransferFlights: combinedTransfers}, nil
 }
