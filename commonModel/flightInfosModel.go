@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/duke-git/lancet/v2/datetime"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/mr"
 	"strings"
 	"time"
@@ -575,9 +576,9 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 	var arriveSlice []*FlightInfos
 	err := mr.Finish(func() (err error) {
 		// 构建出发地点是 departPosition 的 sql
-		rowBuilder = rowBuilder.Where(squirrel.Eq{"set_out_date": sod.Format("2006-01-02 15:04:05")})
+		rowBuilder1 := rowBuilder.Where(squirrel.Eq{"set_out_date": sod.Format("2006-01-02 15:04:05")})
 
-		departRowBuilder := rowBuilder.Where(squirrel.Eq{"depart_position": departPosition})
+		departRowBuilder := rowBuilder1.Where(squirrel.Eq{"depart_position": departPosition})
 
 		departQuery, departValues, err := departRowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 		if err != nil {
@@ -590,8 +591,8 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 		// 构建出发地点是 arrivePosition 的 sql
 		// 中转航班允许跨一天
 		lateSOD := sod.AddDate(0, 0, 1)
-		rowBuilder = rowBuilder.Where("set_out_date = ? or set_out_date = ?", sod.Format("2006-01-02 15:04:05"), lateSOD.Format("2006-01-02 15:04:05"))
-		arriveRowBuilder := rowBuilder.Where(squirrel.Eq{"arrive_position": arrivePosition})
+		rowBuilder2 := rowBuilder.Where("(set_out_date = ? or set_out_date = ?)", sod.Format("2006-01-02 15:04:05"), lateSOD.Format("2006-01-02 15:04:05"))
+		arriveRowBuilder := rowBuilder2.Where(squirrel.Eq{"arrive_position": arrivePosition})
 
 		arriveQuery, arriveValues, err := arriveRowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 		if err != nil {
@@ -599,6 +600,7 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 		}
 
 		err = m.QueryRowsNoCache(&arriveSlice, arriveQuery, arriveValues)
+		logx.Error(err, " 604err:", arriveQuery, arriveValues)
 		return
 	})
 
