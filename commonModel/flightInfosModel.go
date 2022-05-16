@@ -86,19 +86,19 @@ type (
 	}
 
 	FlightInfos struct {
-		Id             int64     `db:"id"`
-		CreateTime     time.Time `db:"create_time"`
-		UpdateTime     time.Time `db:"update_time"`
-		DeleteTime     time.Time `db:"delete_time"`
-		DelState       int64     `db:"del_state"`       // 是否已经删除
-		Version        int64     `db:"version"`         // 版本号
-		FlightNumber   string    `db:"flight_number"`   // 对应的航班号
-		SetOutDate     time.Time `db:"set_out_date"`    // 出发日期
-		Punctuality    int64     `db:"punctuality"`     // 准点率(%)
-		DepartPosition string    `db:"depart_position"` // 起飞地点
-		DepartTime     time.Time `db:"depart_time"`     // 起飞时间
-		ArrivePosition string    `db:"arrive_position"` // 降落地点
-		ArriveTime     time.Time `db:"arrive_time"`     // 降落时间
+		Id             int64     `db:"id" json:"id"`
+		CreateTime     time.Time `db:"create_time" json:"createTime"`
+		UpdateTime     time.Time `db:"update_time" json:"updateTime"`
+		DeleteTime     time.Time `db:"delete_time" json:"deleteTime"`
+		DelState       int64     `db:"del_state" json:"delState"`             // 是否已经删除
+		Version        int64     `db:"version" json:"version"`                // 版本号
+		FlightNumber   string    `db:"flight_number" json:"flightNumber"`     // 对应的航班号
+		SetOutDate     time.Time `db:"set_out_date" json:"setOutDate"`        // 出发日期
+		Punctuality    int64     `db:"punctuality" json:"punctuality"`        // 准点率(%)
+		DepartPosition string    `db:"depart_position" json:"departPosition"` // 起飞地点
+		DepartTime     time.Time `db:"depart_time" json:"departTime"`         // 起飞时间
+		ArrivePosition string    `db:"arrive_position" json:"arrivePosition"` // 降落地点
+		ArriveTime     time.Time `db:"arrive_time" json:"arriveTime"`         // 降落时间
 	}
 )
 
