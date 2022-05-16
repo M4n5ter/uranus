@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"uranus/app/flightInquiry/bizcache"
+	"uranus/common/timeTools"
 	"uranus/common/xerr"
 	"uranus/commonModel"
 
@@ -38,7 +39,7 @@ func (l *QuireTransferFlightsLogic) QuireTransferFlights(in *pb.QuireTransferFli
 	var combinedTransfers []*pb.TransferFlightInfo
 
 	// 从 bizcache 查 id 列表
-	zset := fmt.Sprintf("QuireTransferFlights-%s_%s_%v", in.DepartPosition, in.ArrivePosition, in.SetOutDate)
+	zset := fmt.Sprintf("QuireTransferFlights-%s_%s_%s", in.DepartPosition, in.ArrivePosition, timeTools.Timestamppb2TimeStringYMD(in.SetOutDate))
 	transfers, err := bizcache.ListAllTransfers(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 
 	// 查不到 bizcache
