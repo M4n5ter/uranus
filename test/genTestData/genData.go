@@ -4,7 +4,6 @@ import (
 	"github.com/panjf2000/ants/v2"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/mr"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"math/rand"
@@ -22,10 +21,10 @@ type Config struct {
 
 func main() {
 	var c Config
-	conf.MustLoad("D:\\Project\\uranus\\test\\genTestData\\etc\\genData.yaml", &c)
-	//insertSpaces(c, 4, 18581)
-	//insertTickets(c, 5, 37162)
-	insertRCIs(c, 5, 37162)
+	conf.MustLoad("D:\\workspace\\uranus\\test\\genTestData\\etc\\genData.yaml", &c)
+	//insertSpaces(c, 1, 18581)
+	//insertTickets(c, 1, 37162)
+	insertRCIs(c, 1, 37162)
 }
 
 func RandInt(min, max int, id int64) int {
@@ -61,21 +60,22 @@ func genACoupleRandomSpaces(flightInfoID int64) []*commonModel.Spaces {
 }
 
 func insertSpaces(c Config, minFlightInfoID, maxFlightInfoID int64) {
+	var wg sync.WaitGroup
 	spacesModel := commonModel.NewSpacesModel(sqlx.NewMysql(c.DB.DataSource), c.Cache)
+	pool, _ := ants.NewPoolWithFunc(1000, func(flightInfoId interface{}) {
+		twoSpaces := genACoupleRandomSpaces(flightInfoId.(int64))
+		_, _ = spacesModel.Insert(nil, twoSpaces[0])
+		_, _ = spacesModel.Insert(nil, twoSpaces[1])
+		wg.Done()
+	})
+	defer pool.Release()
+
 	for i := minFlightInfoID; i <= maxFlightInfoID; i++ {
-		spaces := genACoupleRandomSpaces(i)
-		mr.FinishVoid(func() {
-			_, err := spacesModel.Insert(nil, spaces[0])
-			if err != nil {
-				logx.Error(err)
-			}
-		}, func() {
-			_, err := spacesModel.Insert(nil, spaces[1])
-			if err != nil {
-				logx.Error(err)
-			}
-		})
+		wg.Add(1)
+		_ = pool.Invoke(i)
 	}
+
+	wg.Wait()
 }
 
 func genRandomTicket(spaceID int64) *commonModel.Tickets {
@@ -90,7 +90,7 @@ func genRandomTicket(spaceID int64) *commonModel.Tickets {
 func insertTickets(c Config, minSpaceID, maxSpaceID int64) {
 	var wg sync.WaitGroup
 	ticketsModel := commonModel.NewTicketsModel(sqlx.NewMysql(c.DB.DataSource), c.Cache)
-	pool, _ := ants.NewPoolWithFunc(50, func(spaceId interface{}) {
+	pool, _ := ants.NewPoolWithFunc(50000, func(spaceId interface{}) {
 		_, err := ticketsModel.Insert(nil, genRandomTicket(spaceId.(int64)))
 		if err != nil {
 			logx.Error(err)
@@ -148,7 +148,7 @@ func genACoupleOfRandomRCI(ticketId int64) []*commonModel.RefundAndChangeInfos {
 func insertRCIs(c Config, minTicketID, maxTicketID int64) {
 	var wg sync.WaitGroup
 	rciModel := commonModel.NewRefundAndChangeInfosModel(sqlx.NewMysql(c.DB.DataSource), c.Cache)
-	pool, _ := ants.NewPoolWithFunc(100, func(ticketId interface{}) {
+	pool, _ := ants.NewPoolWithFunc(500, func(ticketId interface{}) {
 		towTickets := genACoupleOfRandomRCI(ticketId.(int64))
 		_, _ = rciModel.Insert(nil, towTickets[0])
 		_, _ = rciModel.Insert(nil, towTickets[1])
