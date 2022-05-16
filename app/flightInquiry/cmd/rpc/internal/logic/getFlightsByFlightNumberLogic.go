@@ -38,7 +38,7 @@ func (l *GetFlightsByFlightNumberLogic) GetFlightsByFlightNumber(in *pb.GetFligh
 	var flightInfos []*commonModel.FlightInfos
 
 	// 从 bizcache 查 id 列表
-	zset := fmt.Sprintf("FlightNumber_%s", in.FlightNumber)
+	zset := fmt.Sprintf("GetFlightsByFlightNumber-%s", in.FlightNumber)
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 	if err != nil || len(idList) == 0 {
 		// 查不到 bizcache

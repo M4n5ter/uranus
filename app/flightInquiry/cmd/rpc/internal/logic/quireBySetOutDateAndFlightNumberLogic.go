@@ -54,7 +54,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 	var flightInfos []*commonModel.FlightInfos
 
 	// 从 bizcache 查 id 列表
-	zset := fmt.Sprintf("%s_%s", in.FlightNumber, timeTools.Timestamppb2TimeStringYMD(in.SetOutDate))
+	zset := fmt.Sprintf("QuireBySetOutDateAndFlightNumber-%s_%s", in.FlightNumber, timeTools.Timestamppb2TimeStringYMD(in.SetOutDate))
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 	// 查不到bizcache的情况
 	if err != nil || idList == nil {

@@ -33,7 +33,7 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 	var flightInfos []*commonModel.FlightInfos
 
 	// 从 bizcache 查 id 列表
-	zset := fmt.Sprintf("%s_%s_%s", timeTools.Timestamppb2TimeStringYMD(in.SetOutDate), in.DepartPosition, in.ArrivePosition)
+	zset := fmt.Sprintf("QuireBySetOutDateStartPositionEndPosition-%s_%s_%s", timeTools.Timestamppb2TimeStringYMD(in.SetOutDate), in.DepartPosition, in.ArrivePosition)
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 	// 查不到bizcache的情况
 	if err != nil || idList == nil {
