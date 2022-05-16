@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/duke-git/lancet/v2/datetime"
-	"github.com/duke-git/lancet/v2/slice"
 	"github.com/zeromicro/go-zero/core/mr"
 	"strings"
 	"time"
@@ -78,7 +77,7 @@ type (
 		// FindPageListByPositionAndDays 根据起始地点和距今日的日期差分页查询, limit <= 0 表示不分页
 		FindPageListByPositionAndDays(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, days int64, limit int64) ([]*FlightInfos, error)
 		// FindTransferFlightsByPlace 根据出发地、目的地、出发日期查询中转航班(中转航班)
-		FindTransferFlightsByPlace(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, sod time.Time) ([]*FlightInfos, error)
+		FindTransferFlightsByPlace(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, sod time.Time) ([]*Transfer, error)
 	}
 
 	defaultFlightInfosModel struct {
@@ -565,7 +564,7 @@ func (m *defaultFlightInfosModel) FindPageListByPositionAndDays(rowBuilder squir
 }
 
 // FindTransferFlightsByPlace 根据出发地、目的地、出发日期查询中转航班(中转航班)
-func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, sod time.Time) ([]*FlightInfos, error) {
+func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, sod time.Time) ([]*Transfer, error) {
 	if len(departPosition) == 0 || len(arrivePosition) == 0 || sod.IsZero() {
 		return nil, ErrNotFound
 	}
@@ -610,7 +609,6 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 	if departSlice == nil || arriveSlice == nil {
 		return nil, ErrNotFound
 	}
-	// todo 逻辑有错误
 
 	// 存放 departSlice 中的 arrivePosition 与 arriveTime 的对应关系
 	departMap := make(map[string]struct {
@@ -636,16 +634,16 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 		}{t: infos.ArriveTime, f: infos}
 	}
 
+	var transfers []*Transfer
 	for depo, deti := range departMap {
 		if arti, exist := arriveMap[depo]; exist {
 			// 存在中转地点 depo, 比较到达中转地点的时间和终端地点的起飞时间(至少需要预留 1 个小时)
 			reservedTime := datetime.AddHour(deti.t, 1)
 			if reservedTime.Equal(arti.t) || reservedTime.Before(arti.t) {
-				// 聚合 todo
-				var transfers []Transfer
-
+				// 聚合
+				transfers = append(transfers, &Transfer{[]*FlightInfos{departMap[depo].f, arriveMap[depo].f}})
 			}
 		}
 	}
-	return slice.Intersection(departSlice, arriveSlice), nil
+	return transfers, nil
 }
