@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/duke-git/lancet/v2/datetime"
-	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/mr"
 	"strings"
 	"time"
@@ -599,8 +598,11 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 			return err
 		}
 
-		err = m.QueryRowsNoCache(&arriveSlice, arriveQuery, arriveValues)
-		logx.Error(err, " 604err:", arriveQuery, arriveValues)
+		err = m.QueryRowsNoCache(&arriveSlice, arriveQuery, arriveValues...)
+		if err != nil {
+			return err
+		}
+
 		return
 	})
 
