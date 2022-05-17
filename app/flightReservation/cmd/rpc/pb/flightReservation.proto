@@ -48,7 +48,7 @@ message ChangeAirTicketsReq {
   // 用户拥有的对应订单号
   string                    OrderSn        = 2;
   // 目标舱位id
-  uint64                    SpaceID        = 3;
+  int64                     SpaceID        = 3;
 }
 // 改票响应
 message ChangeAirTicketsResp {

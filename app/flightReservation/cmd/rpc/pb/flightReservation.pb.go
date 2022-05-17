@@ -7,9 +7,9 @@
 package pb
 
 import (
+	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -32,17 +32,17 @@ type BookAirTicketsReq struct {
 	// 航班号，例如MU5735
 	FlightNumber string `protobuf:"bytes,2,opt,name=FlightNumber,proto3" json:"FlightNumber,omitempty"`
 	// 出发日期
-	SetOutDate *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=SetOutDate,proto3" json:"SetOutDate,omitempty"`
+	SetOutDate *timestamp.Timestamp `protobuf:"bytes,3,opt,name=SetOutDate,proto3" json:"SetOutDate,omitempty"`
 	// 是否为头等舱/商务舱
 	IsFirstClass bool `protobuf:"varint,4,opt,name=IsFirstClass,proto3" json:"IsFirstClass,omitempty"`
 	// 起飞地点
 	DepartPosition string `protobuf:"bytes,5,opt,name=DepartPosition,proto3" json:"DepartPosition,omitempty"`
 	// 起飞时间
-	DepartTime *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=DepartTime,proto3" json:"DepartTime,omitempty"`
+	DepartTime *timestamp.Timestamp `protobuf:"bytes,6,opt,name=DepartTime,proto3" json:"DepartTime,omitempty"`
 	// 降落地点
 	ArrivePosition string `protobuf:"bytes,7,opt,name=ArrivePosition,proto3" json:"ArrivePosition,omitempty"`
 	// 降落时间
-	ArriveTime *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=ArriveTime,proto3" json:"ArriveTime,omitempty"`
+	ArriveTime *timestamp.Timestamp `protobuf:"bytes,8,opt,name=ArriveTime,proto3" json:"ArriveTime,omitempty"`
 }
 
 func (x *BookAirTicketsReq) Reset() {
@@ -91,7 +91,7 @@ func (x *BookAirTicketsReq) GetFlightNumber() string {
 	return ""
 }
 
-func (x *BookAirTicketsReq) GetSetOutDate() *timestamppb.Timestamp {
+func (x *BookAirTicketsReq) GetSetOutDate() *timestamp.Timestamp {
 	if x != nil {
 		return x.SetOutDate
 	}
@@ -112,7 +112,7 @@ func (x *BookAirTicketsReq) GetDepartPosition() string {
 	return ""
 }
 
-func (x *BookAirTicketsReq) GetDepartTime() *timestamppb.Timestamp {
+func (x *BookAirTicketsReq) GetDepartTime() *timestamp.Timestamp {
 	if x != nil {
 		return x.DepartTime
 	}
@@ -126,7 +126,7 @@ func (x *BookAirTicketsReq) GetArrivePosition() string {
 	return ""
 }
 
-func (x *BookAirTicketsReq) GetArriveTime() *timestamppb.Timestamp {
+func (x *BookAirTicketsReq) GetArriveTime() *timestamp.Timestamp {
 	if x != nil {
 		return x.ArriveTime
 	}
@@ -289,7 +289,7 @@ type ChangeAirTicketsReq struct {
 	// 用户拥有的对应订单号
 	OrderSn string `protobuf:"bytes,2,opt,name=OrderSn,proto3" json:"OrderSn,omitempty"`
 	// 目标舱位id
-	SpaceID uint64 `protobuf:"varint,3,opt,name=SpaceID,proto3" json:"SpaceID,omitempty"`
+	SpaceID int64 `protobuf:"varint,3,opt,name=SpaceID,proto3" json:"SpaceID,omitempty"`
 }
 
 func (x *ChangeAirTicketsReq) Reset() {
@@ -338,7 +338,7 @@ func (x *ChangeAirTicketsReq) GetOrderSn() string {
 	return ""
 }
 
-func (x *ChangeAirTicketsReq) GetSpaceID() uint64 {
+func (x *ChangeAirTicketsReq) GetSpaceID() int64 {
 	if x != nil {
 		return x.SpaceID
 	}
@@ -431,7 +431,7 @@ var file_app_flightReservation_cmd_rpc_pb_flightReservation_proto_rawDesc = []by
 	0x03, 0x52, 0x06, 0x55, 0x73, 0x65, 0x72, 0x49, 0x44, 0x12, 0x18, 0x0a, 0x07, 0x4f, 0x72, 0x64,
 	0x65, 0x72, 0x53, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x4f, 0x72, 0x64, 0x65,
 	0x72, 0x53, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x53, 0x70, 0x61, 0x63, 0x65, 0x49, 0x44, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x53, 0x70, 0x61, 0x63, 0x65, 0x49, 0x44, 0x22, 0x16, 0x0a,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x53, 0x70, 0x61, 0x63, 0x65, 0x49, 0x44, 0x22, 0x16, 0x0a,
 	0x14, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x41, 0x69, 0x72, 0x54, 0x69, 0x63, 0x6b, 0x65, 0x74,
 	0x73, 0x52, 0x65, 0x73, 0x70, 0x32, 0xe2, 0x01, 0x0a, 0x11, 0x66, 0x6c, 0x69, 0x67, 0x68, 0x74,
 	0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x3f, 0x0a, 0x0e, 0x42,
@@ -465,13 +465,13 @@ func file_app_flightReservation_cmd_rpc_pb_flightReservation_proto_rawDescGZIP()
 
 var file_app_flightReservation_cmd_rpc_pb_flightReservation_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_app_flightReservation_cmd_rpc_pb_flightReservation_proto_goTypes = []interface{}{
-	(*BookAirTicketsReq)(nil),     // 0: pb.BookAirTicketsReq
-	(*BookAirTicketsResp)(nil),    // 1: pb.BookAirTicketsResp
-	(*RefundAirTicketsReq)(nil),   // 2: pb.RefundAirTicketsReq
-	(*RefundAirTicketsResp)(nil),  // 3: pb.RefundAirTicketsResp
-	(*ChangeAirTicketsReq)(nil),   // 4: pb.ChangeAirTicketsReq
-	(*ChangeAirTicketsResp)(nil),  // 5: pb.ChangeAirTicketsResp
-	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
+	(*BookAirTicketsReq)(nil),    // 0: pb.BookAirTicketsReq
+	(*BookAirTicketsResp)(nil),   // 1: pb.BookAirTicketsResp
+	(*RefundAirTicketsReq)(nil),  // 2: pb.RefundAirTicketsReq
+	(*RefundAirTicketsResp)(nil), // 3: pb.RefundAirTicketsResp
+	(*ChangeAirTicketsReq)(nil),  // 4: pb.ChangeAirTicketsReq
+	(*ChangeAirTicketsResp)(nil), // 5: pb.ChangeAirTicketsResp
+	(*timestamp.Timestamp)(nil),  // 6: google.protobuf.Timestamp
 }
 var file_app_flightReservation_cmd_rpc_pb_flightReservation_proto_depIdxs = []int32{
 	6, // 0: pb.BookAirTicketsReq.SetOutDate:type_name -> google.protobuf.Timestamp

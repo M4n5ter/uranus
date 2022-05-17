@@ -28,13 +28,13 @@ func (s *FlightReservationServer) BookAirTickets(ctx context.Context, in *pb.Boo
 	return l.BookAirTickets(in)
 }
 
-//  RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 来退订机票
+//  RefundAirTickets 给定：用户的平台唯一id 用户拥有的对应订单号 来退订机票
 func (s *FlightReservationServer) RefundAirTickets(ctx context.Context, in *pb.RefundAirTicketsReq) (*pb.RefundAirTicketsResp, error) {
 	l := logic.NewRefundAirTicketsLogic(ctx, s.svcCtx)
 	return l.RefundAirTickets(in)
 }
 
-//  ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应票id 目标舱位id
+//  ChangeAirTickets 给定：用户的平台唯一id 用户拥有的对应订单号 目标舱位id
 func (s *FlightReservationServer) ChangeAirTickets(ctx context.Context, in *pb.ChangeAirTicketsReq) (*pb.ChangeAirTicketsResp, error) {
 	l := logic.NewChangeAirTicketsLogic(ctx, s.svcCtx)
 	return l.ChangeAirTickets(in)
