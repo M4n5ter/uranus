@@ -53,3 +53,15 @@ func (s *ServiceContext) GetFee(rci *commonModel.RefundAndChangeInfos) (fee int6
 	}
 	return 99999999999, false
 }
+
+// ValidateOrderSn 检验订单是否在 orderList 中存在,存在返回 true
+func (s *ServiceContext) ValidateOrderSn(orderSn string, orderList []*order.FlightOrder) (ticketID int64, ok bool) {
+
+	for _, flightOrder := range orderList {
+		if flightOrder.Sn == orderSn {
+			return flightOrder.TicketId, true
+		}
+	}
+
+	return -1, false
+}

@@ -52,7 +52,7 @@ func (l *RefundAirTicketsLogic) RefundAirTickets(in *pb.RefundAirTicketsReq) (*p
 	}
 
 	// 检验该订单是否在支付成功的订单列表中
-	ticketID, ok := l.validateOrderSn(in.OrderSn, orderListResp.List)
+	ticketID, ok := l.svcCtx.ValidateOrderSn(in.OrderSn, orderListResp.List)
 	if !ok {
 		return nil, errors.Wrapf(xerr.NewErrMsg("只有支付成功的订单才能退款"), "orderSn: %s, userID: %d", in.OrderSn, in.UserID)
 	}
@@ -129,16 +129,4 @@ func (l *RefundAirTicketsLogic) RefundAirTickets(in *pb.RefundAirTicketsReq) (*p
 	}
 
 	return &pb.RefundAirTicketsResp{}, nil
-}
-
-// 检验订单是否在 orderList 中存在,存在返回 true
-func (l *RefundAirTicketsLogic) validateOrderSn(orderSn string, orderList []*order.FlightOrder) (ticketID int64, ok bool) {
-
-	for _, flightOrder := range orderList {
-		if flightOrder.Sn == orderSn {
-			return flightOrder.TicketId, true
-		}
-	}
-
-	return -1, false
 }
