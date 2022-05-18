@@ -13,6 +13,8 @@ import (
 )
 
 type (
+	ChangeTheOrderPriceReq          = pb.ChangeTheOrderPriceReq
+	ChangeTheOrderPriceResp         = pb.ChangeTheOrderPriceResp
 	CreateFlightOrderReq            = pb.CreateFlightOrderReq
 	CreateFlightOrderResp           = pb.CreateFlightOrderResp
 	FlightOrder                     = pb.FlightOrder
@@ -26,6 +28,8 @@ type (
 	Order interface {
 		// 机票下订单
 		CreateFlightOrder(ctx context.Context, in *CreateFlightOrderReq, opts ...grpc.CallOption) (*CreateFlightOrderResp, error)
+		//  机票改价
+		ChangeTheOrderPrice(ctx context.Context, in *ChangeTheOrderPriceReq, opts ...grpc.CallOption) (*ChangeTheOrderPriceResp, error)
 		// 机票订单详情
 		FlightOrderDetail(ctx context.Context, in *FlightOrderDetailReq, opts ...grpc.CallOption) (*FlightOrderDetailResp, error)
 		// 更新机票订单状态
@@ -49,6 +53,12 @@ func NewOrder(cli zrpc.Client) Order {
 func (m *defaultOrder) CreateFlightOrder(ctx context.Context, in *CreateFlightOrderReq, opts ...grpc.CallOption) (*CreateFlightOrderResp, error) {
 	client := pb.NewOrderClient(m.cli.Conn())
 	return client.CreateFlightOrder(ctx, in, opts...)
+}
+
+//  机票改价
+func (m *defaultOrder) ChangeTheOrderPrice(ctx context.Context, in *ChangeTheOrderPriceReq, opts ...grpc.CallOption) (*ChangeTheOrderPriceResp, error) {
+	client := pb.NewOrderClient(m.cli.Conn())
+	return client.ChangeTheOrderPrice(ctx, in, opts...)
 }
 
 // 机票订单详情

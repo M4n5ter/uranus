@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type OrderClient interface {
 	//机票下订单
 	CreateFlightOrder(ctx context.Context, in *CreateFlightOrderReq, opts ...grpc.CallOption) (*CreateFlightOrderResp, error)
+	// 机票改价
+	ChangeTheOrderPrice(ctx context.Context, in *ChangeTheOrderPriceReq, opts ...grpc.CallOption) (*ChangeTheOrderPriceResp, error)
 	//机票订单详情
 	FlightOrderDetail(ctx context.Context, in *FlightOrderDetailReq, opts ...grpc.CallOption) (*FlightOrderDetailResp, error)
 	//更新机票订单状态
@@ -43,6 +45,15 @@ func NewOrderClient(cc grpc.ClientConnInterface) OrderClient {
 func (c *orderClient) CreateFlightOrder(ctx context.Context, in *CreateFlightOrderReq, opts ...grpc.CallOption) (*CreateFlightOrderResp, error) {
 	out := new(CreateFlightOrderResp)
 	err := c.cc.Invoke(ctx, "/pb.order/CreateFlightOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderClient) ChangeTheOrderPrice(ctx context.Context, in *ChangeTheOrderPriceReq, opts ...grpc.CallOption) (*ChangeTheOrderPriceResp, error) {
+	out := new(ChangeTheOrderPriceResp)
+	err := c.cc.Invoke(ctx, "/pb.order/ChangeTheOrderPrice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,6 +93,8 @@ func (c *orderClient) UserFlightOrderList(ctx context.Context, in *UserFlightOrd
 type OrderServer interface {
 	//机票下订单
 	CreateFlightOrder(context.Context, *CreateFlightOrderReq) (*CreateFlightOrderResp, error)
+	// 机票改价
+	ChangeTheOrderPrice(context.Context, *ChangeTheOrderPriceReq) (*ChangeTheOrderPriceResp, error)
 	//机票订单详情
 	FlightOrderDetail(context.Context, *FlightOrderDetailReq) (*FlightOrderDetailResp, error)
 	//更新机票订单状态
@@ -97,6 +110,9 @@ type UnimplementedOrderServer struct {
 
 func (UnimplementedOrderServer) CreateFlightOrder(context.Context, *CreateFlightOrderReq) (*CreateFlightOrderResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFlightOrder not implemented")
+}
+func (UnimplementedOrderServer) ChangeTheOrderPrice(context.Context, *ChangeTheOrderPriceReq) (*ChangeTheOrderPriceResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeTheOrderPrice not implemented")
 }
 func (UnimplementedOrderServer) FlightOrderDetail(context.Context, *FlightOrderDetailReq) (*FlightOrderDetailResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FlightOrderDetail not implemented")
@@ -134,6 +150,24 @@ func _Order_CreateFlightOrder_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrderServer).CreateFlightOrder(ctx, req.(*CreateFlightOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Order_ChangeTheOrderPrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeTheOrderPriceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).ChangeTheOrderPrice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.order/ChangeTheOrderPrice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).ChangeTheOrderPrice(ctx, req.(*ChangeTheOrderPriceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -202,6 +236,10 @@ var Order_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateFlightOrder",
 			Handler:    _Order_CreateFlightOrder_Handler,
+		},
+		{
+			MethodName: "ChangeTheOrderPrice",
+			Handler:    _Order_ChangeTheOrderPrice_Handler,
 		},
 		{
 			MethodName: "FlightOrderDetail",

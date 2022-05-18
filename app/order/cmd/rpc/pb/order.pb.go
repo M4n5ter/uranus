@@ -7,9 +7,9 @@
 package pb
 
 import (
+	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -26,20 +26,20 @@ type FlightOrder struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
-	Sn              string                 `protobuf:"bytes,2,opt,name=sn,proto3" json:"sn"`
-	UserId          int64                  `protobuf:"varint,3,opt,name=userId,proto3" json:"userId"`
-	TicketId        int64                  `protobuf:"varint,4,opt,name=ticketId,proto3" json:"ticketId"`
-	DepartPosition  string                 `protobuf:"bytes,5,opt,name=departPosition,proto3" json:"departPosition"`
-	DepartTime      *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=departTime,proto3" json:"departTime"`
-	ArrivePosition  string                 `protobuf:"bytes,7,opt,name=arrivePosition,proto3" json:"arrivePosition"`
-	ArriveTime      *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=arriveTime,proto3" json:"arriveTime"`
-	TicketPrice     int64                  `protobuf:"varint,9,opt,name=ticketPrice,proto3" json:"ticketPrice"`
-	Discount        int64                  `protobuf:"varint,10,opt,name=discount,proto3" json:"discount"`
-	TradeState      int64                  `protobuf:"varint,11,opt,name=tradeState,proto3" json:"tradeState"`
-	TradeCode       string                 `protobuf:"bytes,12,opt,name=tradeCode,proto3" json:"tradeCode"`
-	OrderTotalPrice int64                  `protobuf:"varint,13,opt,name=orderTotalPrice,proto3" json:"orderTotalPrice"`
-	CreateTime      *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=createTime,proto3" json:"createTime"`
+	Id              int64                `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Sn              string               `protobuf:"bytes,2,opt,name=sn,proto3" json:"sn,omitempty"`
+	UserId          int64                `protobuf:"varint,3,opt,name=userId,proto3" json:"userId,omitempty"`
+	TicketId        int64                `protobuf:"varint,4,opt,name=ticketId,proto3" json:"ticketId,omitempty"`
+	DepartPosition  string               `protobuf:"bytes,5,opt,name=departPosition,proto3" json:"departPosition,omitempty"`
+	DepartTime      *timestamp.Timestamp `protobuf:"bytes,6,opt,name=departTime,proto3" json:"departTime,omitempty"`
+	ArrivePosition  string               `protobuf:"bytes,7,opt,name=arrivePosition,proto3" json:"arrivePosition,omitempty"`
+	ArriveTime      *timestamp.Timestamp `protobuf:"bytes,8,opt,name=arriveTime,proto3" json:"arriveTime,omitempty"`
+	TicketPrice     int64                `protobuf:"varint,9,opt,name=ticketPrice,proto3" json:"ticketPrice,omitempty"`
+	Discount        int64                `protobuf:"varint,10,opt,name=discount,proto3" json:"discount,omitempty"`
+	TradeState      int64                `protobuf:"varint,11,opt,name=tradeState,proto3" json:"tradeState,omitempty"`
+	TradeCode       string               `protobuf:"bytes,12,opt,name=tradeCode,proto3" json:"tradeCode,omitempty"`
+	OrderTotalPrice int64                `protobuf:"varint,13,opt,name=orderTotalPrice,proto3" json:"orderTotalPrice,omitempty"`
+	CreateTime      *timestamp.Timestamp `protobuf:"bytes,14,opt,name=createTime,proto3" json:"createTime,omitempty"`
 }
 
 func (x *FlightOrder) Reset() {
@@ -109,7 +109,7 @@ func (x *FlightOrder) GetDepartPosition() string {
 	return ""
 }
 
-func (x *FlightOrder) GetDepartTime() *timestamppb.Timestamp {
+func (x *FlightOrder) GetDepartTime() *timestamp.Timestamp {
 	if x != nil {
 		return x.DepartTime
 	}
@@ -123,7 +123,7 @@ func (x *FlightOrder) GetArrivePosition() string {
 	return ""
 }
 
-func (x *FlightOrder) GetArriveTime() *timestamppb.Timestamp {
+func (x *FlightOrder) GetArriveTime() *timestamp.Timestamp {
 	if x != nil {
 		return x.ArriveTime
 	}
@@ -165,7 +165,7 @@ func (x *FlightOrder) GetOrderTotalPrice() int64 {
 	return 0
 }
 
-func (x *FlightOrder) GetCreateTime() *timestamppb.Timestamp {
+func (x *FlightOrder) GetCreateTime() *timestamp.Timestamp {
 	if x != nil {
 		return x.CreateTime
 	}
@@ -177,8 +177,8 @@ type CreateFlightOrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	TicketId int64 `protobuf:"varint,1,opt,name=ticketId,proto3" json:"ticketId"`
-	UserId   int64 `protobuf:"varint,2,opt,name=userId,proto3" json:"userId"`
+	TicketId int64 `protobuf:"varint,1,opt,name=ticketId,proto3" json:"ticketId,omitempty"`
+	UserId   int64 `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
 }
 
 func (x *CreateFlightOrderReq) Reset() {
@@ -232,7 +232,7 @@ type CreateFlightOrderResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
+	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
 }
 
 func (x *CreateFlightOrderResp) Reset() {
@@ -279,7 +279,7 @@ type FlightOrderDetailReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
+	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
 }
 
 func (x *FlightOrderDetailReq) Reset() {
@@ -326,7 +326,7 @@ type FlightOrderDetailResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	FlightOrder *FlightOrder `protobuf:"bytes,1,opt,name=flightOrder,proto3" json:"flightOrder"`
+	FlightOrder *FlightOrder `protobuf:"bytes,1,opt,name=flightOrder,proto3" json:"flightOrder,omitempty"`
 }
 
 func (x *FlightOrderDetailResp) Reset() {
@@ -373,8 +373,8 @@ type UpdateFlightOrderTradeStateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn         string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"`
-	TradeState int64  `protobuf:"varint,2,opt,name=tradeState,proto3" json:"tradeState"` //-1: 已取消 0:待支付 1:未使用 2:已使用  3:已过关闭
+	Sn         string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn,omitempty"`
+	TradeState int64  `protobuf:"varint,2,opt,name=tradeState,proto3" json:"tradeState,omitempty"` //-1: 已取消 0:待支付 1:未使用 2:已使用  3:已过关闭
 }
 
 func (x *UpdateFlightOrderTradeStateReq) Reset() {
@@ -428,15 +428,15 @@ type UpdateFlightOrderTradeStateResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
-	UserId          int64                  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId"`
-	Sn              string                 `protobuf:"bytes,3,opt,name=sn,proto3" json:"sn"`
-	TradeCode       string                 `protobuf:"bytes,4,opt,name=tradeCode,proto3" json:"tradeCode"`
-	OrderTotalPrice int64                  `protobuf:"varint,5,opt,name=orderTotalPrice,proto3" json:"orderTotalPrice"`
-	DepartPosition  string                 `protobuf:"bytes,6,opt,name=departPosition,proto3" json:"departPosition"`
-	DepartTime      *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=departTime,proto3" json:"departTime"`
-	ArrivePosition  string                 `protobuf:"bytes,8,opt,name=arrivePosition,proto3" json:"arrivePosition"`
-	ArriveTime      *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=arriveTime,proto3" json:"arriveTime"`
+	Id              int64                `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId          int64                `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
+	Sn              string               `protobuf:"bytes,3,opt,name=sn,proto3" json:"sn,omitempty"`
+	TradeCode       string               `protobuf:"bytes,4,opt,name=tradeCode,proto3" json:"tradeCode,omitempty"`
+	OrderTotalPrice int64                `protobuf:"varint,5,opt,name=orderTotalPrice,proto3" json:"orderTotalPrice,omitempty"`
+	DepartPosition  string               `protobuf:"bytes,6,opt,name=departPosition,proto3" json:"departPosition,omitempty"`
+	DepartTime      *timestamp.Timestamp `protobuf:"bytes,7,opt,name=departTime,proto3" json:"departTime,omitempty"`
+	ArrivePosition  string               `protobuf:"bytes,8,opt,name=arrivePosition,proto3" json:"arrivePosition,omitempty"`
+	ArriveTime      *timestamp.Timestamp `protobuf:"bytes,9,opt,name=arriveTime,proto3" json:"arriveTime,omitempty"`
 }
 
 func (x *UpdateFlightOrderTradeStateResp) Reset() {
@@ -513,7 +513,7 @@ func (x *UpdateFlightOrderTradeStateResp) GetDepartPosition() string {
 	return ""
 }
 
-func (x *UpdateFlightOrderTradeStateResp) GetDepartTime() *timestamppb.Timestamp {
+func (x *UpdateFlightOrderTradeStateResp) GetDepartTime() *timestamp.Timestamp {
 	if x != nil {
 		return x.DepartTime
 	}
@@ -527,7 +527,7 @@ func (x *UpdateFlightOrderTradeStateResp) GetArrivePosition() string {
 	return ""
 }
 
-func (x *UpdateFlightOrderTradeStateResp) GetArriveTime() *timestamppb.Timestamp {
+func (x *UpdateFlightOrderTradeStateResp) GetArriveTime() *timestamp.Timestamp {
 	if x != nil {
 		return x.ArriveTime
 	}
@@ -539,10 +539,10 @@ type UserFlightOrderListReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	LastId      int64 `protobuf:"varint,1,opt,name=lastId,proto3" json:"lastId"`
-	PageSize    int64 `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize"`
-	UserId      int64 `protobuf:"varint,3,opt,name=userId,proto3" json:"userId"`
-	TraderState int64 `protobuf:"varint,4,opt,name=traderState,proto3" json:"traderState"`
+	LastId      int64 `protobuf:"varint,1,opt,name=lastId,proto3" json:"lastId,omitempty"`
+	PageSize    int64 `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	UserId      int64 `protobuf:"varint,3,opt,name=userId,proto3" json:"userId,omitempty"`
+	TraderState int64 `protobuf:"varint,4,opt,name=traderState,proto3" json:"traderState,omitempty"`
 }
 
 func (x *UserFlightOrderListReq) Reset() {
@@ -610,7 +610,7 @@ type UserFlightOrderListResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	List []*FlightOrder `protobuf:"bytes,1,rep,name=list,proto3" json:"list"`
+	List []*FlightOrder `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
 }
 
 func (x *UserFlightOrderListResp) Reset() {
@@ -650,6 +650,100 @@ func (x *UserFlightOrderListResp) GetList() []*FlightOrder {
 		return x.List
 	}
 	return nil
+}
+
+// 改价
+type ChangeTheOrderPriceReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	OrderSn string `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	Price   int64  `protobuf:"varint,2,opt,name=price,proto3" json:"price,omitempty"`
+}
+
+func (x *ChangeTheOrderPriceReq) Reset() {
+	*x = ChangeTheOrderPriceReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_order_cmd_rpc_pb_order_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChangeTheOrderPriceReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeTheOrderPriceReq) ProtoMessage() {}
+
+func (x *ChangeTheOrderPriceReq) ProtoReflect() protoreflect.Message {
+	mi := &file_app_order_cmd_rpc_pb_order_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeTheOrderPriceReq.ProtoReflect.Descriptor instead.
+func (*ChangeTheOrderPriceReq) Descriptor() ([]byte, []int) {
+	return file_app_order_cmd_rpc_pb_order_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ChangeTheOrderPriceReq) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+func (x *ChangeTheOrderPriceReq) GetPrice() int64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+type ChangeTheOrderPriceResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ChangeTheOrderPriceResp) Reset() {
+	*x = ChangeTheOrderPriceResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_app_order_cmd_rpc_pb_order_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChangeTheOrderPriceResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeTheOrderPriceResp) ProtoMessage() {}
+
+func (x *ChangeTheOrderPriceResp) ProtoReflect() protoreflect.Message {
+	mi := &file_app_order_cmd_rpc_pb_order_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeTheOrderPriceResp.ProtoReflect.Descriptor instead.
+func (*ChangeTheOrderPriceResp) Descriptor() ([]byte, []int) {
+	return file_app_order_cmd_rpc_pb_order_proto_rawDescGZIP(), []int{10}
 }
 
 var File_app_order_cmd_rpc_pb_order_proto protoreflect.FileDescriptor
@@ -747,29 +841,40 @@ var file_app_order_cmd_rpc_pb_order_proto_rawDesc = []byte{
 	0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70,
 	0x12, 0x23, 0x0a, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0f,
 	0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52,
-	0x04, 0x6c, 0x69, 0x73, 0x74, 0x32, 0xd3, 0x02, 0x0a, 0x05, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x12,
-	0x48, 0x0a, 0x11, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f,
-	0x72, 0x64, 0x65, 0x72, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
-	0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x19,
-	0x2e, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74,
-	0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x12, 0x48, 0x0a, 0x11, 0x46, 0x6c, 0x69,
-	0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x12, 0x18,
-	0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x44,
-	0x65, 0x74, 0x61, 0x69, 0x6c, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c,
-	0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x52,
-	0x65, 0x73, 0x70, 0x12, 0x66, 0x0a, 0x1b, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x46, 0x6c, 0x69,
-	0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x54, 0x72, 0x61, 0x64, 0x65, 0x53, 0x74, 0x61,
-	0x74, 0x65, 0x12, 0x22, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x46, 0x6c,
-	0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x54, 0x72, 0x61, 0x64, 0x65, 0x53, 0x74,
-	0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x23, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x64, 0x61,
+	0x04, 0x6c, 0x69, 0x73, 0x74, 0x22, 0x48, 0x0a, 0x16, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x54,
+	0x68, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x12,
+	0x18, 0x0a, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x53, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x53, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69,
+	0x63, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x22,
+	0x19, 0x0a, 0x17, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x54, 0x68, 0x65, 0x4f, 0x72, 0x64, 0x65,
+	0x72, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x32, 0xa3, 0x03, 0x0a, 0x05, 0x6f,
+	0x72, 0x64, 0x65, 0x72, 0x12, 0x48, 0x0a, 0x11, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x46, 0x6c,
+	0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x43,
+	0x72, 0x65, 0x61, 0x74, 0x65, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72,
+	0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x46,
+	0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x12, 0x4e,
+	0x0a, 0x13, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x54, 0x68, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72,
+	0x50, 0x72, 0x69, 0x63, 0x65, 0x12, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67,
+	0x65, 0x54, 0x68, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x65,
+	0x71, 0x1a, 0x1b, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x54, 0x68, 0x65,
+	0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x72, 0x69, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x48,
+	0x0a, 0x11, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x44, 0x65, 0x74,
+	0x61, 0x69, 0x6c, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f,
+	0x72, 0x64, 0x65, 0x72, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e,
+	0x70, 0x62, 0x2e, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x44, 0x65,
+	0x74, 0x61, 0x69, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x12, 0x66, 0x0a, 0x1b, 0x55, 0x70, 0x64, 0x61,
 	0x74, 0x65, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x54, 0x72, 0x61,
-	0x64, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x4e, 0x0a, 0x13, 0x55,
-	0x73, 0x65, 0x72, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x4c, 0x69,
-	0x73, 0x74, 0x12, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x46, 0x6c, 0x69, 0x67,
-	0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1b,
-	0x2e, 0x70, 0x62, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72,
-	0x64, 0x65, 0x72, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x42, 0x06, 0x5a, 0x04, 0x2e,
-	0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x64, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x22, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x54, 0x72,
+	0x61, 0x64, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x23, 0x2e, 0x70, 0x62,
+	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64,
+	0x65, 0x72, 0x54, 0x72, 0x61, 0x64, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70,
+	0x12, 0x4e, 0x0a, 0x13, 0x55, 0x73, 0x65, 0x72, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72,
+	0x64, 0x65, 0x72, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x73, 0x65,
+	0x72, 0x46, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x4c, 0x69, 0x73, 0x74,
+	0x52, 0x65, 0x71, 0x1a, 0x1b, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x46, 0x6c, 0x69,
+	0x67, 0x68, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70,
+	0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -784,7 +889,7 @@ func file_app_order_cmd_rpc_pb_order_proto_rawDescGZIP() []byte {
 	return file_app_order_cmd_rpc_pb_order_proto_rawDescData
 }
 
-var file_app_order_cmd_rpc_pb_order_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_app_order_cmd_rpc_pb_order_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_app_order_cmd_rpc_pb_order_proto_goTypes = []interface{}{
 	(*FlightOrder)(nil),                     // 0: pb.FlightOrder
 	(*CreateFlightOrderReq)(nil),            // 1: pb.CreateFlightOrderReq
@@ -795,26 +900,30 @@ var file_app_order_cmd_rpc_pb_order_proto_goTypes = []interface{}{
 	(*UpdateFlightOrderTradeStateResp)(nil), // 6: pb.UpdateFlightOrderTradeStateResp
 	(*UserFlightOrderListReq)(nil),          // 7: pb.UserFlightOrderListReq
 	(*UserFlightOrderListResp)(nil),         // 8: pb.UserFlightOrderListResp
-	(*timestamppb.Timestamp)(nil),           // 9: google.protobuf.Timestamp
+	(*ChangeTheOrderPriceReq)(nil),          // 9: pb.ChangeTheOrderPriceReq
+	(*ChangeTheOrderPriceResp)(nil),         // 10: pb.ChangeTheOrderPriceResp
+	(*timestamp.Timestamp)(nil),             // 11: google.protobuf.Timestamp
 }
 var file_app_order_cmd_rpc_pb_order_proto_depIdxs = []int32{
-	9,  // 0: pb.FlightOrder.departTime:type_name -> google.protobuf.Timestamp
-	9,  // 1: pb.FlightOrder.arriveTime:type_name -> google.protobuf.Timestamp
-	9,  // 2: pb.FlightOrder.createTime:type_name -> google.protobuf.Timestamp
+	11, // 0: pb.FlightOrder.departTime:type_name -> google.protobuf.Timestamp
+	11, // 1: pb.FlightOrder.arriveTime:type_name -> google.protobuf.Timestamp
+	11, // 2: pb.FlightOrder.createTime:type_name -> google.protobuf.Timestamp
 	0,  // 3: pb.FlightOrderDetailResp.flightOrder:type_name -> pb.FlightOrder
-	9,  // 4: pb.UpdateFlightOrderTradeStateResp.departTime:type_name -> google.protobuf.Timestamp
-	9,  // 5: pb.UpdateFlightOrderTradeStateResp.arriveTime:type_name -> google.protobuf.Timestamp
+	11, // 4: pb.UpdateFlightOrderTradeStateResp.departTime:type_name -> google.protobuf.Timestamp
+	11, // 5: pb.UpdateFlightOrderTradeStateResp.arriveTime:type_name -> google.protobuf.Timestamp
 	0,  // 6: pb.UserFlightOrderListResp.list:type_name -> pb.FlightOrder
 	1,  // 7: pb.order.CreateFlightOrder:input_type -> pb.CreateFlightOrderReq
-	3,  // 8: pb.order.FlightOrderDetail:input_type -> pb.FlightOrderDetailReq
-	5,  // 9: pb.order.UpdateFlightOrderTradeState:input_type -> pb.UpdateFlightOrderTradeStateReq
-	7,  // 10: pb.order.UserFlightOrderList:input_type -> pb.UserFlightOrderListReq
-	2,  // 11: pb.order.CreateFlightOrder:output_type -> pb.CreateFlightOrderResp
-	4,  // 12: pb.order.FlightOrderDetail:output_type -> pb.FlightOrderDetailResp
-	6,  // 13: pb.order.UpdateFlightOrderTradeState:output_type -> pb.UpdateFlightOrderTradeStateResp
-	8,  // 14: pb.order.UserFlightOrderList:output_type -> pb.UserFlightOrderListResp
-	11, // [11:15] is the sub-list for method output_type
-	7,  // [7:11] is the sub-list for method input_type
+	9,  // 8: pb.order.ChangeTheOrderPrice:input_type -> pb.ChangeTheOrderPriceReq
+	3,  // 9: pb.order.FlightOrderDetail:input_type -> pb.FlightOrderDetailReq
+	5,  // 10: pb.order.UpdateFlightOrderTradeState:input_type -> pb.UpdateFlightOrderTradeStateReq
+	7,  // 11: pb.order.UserFlightOrderList:input_type -> pb.UserFlightOrderListReq
+	2,  // 12: pb.order.CreateFlightOrder:output_type -> pb.CreateFlightOrderResp
+	10, // 13: pb.order.ChangeTheOrderPrice:output_type -> pb.ChangeTheOrderPriceResp
+	4,  // 14: pb.order.FlightOrderDetail:output_type -> pb.FlightOrderDetailResp
+	6,  // 15: pb.order.UpdateFlightOrderTradeState:output_type -> pb.UpdateFlightOrderTradeStateResp
+	8,  // 16: pb.order.UserFlightOrderList:output_type -> pb.UserFlightOrderListResp
+	12, // [12:17] is the sub-list for method output_type
+	7,  // [7:12] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name
@@ -934,6 +1043,30 @@ func file_app_order_cmd_rpc_pb_order_proto_init() {
 				return nil
 			}
 		}
+		file_app_order_cmd_rpc_pb_order_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChangeTheOrderPriceReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_app_order_cmd_rpc_pb_order_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChangeTheOrderPriceResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -941,7 +1074,7 @@ func file_app_order_cmd_rpc_pb_order_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_app_order_cmd_rpc_pb_order_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

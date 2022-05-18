@@ -28,6 +28,12 @@ func (s *OrderServer) CreateFlightOrder(ctx context.Context, in *pb.CreateFlight
 	return l.CreateFlightOrder(in)
 }
 
+//  机票改价
+func (s *OrderServer) ChangeTheOrderPrice(ctx context.Context, in *pb.ChangeTheOrderPriceReq) (*pb.ChangeTheOrderPriceResp, error) {
+	l := logic.NewChangeTheOrderPriceLogic(ctx, s.svcCtx)
+	return l.ChangeTheOrderPrice(in)
+}
+
 // 机票订单详情
 func (s *OrderServer) FlightOrderDetail(ctx context.Context, in *pb.FlightOrderDetailReq) (*pb.FlightOrderDetailResp, error) {
 	l := logic.NewFlightOrderDetailLogic(ctx, s.svcCtx)

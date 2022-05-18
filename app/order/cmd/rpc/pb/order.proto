@@ -69,17 +69,27 @@ message UserFlightOrderListResp {
   repeated FlightOrder list = 1;
 }
 
+// 改价
+message ChangeTheOrderPriceReq {
+  string  orderSn = 1;
+  int64   price   = 2;
+}
+message ChangeTheOrderPriceResp {}
+
 //service
 service order {
   //机票下订单
-  rpc CreateFlightOrder(CreateFlightOrderReq)returns(CreateFlightOrderResp);
+  rpc CreateFlightOrder(CreateFlightOrderReq) returns(CreateFlightOrderResp);
+
+  //机票改价
+  rpc ChangeTheOrderPrice(ChangeTheOrderPriceReq) returns(ChangeTheOrderPriceResp);
 
   //机票订单详情
-  rpc FlightOrderDetail(FlightOrderDetailReq)returns(FlightOrderDetailResp);
+  rpc FlightOrderDetail(FlightOrderDetailReq) returns(FlightOrderDetailResp);
 
   //更新机票订单状态
-  rpc UpdateFlightOrderTradeState(UpdateFlightOrderTradeStateReq)returns(UpdateFlightOrderTradeStateResp);
+  rpc UpdateFlightOrderTradeState(UpdateFlightOrderTradeStateReq) returns(UpdateFlightOrderTradeStateResp);
 
   //用户机票订单
-  rpc UserFlightOrderList(UserFlightOrderListReq)returns(UserFlightOrderListResp);
+  rpc UserFlightOrderList(UserFlightOrderListReq) returns(UserFlightOrderListResp);
 }
