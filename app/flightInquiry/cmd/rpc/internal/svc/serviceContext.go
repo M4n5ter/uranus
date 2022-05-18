@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/mr"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -110,45 +111,54 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 			// 退改票信息
 			refundInfo := &pb.RefundInfo{}
 			changeInfo := &pb.ChangeInfo{}
-			// 查退票信息
-			ri, err := s.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(ticket.Id, 1)
+			var ri, ci *commonModel.RefundAndChangeInfos
+			err = mr.Finish(func() error {
+				// 查退票信息
+				ri, err = s.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(ticket.Id, 1)
+				if err != nil {
+					if err == commonModel.ErrNotFound {
+						return errors.Wrapf(ERRRefundAndChangeInfos, "NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
+					} else {
+						return errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID : ticketID:%d\n", ticket.Id)
+					}
+				}
+				if ri != nil {
+					refundInfo.TimeFees = append(refundInfo.TimeFees,
+						&pb.TimeFee{Time: timestamppb.New(ri.Time1), Fee: uint64(ri.Fee1)},
+						&pb.TimeFee{Time: timestamppb.New(ri.Time2), Fee: uint64(ri.Fee2)},
+						&pb.TimeFee{Time: timestamppb.New(ri.Time3), Fee: uint64(ri.Fee3)},
+						&pb.TimeFee{Time: timestamppb.New(ri.Time4), Fee: uint64(ri.Fee4)},
+					)
+					if !ri.Time5.IsZero() && ri.Fee5 > 0 {
+						refundInfo.TimeFees = append(refundInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(ri.Time5), Fee: uint64(ri.Fee5)})
+					}
+				}
+				return nil
+			}, func() error {
+				// 查改票信息
+				ci, err = s.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(ticket.Id, 0)
+				if err != nil {
+					if err == commonModel.ErrNotFound {
+						return errors.Wrapf(ERRRefundAndChangeInfos, "NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
+					} else {
+						return errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID : ticketID:%d\n", ticket.Id)
+					}
+				}
+				if ci != nil {
+					changeInfo.TimeFees = append(changeInfo.TimeFees,
+						&pb.TimeFee{Time: timestamppb.New(ci.Time1), Fee: uint64(ci.Fee1)},
+						&pb.TimeFee{Time: timestamppb.New(ci.Time2), Fee: uint64(ci.Fee2)},
+						&pb.TimeFee{Time: timestamppb.New(ci.Time3), Fee: uint64(ci.Fee3)},
+						&pb.TimeFee{Time: timestamppb.New(ci.Time4), Fee: uint64(ci.Fee4)},
+					)
+					if !ci.Time5.IsZero() && ci.Fee5 > 0 {
+						changeInfo.TimeFees = append(changeInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(ci.Time5), Fee: uint64(ci.Fee5)})
+					}
+				}
+				return nil
+			})
 			if err != nil {
-				if err == commonModel.ErrNotFound {
-					return nil, errors.Wrapf(ERRRefundAndChangeInfos, "NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
-				} else {
-					return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID : ticketID:%d\n", ticket.Id)
-				}
-			}
-			if ri != nil {
-				refundInfo.TimeFees = append(refundInfo.TimeFees,
-					&pb.TimeFee{Time: timestamppb.New(ri.Time1), Fee: uint64(ri.Fee1)},
-					&pb.TimeFee{Time: timestamppb.New(ri.Time2), Fee: uint64(ri.Fee2)},
-					&pb.TimeFee{Time: timestamppb.New(ri.Time3), Fee: uint64(ri.Fee3)},
-					&pb.TimeFee{Time: timestamppb.New(ri.Time4), Fee: uint64(ri.Fee4)},
-				)
-				if !ri.Time5.IsZero() && ri.Fee5 > 0 {
-					refundInfo.TimeFees = append(refundInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(ri.Time5), Fee: uint64(ri.Fee5)})
-				}
-			}
-			// 查改票信息
-			ci, err := s.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(ticket.Id, 0)
-			if err != nil {
-				if err == commonModel.ErrNotFound {
-					return nil, errors.Wrapf(ERRRefundAndChangeInfos, "NOT FOUND: There is no refund and change information for the corresponding ticket.ticketID:%d\n", ticket.Id)
-				} else {
-					return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc:l.svcCtx.RefundAndChangeInfosModel.FindListByTicketID : ticketID:%d\n", ticket.Id)
-				}
-			}
-			if ci != nil {
-				changeInfo.TimeFees = append(changeInfo.TimeFees,
-					&pb.TimeFee{Time: timestamppb.New(ci.Time1), Fee: uint64(ci.Fee1)},
-					&pb.TimeFee{Time: timestamppb.New(ci.Time2), Fee: uint64(ci.Fee2)},
-					&pb.TimeFee{Time: timestamppb.New(ci.Time3), Fee: uint64(ci.Fee3)},
-					&pb.TimeFee{Time: timestamppb.New(ci.Time4), Fee: uint64(ci.Fee4)},
-				)
-				if !ci.Time5.IsZero() && ci.Fee5 > 0 {
-					changeInfo.TimeFees = append(changeInfo.TimeFees, &pb.TimeFee{Time: timestamppb.New(ci.Time5), Fee: uint64(ci.Fee5)})
-				}
+				return nil, err
 			}
 
 			resp = append(resp, &pb.FlightInfo{

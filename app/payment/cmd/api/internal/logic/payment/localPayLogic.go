@@ -6,6 +6,7 @@ import (
 	"github.com/dtm-labs/dtm/dtmcli/logger"
 	"github.com/dtm-labs/dtm/dtmgrpc"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/mr"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"strings"
 	"uranus/app/order/cmd/rpc/order"
@@ -78,27 +79,41 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 		return nil, errors.Wrapf(xerr.NewErrMsg("该订单号不属于该用户"), "该订单号不属于该用户 userID: %d, order's userID: %d", userID, orderDetail.FlightOrder.UserId)
 	}
 
-	// 创建支付流水
-	paymentSn, err := l.svcCtx.PaymentClient.CreatePayment(l.ctx, &payment.CreatePaymentReq{
-		UserID:   userID,
-		PayMode:  model.PayModeWalletBalance,
-		PayTotal: orderDetail.FlightOrder.OrderTotalPrice,
-		OrderSn:  orderDetail.FlightOrder.Sn,
+	var paymentSn string
+	var userMoney int64
+	err = mr.Finish(func() error {
+		// 创建支付流水
+		paymentResp, err := l.svcCtx.PaymentClient.CreatePayment(l.ctx, &payment.CreatePaymentReq{
+			UserID:   userID,
+			PayMode:  model.PayModeWalletBalance,
+			PayTotal: orderDetail.FlightOrder.OrderTotalPrice,
+			OrderSn:  orderDetail.FlightOrder.Sn,
+		})
+		if err != nil {
+			return errors.Wrapf(xerr.NewErrMsg("创建支付流水失败"), "创建支付流水失败 paymentSn: %s, userId: %d, orderSn: %s, payTotal: %d, err: %v",
+				paymentResp.Sn, userID, orderDetail.FlightOrder.Sn, orderDetail.FlightOrder.OrderTotalPrice, err)
+		}
+
+		paymentSn = paymentResp.Sn
+		return nil
+	}, func() error {
+		// 获取用户钱包余额
+		getMoneyResp, err := l.svcCtx.UserCenterClient.GetUserMoney(l.ctx, &usercenter.GetUserMoneyReq{UserId: userID})
+		if err != nil {
+			return errors.Wrapf(xerr.NewErrMsg("获取用户钱包余额失败"), "获取用户钱包余额失败 err: %v, userID: %d", err, userID)
+		}
+
+		userMoney = getMoneyResp.Money
+		return nil
 	})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("创建支付流水失败"), "创建支付流水失败 paymentSn: %s, userId: %d, orderSn: %s, payTotal: %d, err: %v",
-			paymentSn, userID, orderDetail.FlightOrder.Sn, orderDetail.FlightOrder.OrderTotalPrice, err)
+		return nil, err
 	}
 
-	// 获取用户钱包余额
-	getMoneyResp, err := l.svcCtx.UserCenterClient.GetUserMoney(l.ctx, &usercenter.GetUserMoneyReq{UserId: userID})
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("获取用户钱包余额失败"), "获取用户钱包余额失败 err: %v, userID: %d", err, userID)
-	}
-	if getMoneyResp.Money-orderDetail.FlightOrder.OrderTotalPrice < 0 {
+	if userMoney-orderDetail.FlightOrder.OrderTotalPrice < 0 {
 		// 余额不足，更新支付状态为支付失败
 		updatePaymentReq := &payment.UpdateTradeStateReq{
-			Sn:        paymentSn.Sn,
+			Sn:        paymentSn,
 			PayStatus: model.PaymentLocalPayStatusFAIL,
 			PayTime:   timestamppb.Now(),
 			PayMode:   model.PayModeWalletBalance,
@@ -111,13 +126,13 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 		if err != nil {
 			return nil, fmt.Errorf("submit data to  dtm-server err  : %+v \n", err)
 		}
-		return nil, errors.Wrapf(xerr.NewErrMsg("用户钱包余额不足"), "余额不足, orderTotalPrice: %d, userId: %d, user's money: %d", orderDetail.FlightOrder.OrderTotalPrice, userID, getMoneyResp.Money)
+		return nil, errors.Wrapf(xerr.NewErrMsg("用户钱包余额不足"), "余额不足, orderTotalPrice: %d, userId: %d, user's money: %d", orderDetail.FlightOrder.OrderTotalPrice, userID, userMoney)
 	}
 
 	// 用分布式事务处理
 	// 更新支付状态
 	updatePaymentReq := &payment.UpdateTradeStateReq{
-		Sn:        paymentSn.Sn,
+		Sn:        paymentSn,
 		PayStatus: model.PaymentLocalPayStatusSuccess,
 		PayTime:   timestamppb.Now(),
 		PayMode:   model.PayModeWalletBalance,

@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/mr"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"uranus/common/xerr"
@@ -79,18 +80,28 @@ func (l *FlightDetailLogic) FlightDetail(in *pb.FlightDetailReq) (*pb.FlightDeta
 		return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc: l.svcCtx.Flights.FindOneByNumber, flightNumber: %s, err: %v", flightInfo.FlightNumber, err)
 	}
 	// 获取退改票信息
-	ri, err := l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(in.TicketID, 1)
-	if err != nil {
-		if err == commonModel.ErrNotFound {
+	var ri, ci *commonModel.RefundAndChangeInfos
+	err = mr.Finish(func() error {
+		ri, err = l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(in.TicketID, 1)
+		if err != nil {
+			if err == commonModel.ErrNotFound {
+			}
+			return errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc: l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketId, ticketID: %d, err: %v", in.TicketID, err)
 		}
-		return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc: l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketId, ticketID: %d, err: %v", in.TicketID, err)
-	}
-	ci, err := l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(in.TicketID, 0)
-	if err != nil {
-		if err == commonModel.ErrNotFound {
+		return nil
+	}, func() error {
+		ci, err = l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(in.TicketID, 0)
+		if err != nil {
+			if err == commonModel.ErrNotFound {
+			}
+			return errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc: l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketId, ticketID: %d, err: %v", in.TicketID, err)
 		}
-		return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc: l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketId, ticketID: %d, err: %v", in.TicketID, err)
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
+
 	resp := new(pb.FlightInfo)
 	resp.FlightInfoID = flightInfo.Id
 	resp.DepartPosition = flightInfo.DepartPosition

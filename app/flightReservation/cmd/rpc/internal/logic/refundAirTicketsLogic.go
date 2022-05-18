@@ -6,6 +6,7 @@ import (
 	"github.com/dtm-labs/dtm/dtmcli/logger"
 	"github.com/dtm-labs/dtm/dtmgrpc"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/mr"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/payment/cmd/rpc/payment"
@@ -57,27 +58,36 @@ func (l *RefundAirTicketsLogic) RefundAirTickets(in *pb.RefundAirTicketsReq) (*p
 		return nil, errors.Wrapf(xerr.NewErrMsg("只有支付成功的订单才能退款"), "orderSn: %s, userID: %d", in.OrderSn, in.UserID)
 	}
 
-	// 查询退票信息
-	refundInfo, err := l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(ticketID, 1)
-	if err != nil && err != commonModel.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
-	}
-	if refundInfo == nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("退票失败:该票没有对应的退票信息"), "")
-	}
+	var fee int64
+	var pdResp *payment.GetPaymentSuccessRefundByOrderSnResp
+	err = mr.Finish(func() error {
+		// 查询退票信息
+		refundInfo, err := l.svcCtx.RefundAndChangeInfosModel.FindOneByTicketIdIsRefund(ticketID, 1)
+		if err != nil && err != commonModel.ErrNotFound {
+			return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
+		}
+		if refundInfo == nil {
+			return errors.Wrapf(xerr.NewErrMsg("退票失败:该票没有对应的退票信息"), "")
+		}
 
-	// 获取退票手续费
-	fee, ok := l.svcCtx.GetFee(refundInfo)
-	if !ok {
-		return nil, errors.Wrapf(xerr.NewErrMsg("无法退款，已经超出最晚期限"), "")
-	}
-
-	// 查询支付流水详情
-	pdResp, err := l.svcCtx.PaymentRpcClient.GetPaymentSuccessRefundByOrderSn(l.ctx, &payment.GetPaymentSuccessRefundByOrderSnReq{
-		OrderSn: in.OrderSn,
+		// 获取退票手续费
+		fee, ok = l.svcCtx.GetFee(refundInfo)
+		if !ok {
+			return errors.Wrapf(xerr.NewErrMsg("无法退款，已经超出最晚期限"), "")
+		}
+		return nil
+	}, func() error {
+		// 查询支付流水详情
+		pdResp, err = l.svcCtx.PaymentRpcClient.GetPaymentSuccessRefundByOrderSn(l.ctx, &payment.GetPaymentSuccessRefundByOrderSnReq{
+			OrderSn: in.OrderSn,
+		})
+		if err != nil {
+			return errors.Wrapf(ERRRefundFail, "查询订单支付流水详情失败, err: %v", err)
+		}
+		return nil
 	})
 	if err != nil {
-		return nil, errors.Wrapf(ERRRefundFail, "查询订单支付流水详情失败, err: %v", err)
+		return nil, err
 	}
 
 	// 从配置文件获取服务地址
