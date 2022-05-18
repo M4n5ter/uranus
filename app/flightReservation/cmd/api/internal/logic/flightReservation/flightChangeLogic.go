@@ -24,7 +24,6 @@ func NewFlightChangeLogic(ctx context.Context, svcCtx *svc.ServiceContext) Fligh
 }
 
 func (l *FlightChangeLogic) FlightChange(req *types.FlightChangeReq) (resp *types.FlightChangeResp, err error) {
-	// todo: add your logic here and delete this line
 
 	return
 }

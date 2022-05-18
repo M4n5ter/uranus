@@ -24,8 +24,8 @@ type FlightRefundResp struct {
 }
 
 type FlightChangeReq struct {
-	OrderSn uint64 `json:"orderSn"` // 要改的订单号
-	SpaceID uint64 `json:"spaceId"` // 目标舱位id
+	OrderSn string `json:"orderSn"` // 要改的订单号
+	SpaceID int64  `json:"spaceId"` // 目标舱位id
 }
 
 type FlightChangeResp struct {
