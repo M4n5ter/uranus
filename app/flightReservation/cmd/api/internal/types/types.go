@@ -29,5 +29,5 @@ type FlightChangeReq struct {
 }
 
 type FlightChangeResp struct {
-	Message string `json:"message"` // 改签成功的提示信息
+	NewOrderSn string `json:"newOrderSn"` // 改签的新订单
 }
