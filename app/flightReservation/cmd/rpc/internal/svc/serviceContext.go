@@ -8,6 +8,7 @@ import (
 	"uranus/app/flightReservation/cmd/rpc/internal/config"
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/payment/cmd/rpc/payment"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/commonModel"
 )
 
@@ -21,6 +22,7 @@ type ServiceContext struct {
 	FlightInquiryRpcClient    flightinquiry.FlightInquiry
 	OrderRpcClient            order.Order
 	PaymentRpcClient          payment.Payment
+	UserCenterRpcClient       usercenter.Usercenter
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -34,6 +36,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		FlightInquiryRpcClient:    flightinquiry.NewFlightInquiry(zrpc.MustNewClient(c.FlightInquiryRpcConf)),
 		OrderRpcClient:            order.NewOrder(zrpc.MustNewClient(c.OrderRpcConf)),
 		PaymentRpcClient:          payment.NewPayment(zrpc.MustNewClient(c.PaymentRpcConf)),
+		UserCenterRpcClient:       usercenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpcConf)),
 	}
 }
 
