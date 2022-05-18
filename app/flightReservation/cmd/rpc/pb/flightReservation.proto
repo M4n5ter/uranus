@@ -52,7 +52,8 @@ message ChangeAirTicketsReq {
 }
 // 改票响应
 message ChangeAirTicketsResp {
-
+  // 新的订单号
+  string                    OrderSn        = 1;
 }
 
 service flightReservation {
