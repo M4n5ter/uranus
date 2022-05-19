@@ -112,3 +112,11 @@ type RecommendReturnJourneyByFlightInfoReq struct {
 type RecommendReturnJourneyByFlightInfoResp struct {
 	UniqFlightWithSpaces []*UniqFlightWithSpaces `json:"uniqFlightWithSpaces"`
 }
+
+type GetFlightDetailByTicketIDReq struct {
+	TicketID int64 `json:"ticketId"`
+}
+
+type GetFlightDetailByTicketIDResp struct {
+	Flightinfo Flightinfo `json:"flightinfo"`
+}

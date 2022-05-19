@@ -31,4 +31,6 @@ service flightInquiry {
 	post /quiry/transfer (QuireTransferFlightsReq) returns(QuireTransferFlightsResp)
 	@handler RecommendReturnJourneyByFlightInfo
 	post /quiry/return-journey (RecommendReturnJourneyByFlightInfoReq) returns(RecommendReturnJourneyByFlightInfoResp)
+	@handler GetFlightDetailByTicketID
+	post /quiry/flightInfo-by-ticket (GetFlightDetailByTicketIDReq) returns(GetFlightDetailByTicketIDResp)
 }

@@ -48,6 +48,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/quiry/return-journey",
 				Handler: flightInquiry.RecommendReturnJourneyByFlightInfoHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/quiry/flightInfo-by-ticket",
+				Handler: flightInquiry.GetFlightDetailByTicketIDHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/flightInquiry/v1"),

@@ -179,3 +179,13 @@ type (
         UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
     }
 )
+
+type (
+    //根据 ticketID 查询航班详情
+    GetFlightDetailByTicketIDReq {
+        TicketID                 int64  `json:"ticketId"`
+    }
+    GetFlightDetailByTicketIDResp {
+        Flightinfo               Flightinfo `json:"flightinfo"`
+    }
+)
