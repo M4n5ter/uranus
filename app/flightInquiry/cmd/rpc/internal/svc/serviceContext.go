@@ -180,48 +180,6 @@ func (s *ServiceContext) CombineAllInfos(flightInfos []*commonModel.FlightInfos)
 				Cba:            ticket.Cba,
 				FlightType:     flt.FltType,
 			})
-
-			//// 添加对应信息
-			//if respType {
-			//	resp.(*pb.QuireBySetOutDateAndFlightNumberResp).FlightInfos = append(resp.(*pb.QuireBySetOutDateAndFlightNumberResp).FlightInfos, &pb.FlightInfo{
-			//		FlightNumber:   info.FlightNumber,
-			//		SetOutDate:     timestamppb.New(info.SetOutDate),
-			//		IsFirstClass:   ifc,
-			//		Price:          uint64(ticket.Price),
-			//		Discount:       ticket.Discount,
-			//		Surplus:        space.Surplus,
-			//		Punctuality:    uint32(info.Punctuality),
-			//		DepartPosition: info.DepartPosition,
-			//		DepartTime:     timestamppb.New(info.DepartTime),
-			//		ArrivePosition: info.ArrivePosition,
-			//		ArriveTime:     timestamppb.New(info.ArriveTime),
-			//		RefundInfo:     refundInfo,
-			//		ChangeInfo:     changeInfo,
-			//		Cba:            ticket.Cba,
-			//		FlightType:     flt.FltType,
-			//	})
-			//
-			//} else {
-			//	resp.(*pb.QuireBySetOutDateStartPositionEndPositionResp).FlightInfos = append(resp.(*pb.QuireBySetOutDateStartPositionEndPositionResp).FlightInfos, &pb.FlightInfo{
-			//		FlightNumber:   info.FlightNumber,
-			//		SetOutDate:     timestamppb.New(info.SetOutDate),
-			//		IsFirstClass:   ifc,
-			//		Price:          uint64(ticket.Price),
-			//		Discount:       ticket.Discount,
-			//		Surplus:        space.Surplus,
-			//		Punctuality:    uint32(info.Punctuality),
-			//		DepartPosition: info.DepartPosition,
-			//		DepartTime:     timestamppb.New(info.DepartTime),
-			//		ArrivePosition: info.ArrivePosition,
-			//		ArriveTime:     timestamppb.New(info.ArriveTime),
-			//		RefundInfo:     refundInfo,
-			//		ChangeInfo:     changeInfo,
-			//		Cba:            ticket.Cba,
-			//		FlightType:     flt.FltType,
-			//	})
-			//
-			//}
-
 		}
 
 	}
