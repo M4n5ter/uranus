@@ -6,6 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 	"uranus/app/flightInquiry/cmd/rpc/flightinquiry"
+	"uranus/common/timeTools"
 
 	"uranus/app/flightInquiry/cmd/api/internal/svc"
 	"uranus/app/flightInquiry/cmd/api/internal/types"
@@ -33,7 +34,7 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 		return nil, errors.Wrapf(ERRIllegalInput, "Illegal input : SetOutDate is empty.")
 	}
 	var sod time.Time
-	if sod, err = time.Parse("2006-01-02", req.SetOutDate); err == nil {
+	if sod, err = timeTools.String2TimeYMD(req.SetOutDate); err == nil {
 		if sod.IsZero() {
 			return nil, errors.Wrapf(ERRIllegalInput, "Illegal input : SetOutDate is zero time(maybe wrong layout).")
 		}
@@ -58,6 +59,6 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 	//初始化resp，避免空指针错误
 	resp = &types.QuireBySetOutDateStartPositionEndPositionResp{}
 	resp.UniqFlightWithSpaces = make([]*types.UniqFlightWithSpaces, len(rpcResp.UniqFlightWithSpaces))
-	l.svcCtx.CopyFlightInfosRpcRespToApiResp(resp.UniqFlightWithSpaces, rpcResp.UniqFlightWithSpaces)
+	l.svcCtx.CopyUniqFlightsRpcRespToApiResp(resp.UniqFlightWithSpaces, rpcResp.UniqFlightWithSpaces)
 	return
 }

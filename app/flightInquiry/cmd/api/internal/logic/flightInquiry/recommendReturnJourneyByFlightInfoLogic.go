@@ -2,6 +2,7 @@ package flightInquiry
 
 import (
 	"context"
+	"uranus/app/flightInquiry/cmd/rpc/flightinquiry"
 
 	"uranus/app/flightInquiry/cmd/api/internal/svc"
 	"uranus/app/flightInquiry/cmd/api/internal/types"
@@ -24,7 +25,13 @@ func NewRecommendReturnJourneyByFlightInfoLogic(ctx context.Context, svcCtx *svc
 }
 
 func (l *RecommendReturnJourneyByFlightInfoLogic) RecommendReturnJourneyByFlightInfo(req *types.RecommendReturnJourneyByFlightInfoReq) (resp *types.RecommendReturnJourneyByFlightInfoResp, err error) {
-	// todo: add your logic here and delete this line
+	rpcResp, err := l.svcCtx.FlightInquiryClient.RecommendReturnJourneyByFlightInfo(l.ctx, &flightinquiry.RecommendReturnJourneyByFlightInfoReq{FlightInfoID: req.FlightInfoID})
+	if err != nil {
+		return nil, err
+	}
 
+	resp = &types.RecommendReturnJourneyByFlightInfoResp{}
+	resp.UniqFlightWithSpaces = make([]*types.UniqFlightWithSpaces, len(rpcResp.UniqFlightWithSpaces))
+	l.svcCtx.CopyUniqFlightsRpcRespToApiResp(resp.UniqFlightWithSpaces, rpcResp.UniqFlightWithSpaces)
 	return
 }

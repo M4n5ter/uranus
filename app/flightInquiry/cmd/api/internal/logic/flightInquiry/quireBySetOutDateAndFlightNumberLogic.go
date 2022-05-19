@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"uranus/common/timeTools"
 
 	"time"
 	"uranus/app/flightInquiry/cmd/rpc/flightinquiry"
@@ -43,7 +44,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 		return nil, errors.Wrapf(ERRIllegalInput, "Illegal input : SetOutDate is empty.\n")
 	}
 	var sod time.Time
-	if sod, err = time.Parse("2006-01-02", req.SetOutDate); err == nil {
+	if sod, err = timeTools.String2TimeYMD(req.SetOutDate); err == nil {
 		if sod.IsZero() {
 			return nil, errors.Wrapf(ERRIllegalInput, "Illegal input : SetOutDate is zero time(maybe wrong layout).\n")
 		}
@@ -60,6 +61,6 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 	// 初始化resp，避免空指针
 	resp = &types.QuireBySetOutDateAndFlightNumberResp{}
 	resp.UniqFlightWithSpaces = make([]*types.UniqFlightWithSpaces, len(rpcResp.UniqFlightWithSpaces))
-	l.svcCtx.CopyFlightInfosRpcRespToApiResp(resp.UniqFlightWithSpaces, rpcResp.UniqFlightWithSpaces)
+	l.svcCtx.CopyUniqFlightsRpcRespToApiResp(resp.UniqFlightWithSpaces, rpcResp.UniqFlightWithSpaces)
 	return
 }

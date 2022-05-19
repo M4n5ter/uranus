@@ -2,9 +2,10 @@ package flightInquiry
 
 import (
 	"context"
-
+	"github.com/pkg/errors"
 	"uranus/app/flightInquiry/cmd/api/internal/svc"
 	"uranus/app/flightInquiry/cmd/api/internal/types"
+	"uranus/app/flightInquiry/cmd/rpc/flightinquiry"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +25,24 @@ func NewGetFlightsByPriceRangeLogic(ctx context.Context, svcCtx *svc.ServiceCont
 }
 
 func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(req *types.GetFlightsByPriceRangeReq) (resp *types.GetFlightsByPriceRangeResp, err error) {
-	// todo: add your logic here and delete this line
+	if len(req.DepartPosition) == 0 || len(req.ArrivePosition) == 0 {
+		return nil, errors.Wrapf(ERRIllegalInput, "")
+	}
 
+	rpcResp, err := l.svcCtx.FlightInquiryClient.GetFlightsByPriceRange(l.ctx, &flightinquiry.GetFlightsByPriceRangeReq{
+		DepartPosition: req.DepartPosition,
+		ArrivePosition: req.ArrivePosition,
+		MinPrice:       req.MinPrice,
+		MaxPrice:       req.MaxPrice,
+		Days:           req.Days,
+		Num:            req.Num,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	resp = &types.GetFlightsByPriceRangeResp{}
+	resp.UniqFlightWithSpaces = make([]*types.UniqFlightWithSpaces, len(rpcResp.UniqFlightWithSpaces))
+	l.svcCtx.CopyUniqFlightsRpcRespToApiResp(resp.UniqFlightWithSpaces, rpcResp.UniqFlightWithSpaces)
 	return
 }

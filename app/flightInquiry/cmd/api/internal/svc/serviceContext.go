@@ -21,7 +21,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 }
 
-func (s *ServiceContext) CopyFlightInfosRpcRespToApiResp(resp []*types.UniqFlightWithSpaces, rpcResp []*pb.UniqFlightWithSpaces) {
+func (s *ServiceContext) CopyUniqFlightsRpcRespToApiResp(resp []*types.UniqFlightWithSpaces, rpcResp []*pb.UniqFlightWithSpaces) {
 	// 赋值
 	for i := range rpcResp {
 		//初始化FlightInfos以便下面进行赋值（避免空指针）
