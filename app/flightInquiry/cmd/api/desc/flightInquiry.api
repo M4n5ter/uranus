@@ -18,17 +18,17 @@ import "types/types.api"
 service flightInquiry {
 	@doc "航班查询"
 	@handler QuireBySetOutDateAndFlightNumber
-	get /quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns(QuireBySetOutDateAndFlightNumberResp)
+	post /quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns(QuireBySetOutDateAndFlightNumberResp)
 	@handler QuireBySetOutDateStartPositionEndPosition
-	get /quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns(QuireBySetOutDateStartPositionEndPositionResp)
+	post /quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns(QuireBySetOutDateStartPositionEndPositionResp)
 	@handler GetDiscountFlights
-	get /quiry/discount	(GetDiscountFlightsReq)	returns(GetDiscountFlightsResp)
+	post /quiry/discount	(GetDiscountFlightsReq)	returns(GetDiscountFlightsResp)
 	@handler GetFlightsByFlightNumber
-	get /quiry/flights-by-number (GetFlightsByFlightNumberReq) returns(GetFlightsByFlightNumberResp)
+	post /quiry/flights-by-number (GetFlightsByFlightNumberReq) returns(GetFlightsByFlightNumberResp)
 	@handler GetFlightsByPriceRange
-	get /quiry/flights-by-price (GetFlightsByPriceRangeReq) returns(GetFlightsByPriceRangeResp)
+	post /quiry/flights-by-price (GetFlightsByPriceRangeReq) returns(GetFlightsByPriceRangeResp)
 	@handler QuireTransferFlights
-	get /quiry/transfer (QuireTransferFlightsReq) returns(QuireTransferFlightsResp)
+	post /quiry/transfer (QuireTransferFlightsReq) returns(QuireTransferFlightsResp)
 	@handler RecommendReturnJourneyByFlightInfo
-	get /quiry/return-journey (RecommendReturnJourneyByFlightInfoReq) returns(RecommendReturnJourneyByFlightInfoResp)
+	post /quiry/return-journey (RecommendReturnJourneyByFlightInfoReq) returns(RecommendReturnJourneyByFlightInfoResp)
 }

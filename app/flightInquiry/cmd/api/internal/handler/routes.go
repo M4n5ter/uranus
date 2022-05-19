@@ -14,37 +14,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/quiry/date-number",
 				Handler: flightInquiry.QuireBySetOutDateAndFlightNumberHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/quiry/date-position",
 				Handler: flightInquiry.QuireBySetOutDateStartPositionEndPositionHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/quiry/discount",
 				Handler: flightInquiry.GetDiscountFlightsHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/quiry/flights-by-number",
 				Handler: flightInquiry.GetFlightsByFlightNumberHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/quiry/flights-by-price",
 				Handler: flightInquiry.GetFlightsByPriceRangeHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/quiry/transfer",
 				Handler: flightInquiry.QuireTransferFlightsHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/quiry/return-journey",
 				Handler: flightInquiry.RecommendReturnJourneyByFlightInfoHandler(serverCtx),
 			},
