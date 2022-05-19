@@ -18,7 +18,17 @@ import "types/types.api"
 service flightInquiry {
 	@doc "航班查询"
 	@handler QuireBySetOutDateAndFlightNumber
-	get /quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns (QuireBySetOutDateAndFlightNumberResp)
+	get /quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns(QuireBySetOutDateAndFlightNumberResp)
 	@handler QuireBySetOutDateStartPositionEndPosition
-	get /quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns (QuireBySetOutDateStartPositionEndPositionResp)
+	get /quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns(QuireBySetOutDateStartPositionEndPositionResp)
+	@handler GetDiscountFlights
+	get /quiry/discount	(GetDiscountFlightsReq)	returns(GetDiscountFlightsResp)
+	@handler GetFlightsByFlightNumber
+	get /quiry/flights-by-number (GetFlightsByFlightNumberReq) returns(GetFlightsByFlightNumberResp)
+	@handler GetFlightsByPriceRange
+	get /quiry/flights-by-price (GetFlightsByPriceRangeReq) returns(GetFlightsByPriceRangeResp)
+	@handler QuireTransferFlights
+	get /quiry/transfer (QuireTransferFlightsReq) returns(QuireTransferFlightsResp)
+	@handler RecommendReturnJourneyByFlightInfo
+	get /quiry/return-journey (RecommendReturnJourneyByFlightInfoReq) returns(RecommendReturnJourneyByFlightInfoResp)
 }

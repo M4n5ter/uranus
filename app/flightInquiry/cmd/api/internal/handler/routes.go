@@ -23,6 +23,31 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/quiry/date-position",
 				Handler: flightInquiry.QuireBySetOutDateStartPositionEndPositionHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/quiry/discount",
+				Handler: flightInquiry.GetDiscountFlightsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/quiry/flights-by-number",
+				Handler: flightInquiry.GetFlightsByFlightNumberHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/quiry/flights-by-price",
+				Handler: flightInquiry.GetFlightsByPriceRangeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/quiry/transfer",
+				Handler: flightInquiry.QuireTransferFlightsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/quiry/return-journey",
+				Handler: flightInquiry.RecommendReturnJourneyByFlightInfoHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/flightInquiry/v1"),

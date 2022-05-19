@@ -38,6 +38,10 @@ type UniqFlightWithSpaces struct {
 	SpacesOfFlightInfo []Flightinfo `json:"spacesOfFlightInfo"`
 }
 
+type TransferFlights struct {
+	UniqFlightWithSpaceses []*UniqFlightWithSpaces `json:"uniqFlightWithSpaceses"`
+}
+
 type QuireBySetOutDateAndFlightNumberReq struct {
 	FlightNumber string `json:"flightNumber"`
 	SetOutDate   string `json:"setOutDate"`
@@ -54,5 +58,57 @@ type QuireBySetOutDateStartPositionEndPositionReq struct {
 }
 
 type QuireBySetOutDateStartPositionEndPositionResp struct {
+	UniqFlightWithSpaces []*UniqFlightWithSpaces `json:"uniqFlightWithSpaces"`
+}
+
+type GetDiscountFlightsReq struct {
+	DepartPosition string `json:"departPosition"`
+	ArrivePosition string `json:"arrivePosition"`
+	Days           int64  `json:"days"`
+	Num            int64  `json:"num"`
+}
+
+type GetDiscountFlightsResp struct {
+	UniqFlightWithSpaces []*UniqFlightWithSpaces `json:"uniqFlightWithSpaces"`
+}
+
+type GetFlightsByFlightNumberReq struct {
+	FlightNumber string `json:"flightNumber"`
+	Days         int64  `json:"days"`
+	Num          int64  `json:"num"`
+}
+
+type GetFlightsByFlightNumberResp struct {
+	UniqFlightWithSpaces []*UniqFlightWithSpaces `json:"uniqFlightWithSpaces"`
+}
+
+type GetFlightsByPriceRangeReq struct {
+	DepartPosition string `json:"departPosition"`
+	ArrivePosition string `json:"arrivePosition"`
+	MaxPrice       int64  `json:"maxPrice"`
+	MinPrice       int64  `json:"minPrice"`
+	Days           int64  `json:"days"`
+	Num            int64  `json:"num"`
+}
+
+type GetFlightsByPriceRangeResp struct {
+	UniqFlightWithSpaces []*UniqFlightWithSpaces `json:"uniqFlightWithSpaces"`
+}
+
+type QuireTransferFlightsReq struct {
+	DepartPosition string `json:"departPosition"`
+	ArrivePosition string `json:"arrivePosition"`
+	SetOutDate     string `json:"setOutDate"`
+}
+
+type QuireTransferFlightsResp struct {
+	Transfers []TransferFlights `json:"transfers"`
+}
+
+type RecommendReturnJourneyByFlightInfoReq struct {
+	FlightInfoID int64 `json:"flightInfoId"`
+}
+
+type RecommendReturnJourneyByFlightInfoResp struct {
 	UniqFlightWithSpaces []*UniqFlightWithSpaces `json:"uniqFlightWithSpaces"`
 }

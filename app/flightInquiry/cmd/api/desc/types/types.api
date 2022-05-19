@@ -63,6 +63,10 @@ type (
         FlightInfoID            int64           `json:"flightInfoId"`
         SpacesOfFlightInfo      []Flightinfo    `json:"spacesOfFlightInfo"`
     }
+
+    TransferFlights {
+        UniqFlightWithSpaceses  []*UniqFlightWithSpaces  `json:"uniqFlightWithSpaceses"`
+    }
 )
 
 
@@ -96,3 +100,82 @@ type (
     }
 )
 
+type (
+    //GetDiscountFlightsReq 查询两地之间 days 天内的 num 条折扣航班(优先返回折扣大的航班)
+    GetDiscountFlightsReq {
+        //出发地
+        DepartPosition  string      `json:"departPosition"`
+        //目的地
+        ArrivePosition  string      `json:"arrivePosition"`
+        //天数
+        Days            int64       `json:"days"`
+        //条数
+        Num             int64       `json:"num"`
+    }
+
+    GetDiscountFlightsResp {
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+    }
+)
+
+type (
+    //GetFlightsByFlightNumberReq 根据航班号查询数据
+    GetFlightsByFlightNumberReq {
+        // 航班号
+        FlightNumber    string      `json:"flightNumber"`
+        //天数
+        Days            int64       `json:"days"`
+        //条数
+        Num             int64       `json:"num"`
+    }
+
+    GetFlightsByFlightNumberResp {
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+    }
+)
+
+type (
+    //GetFlightsByPriceRangeReq 查询两地之间指定价格区间的航班
+    GetFlightsByPriceRangeReq {
+        //出发地
+        DepartPosition  string      `json:"departPosition"`
+        //目的地
+        ArrivePosition  string      `json:"arrivePosition"`
+        //最高价格(分)
+        MaxPrice        int64       `json:"maxPrice"`
+        //最低价格(分)
+        MinPrice        int64       `json:"minPrice"`
+        //天数
+        Days            int64       `json:"days"`
+        //条数
+        Num             int64       `json:"num"`
+    }
+    GetFlightsByPriceRangeResp {
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+    }
+)
+
+type (
+    //QuireTransferFlightsReq 查询中转航班
+    QuireTransferFlightsReq {
+        //出发地
+        DepartPosition  string      `json:"departPosition"`
+        //目的地
+        ArrivePosition  string      `json:"arrivePosition"`
+        //出发日期
+        SetOutDate      string      `json:"setOutDate"`
+    }
+    QuireTransferFlightsResp {
+        Transfers       []TransferFlights   `json:"transfers"`
+    }
+)
+
+type (
+    //根据指定航班信息提供返程机票推荐(仅支持直飞)
+    RecommendReturnJourneyByFlightInfoReq {
+        FlightInfoID             int64                      `json:"flightInfoId"`
+    }
+    RecommendReturnJourneyByFlightInfoResp {
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+    }
+)
