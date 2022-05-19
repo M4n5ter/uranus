@@ -178,7 +178,7 @@ message QuireTransferFlightsResp {
 
 // 根据指定航班信息提供返程机票推荐(仅支持直飞)
 message RecommendReturnJourneyByFlightInfoReq {
-  FlightInfo FlightInfo = 1;
+  int64 FlightInfoID = 1;
 }
 message RecommendReturnJourneyByFlightInfoResp {
   repeated UniqFlightWithSpaces UniqFlightWithSpaces = 1;
