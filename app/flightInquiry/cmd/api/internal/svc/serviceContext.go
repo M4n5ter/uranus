@@ -27,6 +27,7 @@ func (s *ServiceContext) CopyUniqFlightsRpcRespToApiResp(resp []*types.UniqFligh
 		//初始化FlightInfos以便下面进行赋值（避免空指针）
 		resp[i] = &types.UniqFlightWithSpaces{}
 		resp[i].FlightInfoID = rpcResp[i].FlightInfoID
+		resp[i].SpacesOfFlightInfo = make([]types.Flightinfo, 2, 2)
 		for spaceIndex, info := range rpcResp[i].SpacesOfFlightInfo {
 			//退票信息
 			for _, timeFee := range info.RefundInfo.TimeFees {
