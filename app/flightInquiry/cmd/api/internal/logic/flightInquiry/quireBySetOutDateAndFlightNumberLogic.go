@@ -56,7 +56,7 @@ func (l *QuireBySetOutDateAndFlightNumberLogic) QuireBySetOutDateAndFlightNumber
 		return nil, errors.Wrapf(ERRRpcCall, "Rpc err in callling flightInquiry-rpc.QuireBySetOutDateAndFlightNumber, FlightNumber: %s, SetOutDate: %v, err: %v\n", req.FlightNumber, req.SetOutDate, err)
 	}
 	if rpcResp.UniqFlightWithSpaces == nil {
-		return nil, errors.Wrapf(ERRNotFound, "the rpcResp.FlightInfos is nil: l.svcCtx.FlightInquiryClient.QuireBySetOutDateAndFlightNumber, FlightNumber: %s, SetOutDate: %v\n", req.FlightNumber, req.SetOutDate)
+		return nil, errors.Wrapf(ERRNotFound, "the rpcResp.UniqFlightWithSpaces is nil: l.svcCtx.FlightInquiryClient.QuireBySetOutDateAndFlightNumber, FlightNumber: %s, SetOutDate: %v\n", req.FlightNumber, req.SetOutDate)
 	}
 	// 初始化resp，避免空指针
 	resp = &types.QuireBySetOutDateAndFlightNumberResp{}
