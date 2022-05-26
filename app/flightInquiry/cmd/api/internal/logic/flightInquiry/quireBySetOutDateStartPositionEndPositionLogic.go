@@ -54,7 +54,7 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 		return nil, errors.Wrapf(ERRRpcCall, "Rpc err in callling flightInquiry-rpc.QuireBySetOutDateStartPositionEndPosition, ArrivePosition: %s, DepartPosition: %s, SetOutDate: %v, err: %v", req.ArrivePosition, req.DepartPosition, req.SetOutDate, err)
 	}
 	if rpcResp.UniqFlightWithSpaces == nil {
-		return nil, errors.Wrapf(ERRRpcCall, "the rpcResp.FlightInfos is nil: l.svcCtx.FlightInquiryClient.QuireBySetOutDateStartPositionEndPosition, ArrivePosition: %s, DepartPosition: %s, SetOutDate: %v", req.ArrivePosition, req.DepartPosition, req.SetOutDate)
+		return nil, errors.Wrapf(ERRRpcCall, "the rpcResp.UniqFlightWithSpaces is nil: l.svcCtx.FlightInquiryClient.QuireBySetOutDateStartPositionEndPosition, ArrivePosition: %s, DepartPosition: %s, SetOutDate: %v", req.ArrivePosition, req.DepartPosition, req.SetOutDate)
 	}
 	//初始化resp，避免空指针错误
 	resp = &types.QuireBySetOutDateStartPositionEndPositionResp{}
