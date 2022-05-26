@@ -36,7 +36,7 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 	zset := fmt.Sprintf("QuireBySetOutDateStartPositionEndPosition-%s_%s_%s", timeTools.Timestamppb2TimeStringYMD(in.SetOutDate), in.DepartPosition, in.ArrivePosition)
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 	// 查不到bizcache的情况
-	if err != nil || idList == nil {
+	if err != nil || len(idList) == 0 {
 
 		// 不走缓存查询 FlightNumber SetOutDate Punctuality DepartPosition DepartTime ArrivePosition ArriveTime
 		flightInfos, err = l.svcCtx.FlightInfosModel.FindListBySetOutDateAndPosition(l.svcCtx.FlightInfosModel.RowBuilder(), in.SetOutDate.AsTime(), in.DepartPosition, in.ArrivePosition)
