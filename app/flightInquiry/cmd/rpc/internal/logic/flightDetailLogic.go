@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/mr"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"uranus/common/xerr"
 	"uranus/commonModel"
@@ -62,22 +61,21 @@ func (l *FlightDetailLogic) FlightDetail(in *pb.FlightDetailReq) (*pb.FlightDeta
 	}
 	// 找到机型
 	flight, err := l.svcCtx.Flights.FindOneByNumber(flightInfo.FlightNumber)
-	if err != nil {
-		if err == commonModel.ErrNotFound {
-			err = l.svcCtx.Flights.Trans(func(session sqlx.Session) error {
-				_, err = l.svcCtx.Flights.Insert(session, &commonModel.Flights{
-					DelState: 0,
-					Version:  0,
-					Number:   flightInfo.FlightNumber,
-					FltType:  "unknown",
-				})
-				return err
-			})
-			if err != nil {
-				return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc: l.svcCtx.Flights.Insert, flightNumber: %s, err: %v", flightInfo.FlightNumber, err)
-			}
-		}
+	if err != nil && err != commonModel.ErrNotFound {
 		return nil, errors.Wrapf(ERRDBERR, "DBERR: when calling flightinquiry-rpc: l.svcCtx.Flights.FindOneByNumber, flightNumber: %s, err: %v", flightInfo.FlightNumber, err)
+	}
+	if flight == nil {
+		_, err := l.svcCtx.Flights.Insert(nil, &commonModel.Flights{
+			DelState: 0,
+			Version:  0,
+			Number:   flightInfo.FlightNumber,
+			FltType:  "unknown",
+		})
+		if err != nil {
+			return nil, errors.Wrapf(xerr.NewErrMsg("机型不存在，且插入机型失败"), "err: %+v", err)
+		}
+
+		flight = &commonModel.Flights{FltType: "unknown"}
 	}
 	// 获取退改票信息
 	var ri, ci *commonModel.RefundAndChangeInfos
