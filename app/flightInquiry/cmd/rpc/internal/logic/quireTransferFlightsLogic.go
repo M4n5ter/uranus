@@ -55,7 +55,9 @@ func (l *QuireTransferFlightsLogic) QuireTransferFlights(in *pb.QuireTransferFli
 
 		for _, transfer := range transfers {
 			err := bizcache.AddTransfer(l.svcCtx.Redis, *transfer, zset, bizcache.BizTransferCachePrefix)
-			logx.Errorf("ADD bizcache ERR: %v", err)
+			if err != nil {
+				logx.Errorf("ADD bizcache ERR: %v", err)
+			}
 		}
 
 		for _, transfer := range transfers {

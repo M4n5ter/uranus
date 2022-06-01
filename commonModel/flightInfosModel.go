@@ -571,7 +571,9 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 
 	sod, _ = timeTools.Time2TimeYMD000(sod)
 
+	//符合出发地要求
 	var departSlice []*FlightInfos
+	//符合目的地要求
 	var arriveSlice []*FlightInfos
 	err := mr.Finish(func() (err error) {
 		// 构建出发地点是 departPosition 的 sql
@@ -626,12 +628,22 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 	})
 
 	for _, infos := range departSlice {
+		// 过滤数据库中可能的错误记录
+		if infos.DepartTime.After(infos.ArriveTime) {
+			continue
+		}
+
 		departMap[infos.ArrivePosition] = struct {
 			t time.Time
 			f *FlightInfos
 		}{t: infos.ArriveTime, f: infos}
 	}
 	for _, infos := range arriveSlice {
+		// 过滤数据库中可能的错误记录
+		if infos.DepartTime.After(infos.ArriveTime) {
+			continue
+		}
+
 		arriveMap[infos.DepartPosition] = struct {
 			t time.Time
 			f *FlightInfos
@@ -643,7 +655,7 @@ func (m *defaultFlightInfosModel) FindTransferFlightsByPlace(rowBuilder squirrel
 		if arti, exist := arriveMap[depo]; exist {
 			// 存在中转地点 depo, 比较到达中转地点的时间和终端地点的起飞时间(至少需要预留 1 个小时)
 			reservedTime := datetime.AddHour(deti.t, 1)
-			if reservedTime.Equal(arti.t) || reservedTime.Before(arti.t) {
+			if reservedTime.Equal(arti.t) || reservedTime.Before(arti.t) && arti.t.Sub(reservedTime).Hours() < 24 {
 				// 聚合
 				transfers = append(transfers, &Transfer{[]*FlightInfos{departMap[depo].f, arriveMap[depo].f}})
 			}
