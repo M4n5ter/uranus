@@ -73,3 +73,10 @@ type (
     }
 )
 
+type (
+    GetUserWalletReq {}
+    GetUserWalletResp {
+        Balance int64 `json:"balance"`
+    }
+)
+

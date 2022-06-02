@@ -62,6 +62,13 @@ type SearchUserInfoResp struct {
 	UserInfo User `json:"userInfo"`
 }
 
+type GetUserWalletReq struct {
+}
+
+type GetUserWalletResp struct {
+	Balance int64 `json:"balance"`
+}
+
 type GetAvatarUpTokenReq struct {
 }
 

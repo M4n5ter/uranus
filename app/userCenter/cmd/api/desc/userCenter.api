@@ -54,4 +54,8 @@ service usercenter {
 	@doc "上传头像"
 	@handler UploadAvatar
 	post /user/avatar/upload (UploadAvatarReq) returns (UploadAvatarResp)
+	
+	@doc "获取用户钱包"
+	@handler GetUserWallet
+	get /user/wallet/detail (GetUserWalletReq) returns (GetUserWalletResp)
 }

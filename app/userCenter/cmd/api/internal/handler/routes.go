@@ -59,6 +59,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/avatar/upload",
 				Handler: user.UploadAvatarHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/wallet/detail",
+				Handler: user.GetUserWalletHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/usercenter/v1"),
