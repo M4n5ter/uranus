@@ -91,3 +91,8 @@ func (s *UsercenterServer) GetAvatarSrc(ctx context.Context, in *pb.GetAvatarSrc
 	l := logic.NewGetAvatarSrcLogic(ctx, s.svcCtx)
 	return l.GetAvatarSrc(in)
 }
+
+func (s *UsercenterServer) GetUserWallet(ctx context.Context, in *pb.GetUserWalletReq) (*pb.GetUserWalletResp, error) {
+	l := logic.NewGetUserWalletLogic(ctx, s.svcCtx)
+	return l.GetUserWallet(in)
+}

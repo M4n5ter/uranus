@@ -118,6 +118,14 @@ message GetAvatarSrcResp {
   string avatar   = 1;
 }
 
+// 获取用户钱包
+message GetUserWalletReq {
+  int64 user_id   = 1;
+}
+message GetUserWalletResp {
+  int64 balance   = 1;
+}
+
 service usercenter {
   rpc Login(LoginReq) returns(LoginResp);
   rpc Register(RegisterReq) returns(RegisterResp);
@@ -133,4 +141,5 @@ service usercenter {
   rpc DeductMontyRollBack(DeductMoneyReq) returns(DeductMoneyResp);
   rpc UploadAvatar(UploadAvatarReq) returns(UploadAvatarResp);
   rpc GetAvatarSrc(GetAvatarSrcReq) returns(GetAvatarSrcResp);
+  rpc GetUserWallet(GetUserWalletReq) returns(GetUserWalletResp);
 }
