@@ -14,7 +14,7 @@ type FlightOrder {
     ticketId            int64   `json:"ticketId"`           // 票id
     departPosition      string  `json:"departPosition"`     // 出发地点
     departTime          string  `json:"departTime"`         // 出发时间
-    arrivePosisition    string  `json:"arrivePosisition"`   // 降落地点
+    arrivePosisition    string  `json:"arrivePosition"`   // 降落地点
     arriveTime          string  `json:"arriveTime"`         // 降落地点
     ticketPrice         int64   `json:"ticketPrice"`        // 票价(分)
     discount            int64   `json:"discount"`           // 折扣(-n%)
