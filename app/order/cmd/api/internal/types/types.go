@@ -2,19 +2,19 @@
 package types
 
 type FlightOrder struct {
-	Sn               string `json:"sn"`             // 订单号
-	UserId           int64  `json:"userId"`         // 用户id
-	TicketId         int64  `json:"ticketId"`       // 票id
-	DepartPosition   string `json:"departPosition"` // 出发地点
-	DepartTime       string `json:"departTime"`     // 出发时间
-	ArrivePosisition string `json:"arrivePosition"` // 降落地点
-	ArriveTime       string `json:"arriveTime"`     // 降落地点
-	TicketPrice      int64  `json:"ticketPrice"`    // 票价(分)
-	Discount         int64  `json:"discount"`       // 折扣(-n%)
-	TradeState       int64  `json:"tradeState"`     // 交易状态（-1: 已取消 0:待支付 1:未使用 2:已使用  3:已退款 4:已过期）
-	TradeCode        string `json:"tradeCode"`
-	OrderTotalPrice  int64  `json:"orderTotalPrice"` // 订单总价(分)(ticketPrice-ticketPrice*discount)
-	CreateTime       string `json:"createTime"`      // 订单创建时间
+	Sn              string `json:"sn"`             // 订单号
+	UserId          int64  `json:"userId"`         // 用户id
+	TicketId        int64  `json:"ticketId"`       // 票id
+	DepartPosition  string `json:"departPosition"` // 出发地点
+	DepartTime      string `json:"departTime"`     // 出发时间
+	ArrivePosition  string `json:"arrivePosition"` // 降落地点
+	ArriveTime      string `json:"arriveTime"`     // 降落地点
+	TicketPrice     int64  `json:"ticketPrice"`    // 票价(分)
+	Discount        int64  `json:"discount"`       // 折扣(-n%)
+	TradeState      int64  `json:"tradeState"`     // 交易状态（-1: 已取消 0:待支付 1:未使用 2:已使用  3:已退款 4:已过期）
+	TradeCode       string `json:"tradeCode"`
+	OrderTotalPrice int64  `json:"orderTotalPrice"` // 订单总价(分)(ticketPrice-ticketPrice*discount)
+	CreateTime      string `json:"createTime"`      // 订单创建时间
 }
 
 type UserFlightOrderListReq struct {
