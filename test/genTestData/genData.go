@@ -21,9 +21,9 @@ type Config struct {
 
 func main() {
 	var c Config
-	conf.MustLoad("D:\\workspace\\uranus\\test\\genTestData\\etc\\genData.yaml", &c)
-	//insertSpaces(c, 1, 18581)
-	//insertTickets(c, 1, 37162)
+	conf.MustLoad("etc/genData.yaml", &c)
+	insertSpaces(c, 1, 18581)
+	insertTickets(c, 1, 37162)
 	insertRCIs(c, 1, 37162)
 }
 
