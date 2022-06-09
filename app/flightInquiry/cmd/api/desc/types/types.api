@@ -107,6 +107,8 @@ type (
         DepartPosition  string      `json:"departPosition"`
         //目的地
         ArrivePosition  string      `json:"arrivePosition"`
+        //选定日期
+        SelectedDate    string      `json:"selectedDate"`
         //天数
         Days            int64       `json:"days"`
         //条数
@@ -145,6 +147,8 @@ type (
         MaxPrice        int64       `json:"maxPrice"`
         //最低价格(分)
         MinPrice        int64       `json:"minPrice"`
+        //选定日期
+        SelectedDate    string      `json:"selectedDate"`
         //天数
         Days            int64       `json:"days"`
         //条数
@@ -174,6 +178,8 @@ type (
     //根据指定航班信息提供返程机票推荐(仅支持直飞)
     RecommendReturnJourneyByFlightInfoReq {
         FlightInfoID             int64                      `json:"flightInfoId"`
+        //选定日期
+        SelectedDate    string      `json:"selectedDate"`
     }
     RecommendReturnJourneyByFlightInfoResp {
         UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`

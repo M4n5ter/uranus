@@ -64,6 +64,7 @@ type QuireBySetOutDateStartPositionEndPositionResp struct {
 type GetDiscountFlightsReq struct {
 	DepartPosition string `json:"departPosition"`
 	ArrivePosition string `json:"arrivePosition"`
+	SelectedDate   string `json:"selectedDate"`
 	Days           int64  `json:"days"`
 	Num            int64  `json:"num"`
 }
@@ -87,6 +88,7 @@ type GetFlightsByPriceRangeReq struct {
 	ArrivePosition string `json:"arrivePosition"`
 	MaxPrice       int64  `json:"maxPrice"`
 	MinPrice       int64  `json:"minPrice"`
+	SelectedDate   string `json:"selectedDate"`
 	Days           int64  `json:"days"`
 	Num            int64  `json:"num"`
 }
@@ -106,7 +108,8 @@ type QuireTransferFlightsResp struct {
 }
 
 type RecommendReturnJourneyByFlightInfoReq struct {
-	FlightInfoID int64 `json:"flightInfoId"`
+	FlightInfoID int64  `json:"flightInfoId"`
+	SelectedDate string `json:"selectedDate"`
 }
 
 type RecommendReturnJourneyByFlightInfoResp struct {
