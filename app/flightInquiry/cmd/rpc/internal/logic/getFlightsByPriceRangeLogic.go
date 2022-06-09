@@ -42,7 +42,7 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 	if err != nil || len(idList) == 0 {
 		// 查不到 bizcache
-		flightInfos, err := l.svcCtx.FlightInfosModel.FindPageListByPositionAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.Days, in.Num)
+		flightInfos, err := l.svcCtx.FlightInfosModel.FindPageListByPositionSODAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.SelectedDate.AsTime(), in.Days, in.Num)
 		if err != nil && err != commonModel.ErrNotFound {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR : %+v", err)
 		}

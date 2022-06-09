@@ -117,10 +117,12 @@ message GetDiscountFlightsReq {
   string  DepartPosition  = 1;
   // 目的地(为空表示全部)
   string  ArrivePosition  = 2;
+  // 选定日期
+  google.protobuf.Timestamp SelectedDate = 3;
   // 天数(表示未来多少天内)
-  int64   Days            = 3;
+  int64   Days            = 4;
   // 指定需要的航班条数(0 代表全要)
-  int64   Num             = 4;
+  int64   Num             = 5;
 }
 message GetDiscountFlightsResp {
   repeated UniqFlightWithSpaces UniqFlightWithSpaces  = 1;
@@ -136,10 +138,12 @@ message GetFlightsByPriceRangeReq {
   int64   MinPrice        = 3;
   // 最高价格
   int64   MaxPrice        = 4;
+  // 指定日期
+  google.protobuf.Timestamp selectedDate = 5;
   // 天数(表示未来多少天内)
-  int64   Days            = 5;
+  int64   Days            = 6;
   // 指定需要的航班条数(0 代表全要)
-  int64   Num             = 6;
+  int64   Num             = 7;
 }
 message GetFlightsByPriceRangeResp {
   repeated UniqFlightWithSpaces UniqFlightWithSpaces  = 1;
@@ -179,6 +183,7 @@ message QuireTransferFlightsResp {
 // 根据指定航班信息提供返程机票推荐(仅支持直飞)
 message RecommendReturnJourneyByFlightInfoReq {
   int64 FlightInfoID = 1;
+  google.protobuf.Timestamp SelectedDate = 2;
 }
 message RecommendReturnJourneyByFlightInfoResp {
   repeated UniqFlightWithSpaces UniqFlightWithSpaces = 1;

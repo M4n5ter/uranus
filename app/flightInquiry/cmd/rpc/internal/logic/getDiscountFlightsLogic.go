@@ -46,7 +46,7 @@ func (l *GetDiscountFlightsLogic) GetDiscountFlights(in *pb.GetDiscountFlightsRe
 
 	// 查不到 bizcache 的情况
 	if err != nil || len(idList) == 0 {
-		flightInfos, err = l.svcCtx.FlightInfosModel.FindPageListByPositionAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.Days, -1)
+		flightInfos, err = l.svcCtx.FlightInfosModel.FindPageListByPositionSODAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.SelectedDate.AsTime(), in.Days, -1)
 		if err != nil {
 			if err == commonModel.ErrNotFound {
 				return nil, errors.Wrapf(ERRGetInfos, "NOT FOUND: can't found flight infos: departPosition->%s arrivePosition->%v, ERR: %v\n", in.DepartPosition, in.ArrivePosition, err)

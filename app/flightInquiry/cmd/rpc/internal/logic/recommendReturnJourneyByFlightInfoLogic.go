@@ -50,7 +50,7 @@ func (l *RecommendReturnJourneyByFlightInfoLogic) RecommendReturnJourneyByFlight
 
 	// 查不到 bizcache 的情况
 	if err != nil || len(idList) == 0 {
-		flightInfos, err = l.svcCtx.FlightInfosModel.FindPageListByPositionAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), flightInfo.ArrivePosition, flightInfo.DepartPosition, 7, 5)
+		flightInfos, err = l.svcCtx.FlightInfosModel.FindPageListByPositionSODAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), flightInfo.ArrivePosition, flightInfo.DepartPosition, in.SelectedDate.AsTime(), 7, 5)
 		if err != nil && err != commonModel.ErrNotFound {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %+v", err)
 		}

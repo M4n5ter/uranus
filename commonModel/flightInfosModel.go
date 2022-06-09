@@ -78,6 +78,8 @@ type (
 		FindPageListByPositionAndDays(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, days int64, limit int64) ([]*FlightInfos, error)
 		// FindTransferFlightsByPlace 根据出发地、目的地、出发日期查询中转航班(中转航班)
 		FindTransferFlightsByPlace(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, sod time.Time) ([]*Transfer, error)
+		// FindPageListByPositionSODAndDays 根据起始地点和距今日的日期差分页查询, limit <= 0 表示不分页
+		FindPageListByPositionSODAndDays(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, selectedDate time.Time, days int64, limit int64) ([]*FlightInfos, error)
 	}
 
 	defaultFlightInfosModel struct {
@@ -541,6 +543,44 @@ func (m *defaultFlightInfosModel) FindPageListByPositionAndDays(rowBuilder squir
 			rowBuilder = rowBuilder.Where("set_out_date between ? and ?", todayString, lastDateString)
 		} else {
 			rowBuilder = rowBuilder.Where(squirrel.Eq{"set_out_date": todayString})
+		}
+
+		if limit > 0 {
+			rowBuilder = rowBuilder.Limit(uint64(limit))
+		}
+	}
+
+	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*FlightInfos
+	err = m.QueryRowsNoCache(&resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+// FindPageListByPositionSODAndDays 根据起始地点和距选定的日期差分页查询, limit <= 0 表示不分页
+func (m *defaultFlightInfosModel) FindPageListByPositionSODAndDays(rowBuilder squirrel.SelectBuilder, departPosition, arrivePosition string, selectedDate time.Time, days int64, limit int64) ([]*FlightInfos, error) {
+	if len(departPosition) == 0 || len(arrivePosition) == 0 {
+		return nil, ErrNotFound
+	} else {
+		sod, _ := timeTools.Time2TimeYMD000(selectedDate)
+		sodString := sod.Format("2006-01-02 15:04:05")
+		lastDate := sod.AddDate(0, 0, int(days))
+		lastDateString := lastDate.Format("2006-01-02 15:04:05")
+		rowBuilder = rowBuilder.Where(squirrel.Eq{"depart_position": departPosition, "arrive_position": arrivePosition})
+		if days < 0 {
+			rowBuilder = rowBuilder.Where("set_out_date between ? and ?", lastDateString, sodString)
+		} else if days > 0 {
+			rowBuilder = rowBuilder.Where("set_out_date between ? and ?", sodString, lastDateString)
+		} else {
+			rowBuilder = rowBuilder.Where(squirrel.Eq{"set_out_date": sodString})
 		}
 
 		if limit > 0 {
