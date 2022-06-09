@@ -5,7 +5,7 @@ import (
 	"uranus/app/mqueue/cmd/rpc/mqueue"
 	"uranus/app/order/cmd/mq/internal/config"
 	"uranus/app/order/cmd/rpc/order"
-	"uranus/app/usercenter/cmd/rpc/usercenter"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/commonModel"
 
 	"github.com/zeromicro/go-zero/zrpc"

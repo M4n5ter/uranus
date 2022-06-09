@@ -12,7 +12,7 @@ import (
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/order/model"
 	paymentModel "uranus/app/payment/model"
-	"uranus/app/usercenter/cmd/rpc/usercenter"
+	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/common/kqueue"
 	"uranus/common/tool"
 	"uranus/common/wxminisub"
