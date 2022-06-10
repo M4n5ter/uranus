@@ -58,7 +58,7 @@ services:
     networks:
         - uranus_net
 
-#  #搜集kafka业务日志、存储prometheus监控数据
+  #搜集kafka业务日志、存储prometheus监控数据
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     container_name: elasticsearch
@@ -90,6 +90,19 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+
+#  # zinc 日志收集
+#  zinc:
+#    image: public.ecr.aws/zinclabs/zinc:latest
+#    container_name: zinc
+#    environment:
+#      ZINC_DATA_PATH: /data
+#      ZINC_FIRST_ADMIN_USER: uranus
+#      ZINC_FIRST_ADMIN_PASSWORD: uranus#123
+#    volumes:
+#      - ./data/zinc/data:/data
+#    ports:
+#      - "4080:4080"
 
   #消费kafka中filebeat收集的数据输出到es
   go-stash:
@@ -124,7 +137,7 @@ services:
       # 此处需指定docker的containers目录，取决于你docker的配置
       # 如snap安装的docker，则为/var/snap/docker/common/var-lib-docker/containers
       # - /var/snap/docker/common/var-lib-docker/containers:/var/lib/docker/containers
-      - /var/lib/docker/containers:/var/lib/docker/containers
+      - /home/i78/docker-data-root/containers:/var/lib/docker/containers
     networks:
       - uranus_net
     depends_on:
