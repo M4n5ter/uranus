@@ -30,7 +30,7 @@ func NewRecommendReturnJourneyByFlightInfoLogic(ctx context.Context, svcCtx *svc
 
 func (l *RecommendReturnJourneyByFlightInfoLogic) RecommendReturnJourneyByFlightInfo(req *types.RecommendReturnJourneyByFlightInfoReq) (resp *types.RecommendReturnJourneyByFlightInfoResp, err error) {
 	var sd time.Time
-	if sd, err := timeTools.String2TimeYMD(req.SelectedDate); err == nil {
+	if sd, err = timeTools.String2TimeYMD(req.SelectedDate); err == nil {
 		if sd.IsZero() {
 			return nil, errors.Wrapf(ERRIllegalInput, "Illegal input : SetOutDate is zero time(maybe wrong layout).")
 		}
