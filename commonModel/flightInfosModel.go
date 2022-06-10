@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/duke-git/lancet/v2/datetime"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/mr"
 	"strings"
 	"time"
@@ -592,7 +593,7 @@ func (m *defaultFlightInfosModel) FindPageListByPositionSODAndDays(rowBuilder sq
 	if err != nil {
 		return nil, err
 	}
-
+	logx.Errorf("调试点： query is : %+v\nvalues is : %+v", query, values)
 	var resp []*FlightInfos
 	err = m.QueryRowsNoCache(&resp, query, values...)
 	switch err {

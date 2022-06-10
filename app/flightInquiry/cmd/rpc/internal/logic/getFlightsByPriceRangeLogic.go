@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"uranus/app/flightInquiry/bizcache"
+	"uranus/common/timeTools"
 	"uranus/common/xerr"
 	"uranus/commonModel"
 
@@ -36,7 +37,7 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 	}
 
 	var flightInfos []*commonModel.FlightInfos
-
+	logx.Errorf("进入GetFlightsByPriceRange-rpc")
 	// 从 bizcache 查 id 列表
 	zset := fmt.Sprintf("GetFlightsByPriceRange-%s_%s", in.DepartPosition, in.ArrivePosition)
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
@@ -48,7 +49,7 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 		}
 
 		if flightInfos == nil {
-			return nil, errors.Wrapf(xerr.NewErrMsg("未找到航班信息"), "Err Not Found: departPosition: %s, arrivePosition: %s, days: %d, num: %d", in.DepartPosition, in.ArrivePosition, in.Days, in.Num)
+			return nil, errors.Wrapf(xerr.NewErrMsg("未找到航班信息"), "Err Not Found: departPosition: %s, arrivePosition: %s,selectedDate: %s, days: %d, num: %d", in.DepartPosition, in.ArrivePosition, timeTools.Timestamppb2TimeStringYMD(in.SelectedDate), in.Days, in.Num)
 		}
 
 		// 把 id 列表加进 bizcache
