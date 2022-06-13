@@ -37,13 +37,13 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 	}
 
 	var flightInfos []*commonModel.FlightInfos
-	logx.Errorf("进入GetFlightsByPriceRange-rpc")
+
 	// 从 bizcache 查 id 列表
 	zset := fmt.Sprintf("GetFlightsByPriceRange-%s_%s", in.DepartPosition, in.ArrivePosition)
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 	if err != nil || len(idList) == 0 {
 		// 查不到 bizcache
-		flightInfos, err := l.svcCtx.FlightInfosModel.FindPageListByPositionSODAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.SelectedDate.AsTime(), in.Days, in.Num)
+		flightInfos, err = l.svcCtx.FlightInfosModel.FindPageListByPositionSODAndDays(l.svcCtx.FlightInfosModel.RowBuilder(), in.DepartPosition, in.ArrivePosition, in.SelectedDate.AsTime(), in.Days, in.Num)
 		if err != nil && err != commonModel.ErrNotFound {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR : %+v", err)
 		}
@@ -59,12 +59,15 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 				logx.Errorf("ADD bizcache ERR: %v", err)
 			}
 		}
-
+		logx.Errorf("组合前航班信息: %+v", flightInfos)
 		combinedFLIs, err := l.svcCtx.CombineAllInfos(flightInfos)
-		filteredCombinedFLIs := slice.Filter(combinedFLIs, func(i int, v *pb.FlightInfo) bool {
-			total := int64(v.Price) - int64(float64(v.Discount)/100*float64(v.Price))
-			return total >= in.MinPrice && total <= in.MaxPrice
-		})
+		if err != nil {
+			return nil, err
+		}
+
+		logx.Errorf("过滤前航班信息: %+v", combinedFLIs)
+		filteredCombinedFLIs := filterByPrice(combinedFLIs, in.MinPrice, in.MaxPrice)
+		logx.Errorf("过滤后航班信息: %+v", filteredCombinedFLIs)
 		return &pb.GetFlightsByPriceRangeResp{UniqFlightWithSpaces: l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(filteredCombinedFLIs)}, nil
 	}
 
@@ -73,11 +76,21 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 	if err != nil {
 		return nil, err
 	}
-
+	logx.Errorf("组合前航班信息: %+v", flightInfos)
 	combinedFLIs, err := l.svcCtx.CombineAllInfos(flightInfos)
-	filteredCombinedFLIs := slice.Filter(combinedFLIs, func(i int, v *pb.FlightInfo) bool {
-		total := int64(v.Price) - int64(float64(v.Discount)/100*float64(v.Price))
-		return total >= in.MinPrice && total <= in.MaxPrice
-	})
+	if err != nil {
+		return nil, err
+	}
+
+	logx.Errorf("过滤前航班信息: %+v", combinedFLIs)
+	filteredCombinedFLIs := filterByPrice(combinedFLIs, in.MinPrice, in.MaxPrice)
+	logx.Errorf("过滤后航班信息: %+v", filteredCombinedFLIs)
 	return &pb.GetFlightsByPriceRangeResp{UniqFlightWithSpaces: l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(filteredCombinedFLIs)}, nil
+}
+
+func filterByPrice(s []*pb.FlightInfo, minPrice, maxPrice int64) []*pb.FlightInfo {
+	return slice.Filter(s, func(i int, v *pb.FlightInfo) bool {
+		total := int64(v.Price) - int64(float64(v.Discount)/100*float64(v.Price))
+		return total >= minPrice && total <= maxPrice
+	})
 }

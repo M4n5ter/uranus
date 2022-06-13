@@ -1,4 +1,4 @@
 .idea
-test/model
+scripts/model
 data
 dtm.bolt

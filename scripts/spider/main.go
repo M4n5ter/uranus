@@ -13,7 +13,7 @@ package main
 //	"strconv"
 //	"strings"
 //	"time"
-//	"uranus/test/payment"
+//	"uranus/scripts/payment"
 //)
 //
 //var CNFlightNames = `北京首都国际机场 PEK 北京

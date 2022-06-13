@@ -19,7 +19,7 @@ type Config struct {
 
 func TestFindTransferFlightsByPlace(t *testing.T) {
 	var c Config
-	conf.MustLoad("D:\\Project\\uranus\\test\\modelTest\\etc\\genData.yaml", &c)
+	conf.MustLoad("D:\\Project\\uranus\\scripts\\modelTest\\etc\\genData.yaml", &c)
 	flightInfosModel := commonModel.NewFlightInfosModel(sqlx.NewMysql(c.DB.DataSource), c.Cache)
 	transfers, err := flightInfosModel.FindTransferFlightsByPlace(flightInfosModel.RowBuilder(), "白云国际机场T2", "萧山国际机场T1", time.Date(2022, 3, 22, 0, 0, 0, 0, time.UTC))
 	if err != nil {

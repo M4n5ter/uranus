@@ -11,7 +11,7 @@ var GlobalDB *gorm.DB
 
 func init() {
 	db, err := gorm.Open(mysql.New(mysql.Config{
-		DSN:               "root:flightpassword@(putpp.com:13306)/test?charset=utf8mb4&parseTime=True&loc=Local",
+		DSN:               "root:flightpassword@(putpp.com:13306)/scripts?charset=utf8mb4&parseTime=True&loc=Local",
 		DefaultStringSize: 256,
 	}), &gorm.Config{
 		SkipDefaultTransaction:                   true,
