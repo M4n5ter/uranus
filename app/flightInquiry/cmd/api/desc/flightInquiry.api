@@ -12,25 +12,39 @@ import "types/types.api"
 
 @server(
 	group: flightInquiry
-	prefix: flightInquiry/v1
+	prefix: /flightInquiry/v1
 	jwt:	JwtAuth
 )
 service flightInquiry {
-	@doc "航班查询"
+	@doc "根据出发日期与航班号提供航班查询"
 	@handler QuireBySetOutDateAndFlightNumber
 	post /quiry/date-number (QuireBySetOutDateAndFlightNumberReq) returns(QuireBySetOutDateAndFlightNumberResp)
+	
+	@doc "根据出发日期、出发地、目的地提供航班查询"
 	@handler QuireBySetOutDateStartPositionEndPosition
 	post /quiry/date-position (QuireBySetOutDateStartPositionEndPositionReq) returns(QuireBySetOutDateStartPositionEndPositionResp)
+	
+	@doc "根据出发日期、出发地、目的地提供折扣航班查询"
 	@handler GetDiscountFlights
 	post /quiry/discount	(GetDiscountFlightsReq)	returns(GetDiscountFlightsResp)
+	
+	@doc "根据航班号查询指定天数内的航班"
 	@handler GetFlightsByFlightNumber
 	post /quiry/flights-by-number (GetFlightsByFlightNumberReq) returns(GetFlightsByFlightNumberResp)
+	
+	@doc "根据出发日期、出发地、目的地、价格区间提供航班查询"
 	@handler GetFlightsByPriceRange
 	post /quiry/flights-by-price (GetFlightsByPriceRangeReq) returns(GetFlightsByPriceRangeResp)
+	
+	@doc "根据出发日期、出发地、目的地提供中转航班查询"
 	@handler QuireTransferFlights
 	post /quiry/transfer (QuireTransferFlightsReq) returns(QuireTransferFlightsResp)
+	
+	@doc "提供指定日期的返程航班推荐"
 	@handler RecommendReturnJourneyByFlightInfo
 	post /quiry/return-journey (RecommendReturnJourneyByFlightInfoReq) returns(RecommendReturnJourneyByFlightInfoResp)
+	
+	@doc "根据票ID来查询对应航班信息"
 	@handler GetFlightDetailByTicketID
 	post /quiry/flightInfo-by-ticket (GetFlightDetailByTicketIDReq) returns(GetFlightDetailByTicketIDResp)
 }
