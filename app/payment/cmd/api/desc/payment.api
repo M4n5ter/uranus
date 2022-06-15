@@ -15,7 +15,7 @@ import(
 
 //支付服务v1版本的接口
 @server(
-	prefix: payment/v1
+	prefix: /payment/v1
 	group: payment
 	jwt:	JwtAuth
 )

@@ -11,7 +11,7 @@ import "user/user.api"
 import "qiniuoss.api"
 
 @server(
-	prefix: usercenter/v1
+	prefix: /usercenter/v1
 	group:  user
 )
 service usercenter {

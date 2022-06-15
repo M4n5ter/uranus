@@ -12,7 +12,7 @@ import "types/types.api"
 
 @server(
 	group: flightOrder
-	prefix: flightOrder/v1
+	prefix: /flightOrder/v1
 	jwt:	JwtAuth
 )
 service order {
