@@ -4,11 +4,9 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"
 	"time"
-	"uranus/app/flightInquiry/cmd/rpc/flightinquiry"
 	"uranus/app/flightReservation/cmd/rpc/internal/config"
 	"uranus/app/order/cmd/rpc/order"
 	"uranus/app/payment/cmd/rpc/payment"
-	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/commonModel"
 )
 
@@ -19,10 +17,8 @@ type ServiceContext struct {
 	SpacesModel               commonModel.SpacesModel
 	TicketsModel              commonModel.TicketsModel
 	RefundAndChangeInfosModel commonModel.RefundAndChangeInfosModel
-	FlightInquiryRpcClient    flightinquiry.FlightInquiry
 	OrderRpcClient            order.Order
 	PaymentRpcClient          payment.Payment
-	UserCenterRpcClient       usercenter.Usercenter
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -33,10 +29,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		SpacesModel:               commonModel.NewSpacesModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		TicketsModel:              commonModel.NewTicketsModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		RefundAndChangeInfosModel: commonModel.NewRefundAndChangeInfosModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
-		FlightInquiryRpcClient:    flightinquiry.NewFlightInquiry(zrpc.MustNewClient(c.FlightInquiryRpcConf)),
 		OrderRpcClient:            order.NewOrder(zrpc.MustNewClient(c.OrderRpcConf)),
 		PaymentRpcClient:          payment.NewPayment(zrpc.MustNewClient(c.PaymentRpcConf)),
-		UserCenterRpcClient:       usercenter.NewUsercenter(zrpc.MustNewClient(c.UserCenterRpcConf)),
 	}
 }
 

@@ -55,14 +55,7 @@ func (l *LocalPayLogic) LocalPay(req *types.LocalPaymentReq) (resp *types.LocalP
 
 	// 执行本地支付
 	resp, err = l.execLocalPay(orderDetail)
-	//if err != nil {
-	//
-	//	// 支付失败，恢复库存
-	//	if e := l.recoverSurplus(orderDetail.FlightOrder.TicketId); e != nil {
-	//		return nil, errors.Wrapf(err, "恢复库存失败, err: %v", e)
-	//	}
-	//	return nil, errors.Wrapf(err, "支付失败, err: %v", err)
-	//}
+
 	if err != nil {
 		return nil, err
 	}
@@ -184,28 +177,3 @@ func (l *LocalPayLogic) execLocalPay(orderDetail *order.FlightOrderDetailResp) (
 	}
 	return
 }
-
-//// 恢复占用的库存
-//func (l *LocalPayLogic) recoverSurplus(ticketID int64) error {
-//	// 恢复该订单占用的库存
-//	ticket, err := l.svcCtx.TicketsModel.FindOne(ticketID)
-//	if err != nil && err != commonModel.ErrNotFound {
-//		return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
-//	}
-//	if ticket == nil {
-//		return errors.Wrapf(xerr.NewErrMsg("票不存在"), "票不存在, ticketID: %d", ticketID)
-//	}
-//	space, err := l.svcCtx.SpacesModel.FindOne(ticket.SpaceId)
-//	if err != nil && err != commonModel.ErrNotFound {
-//		return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "DBERR: %v", err)
-//	}
-//	if ticket == nil {
-//		return errors.Wrapf(xerr.NewErrMsg("舱位不存在"), "舱位不存在, spaceID: %d", ticket.SpaceId)
-//	}
-//	space.Surplus = space.Surplus + 1
-//	err = l.svcCtx.SpacesModel.UpdateWithVersion(nil, space)
-//	if err != nil {
-//		return errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "更新库存失败 space: %+v", space)
-//	}
-//	return nil
-//}
