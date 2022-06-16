@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/hash"
 	"uranus/app/userCenter/cmd/rpc/usercenter"
 	"uranus/common/ctxdata"
 	"uranus/common/xerr"
@@ -33,7 +34,15 @@ func (l *UploadAvatarLogic) UploadAvatar(req *types.UploadAvatarReq) (resp *type
 		return nil, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "用户不存在,ID:%d", userID)
 	}
 
-	_, err = l.svcCtx.UsercenterRpcClient.UploadAvatar(l.ctx, &usercenter.UploadAvatarReq{UserId: userID, Avatar: req.AvatarBasePath})
+	userinfoResp, err := l.svcCtx.UsercenterRpcClient.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{Id: userID})
+	if err != nil {
+		return nil, err
+	}
+
+	nickname, mobile := userinfoResp.User.Nickname, userinfoResp.User.Mobile
+	key := hash.Md5Hex([]byte(nickname + "_" + mobile))
+
+	_, err = l.svcCtx.UsercenterRpcClient.UploadAvatar(l.ctx, &usercenter.UploadAvatarReq{UserId: userID, Avatar: key})
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("上传头像地址失败"), "RPC ERR : %+v", err)
 	}
