@@ -6,77 +6,84 @@ info(
     author: "王勇涛 <wangyongtao2000@qq.com>"
 )
 
+// 用户完整信息
 type User {
-    Id          int64       `json:"id"`
-    Mobile      string      `json:"mobile"`
-    Nickname    string      `json:"nickname"`
-    Sex         int64       `json:"sex"`
-    Avatar      string      `json:"avatar"`
-    Info        string      `json:"info"`
+    Id          int64       `json:"id"`         // 用户ID
+    Mobile      string      `json:"mobile"`     // 用户手机号
+    Nickname    string      `json:"nickname"`   // 用户昵称
+    Sex         int64       `json:"sex"`        // 性别 0:男 1:女 -1:未知
+    Avatar      string      `json:"avatar"`     // 头像链接
+    Info        string      `json:"info"`       // 信息（类似个人简介/个性签名）
 }
 
 type (
+    // 注册
     RegisterReq {
-        Mobile      string  `json:"mobile"`
-        Password    string  `json:"password"`
-        Sex         int64   `json:"sex"`    // 性别 0:男 1:女 -1:未知
-        Nickname    string  `json:"nickname"`
+        Mobile      string  `json:"mobile"`     // 用户手机号
+        Password    string  `json:"password"`   // 用户密码
+        Sex         int64   `json:"sex"`        // 性别 0:男 1:女 -1:未知
+        Nickname    string  `json:"nickname"`   // 用户昵称
     }
     RegisterResp {
-        AccessToken     string  `json:"accessToken"`
-        AccessExpire    int64   `json:"accessExpire"`
-        RefreshAfter    int64   `json:"refreshAfter"`
+        AccessToken     string  `json:"accessToken"`    // 身份凭证，请在 Header 中携带 Authorization: accessToken
+        AccessExpire    int64   `json:"accessExpire"`   // 凭证过期时间
+        RefreshAfter    int64   `json:"refreshAfter"`   // 凭证在该时间后刷新时间
     }
 )
 
 type (
+    // 登录
     LoginReq {
-        AuthType    string  `json:"authType"`
-        Mobile      string  `json:"mobile"`
-        Password    string  `json:"password"`
+        AuthType    string  `json:"authType"`       // 认证类型: system 代表平台内部, wxMini 代表微信小程序（暂不提供）
+        Mobile      string  `json:"mobile"`         // 用户手机号
+        Password    string  `json:"password"`       // 用户密码
     }
     LoginResp {
-        AccessToken     string `json:"accessToken"`
-        AccessExpire    int64  `json:"accessExpire"`
-        RefreshAfter    int64  `json:"refreshAfter"`
+        AccessToken     string  `json:"accessToken"`    // 身份凭证，请在 Header 中携带 Authorization: accessToken
+        AccessExpire    int64   `json:"accessExpire"`   // 凭证过期时间
+        RefreshAfter    int64   `json:"refreshAfter"`   // 凭证在该时间后刷新时间
     }
 )
 
 type (
+    // 微信小程序授权认证
     WXMiniAuthReq {
         Code          string `json:"code"`
         IV            string `json:"iv"`
         EncryptedData string `json:"encryptedData"`
     }
     WXMiniAuthResp {
-        AccessToken  string `json:"accessToken"`
-        AccessExpire int64  `json:"accessExpire"`
-        RefreshAfter int64  `json:"refreshAfter"`
+        AccessToken     string  `json:"accessToken"`    // 身份凭证，请在 Header 中携带 Authorization: accessToken
+        AccessExpire    int64   `json:"accessExpire"`   // 凭证过期时间
+        RefreshAfter    int64   `json:"refreshAfter"`   // 凭证在该时间后刷新时间
     }
 )
 
 type (
+    // 查询当前用户信息
     UserInfoReq {
     }
     UserInfoResp {
-        UserInfo User `json:"userInfo"`
+        UserInfo User `json:"userInfo"` // 用户完整信息
     }
 )
 
 type (
+    // 搜索用户信息
     SearchUserInfoReq {
-        UserId  int64 `json:"userId"`
+        UserId  int64 `json:"userId"`   // 用户ID
     }
     // 为保护隐私，Resp 中不应包含 Mobile
     SearchUserInfoResp {
-        UserInfo User `json:"userInfo"`
+        UserInfo User `json:"userInfo"` // 用户完整信息（不包含用户手机号）
     }
 )
 
 type (
+    // 获取用户钱包
     GetUserWalletReq {}
     GetUserWalletResp {
-        Balance int64 `json:"balance"`
+        Balance int64 `json:"balance"`  // 钱包余额
     }
 )
 

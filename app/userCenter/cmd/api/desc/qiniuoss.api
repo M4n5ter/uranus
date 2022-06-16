@@ -4,7 +4,7 @@ syntax = "v1"
 type (
     GetAvatarUpTokenReq {}
     GetAvatarUpTokenResp {
-        upToken string  `json:"upToken"`
+        upToken string  `json:"upToken"`        // 七牛云OSS上传凭证
     }
 )
 
@@ -12,14 +12,12 @@ type (
 type (
     GetAvatarSrcReq {}
     GetAvatarSrcResp {
-        avatarSrc string    `json:"avatarSrc"`
+        avatarSrc string    `json:"avatarSrc"`  // 头像链接（有效期 10_485_760 秒）
     }
 )
 
-// 上传头像
+// 上传头像到数据库
 type (
-    UploadAvatarReq {
-        avatarBasePath string   `json:"avatarBasePath"`
-    }
+    UploadAvatarReq {}
     UploadAvatarResp {}
 )

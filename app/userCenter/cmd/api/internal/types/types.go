@@ -2,37 +2,37 @@
 package types
 
 type User struct {
-	Id       int64  `json:"id"`
-	Mobile   string `json:"mobile"`
-	Nickname string `json:"nickname"`
-	Sex      int64  `json:"sex"`
-	Avatar   string `json:"avatar"`
-	Info     string `json:"info"`
+	Id       int64  `json:"id"`       // 用户ID
+	Mobile   string `json:"mobile"`   // 用户手机号
+	Nickname string `json:"nickname"` // 用户昵称
+	Sex      int64  `json:"sex"`      // 性别 0:男 1:女 -1:未知
+	Avatar   string `json:"avatar"`   // 头像链接
+	Info     string `json:"info"`     // 信息（类似个人简介/个性签名）
 }
 
 type RegisterReq struct {
-	Mobile   string `json:"mobile"`
-	Password string `json:"password"`
-	Sex      int64  `json:"sex"` // 性别 0:男 1:女 -1:未知
-	Nickname string `json:"nickname"`
+	Mobile   string `json:"mobile"`   // 用户手机号
+	Password string `json:"password"` // 用户密码
+	Sex      int64  `json:"sex"`      // 性别 0:男 1:女 -1:未知
+	Nickname string `json:"nickname"` // 用户昵称
 }
 
 type RegisterResp struct {
-	AccessToken  string `json:"accessToken"`
-	AccessExpire int64  `json:"accessExpire"`
-	RefreshAfter int64  `json:"refreshAfter"`
+	AccessToken  string `json:"accessToken"`  // 身份凭证，请在 Header 中携带 Authorization: accessToken
+	AccessExpire int64  `json:"accessExpire"` // 凭证过期时间
+	RefreshAfter int64  `json:"refreshAfter"` // 凭证在该时间后刷新时间
 }
 
 type LoginReq struct {
-	AuthType string `json:"authType"`
-	Mobile   string `json:"mobile"`
-	Password string `json:"password"`
+	AuthType string `json:"authType"` // 认证类型: system 代表平台内部, wxMini 代表微信小程序（暂不提供）
+	Mobile   string `json:"mobile"`   // 用户手机号
+	Password string `json:"password"` // 用户密码
 }
 
 type LoginResp struct {
-	AccessToken  string `json:"accessToken"`
-	AccessExpire int64  `json:"accessExpire"`
-	RefreshAfter int64  `json:"refreshAfter"`
+	AccessToken  string `json:"accessToken"`  // 身份凭证，请在 Header 中携带 Authorization: accessToken
+	AccessExpire int64  `json:"accessExpire"` // 凭证过期时间
+	RefreshAfter int64  `json:"refreshAfter"` // 凭证在该时间后刷新时间
 }
 
 type WXMiniAuthReq struct {
@@ -42,49 +42,48 @@ type WXMiniAuthReq struct {
 }
 
 type WXMiniAuthResp struct {
-	AccessToken  string `json:"accessToken"`
-	AccessExpire int64  `json:"accessExpire"`
-	RefreshAfter int64  `json:"refreshAfter"`
+	AccessToken  string `json:"accessToken"`  // 身份凭证，请在 Header 中携带 Authorization: accessToken
+	AccessExpire int64  `json:"accessExpire"` // 凭证过期时间
+	RefreshAfter int64  `json:"refreshAfter"` // 凭证在该时间后刷新时间
 }
 
 type UserInfoReq struct {
 }
 
 type UserInfoResp struct {
-	UserInfo User `json:"userInfo"`
+	UserInfo User `json:"userInfo"` // 用户完整信息
 }
 
 type SearchUserInfoReq struct {
-	UserId int64 `json:"userId"`
+	UserId int64 `json:"userId"` // 用户ID
 }
 
 type SearchUserInfoResp struct {
-	UserInfo User `json:"userInfo"`
+	UserInfo User `json:"userInfo"` // 用户完整信息（不包含用户手机号）
 }
 
 type GetUserWalletReq struct {
 }
 
 type GetUserWalletResp struct {
-	Balance int64 `json:"balance"`
+	Balance int64 `json:"balance"` // 钱包余额
 }
 
 type GetAvatarUpTokenReq struct {
 }
 
 type GetAvatarUpTokenResp struct {
-	UpToken string `json:"upToken"`
+	UpToken string `json:"upToken"` // 七牛云OSS上传凭证
 }
 
 type GetAvatarSrcReq struct {
 }
 
 type GetAvatarSrcResp struct {
-	AvatarSrc string `json:"avatarSrc"`
+	AvatarSrc string `json:"avatarSrc"` // 头像链接（有效期 10_485_760 秒）
 }
 
 type UploadAvatarReq struct {
-	AvatarBasePath string `json:"avatarBasePath"`
 }
 
 type UploadAvatarResp struct {

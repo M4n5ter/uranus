@@ -10,62 +10,45 @@ info(
 
 type (
     TF {
-        Time string `json:"time"`
-        Fee  uint64 `json:"fee"`
+        Time string `json:"time"`       // 时间
+        Fee  uint64 `json:"fee"`        // 日期
     }
-    //退票信息
+
     RefundInfo {
-        TFs     []TF`json:"tfs"`
+        TFs     []TF`json:"tfs"`        // 退票信息
     }
-    //改票信息
+
     ChangeInfo {
-        TFs     []TF`json:"tfs"`
+        TFs     []TF`json:"tfs"`        // 改票信息
     }
 
     //航班信息
     Flightinfo {
-        // 航班信息ID
-        FlightInfoID    int64       `json:"flightInfoId"`
-        //航班号，例如MU5735
-        FlightNumber    string      `json:"flightNumber"`
-        //机型
-        FlightType      string      `json:"flightType"`
-        //出发日期
-        SetOutDate      string      `json:"setOutDate"`
-        //是否为头等舱/商务舱
-        IsFirstClass    bool        `json:"isFirstClass"`
-        //舱位ID
-        SpaceID         int64       `json:"spaceId"`
-        //票价(￥)
-        Price uint64                `json:"price"`
-        //折扣(-n%)
-        Discount int64              `json:"discount"`
-        //剩余量(由于有超卖可能性，可能为负)
-        Surplus int64              `json:"surplus"`
-        //准点率(例如97，表示97%)
-        Punctuality uint32          `json:"punctuality"`
-        //起飞地点
-        DepartPosition string       `json:"departPosition"`
-        //起飞时间
-        DepartTime  string          `json:"departTime"`
-        //降落地点
-        ArrivePosition string       `json:"arrivePosition"`
-        //降落时间
-        ArriveTime  string          `json:"arriveTime"`
-        //退票信息
-        RefundInfo  RefundInfo      `json:"refundInfo"`
-        //改票信息
-        ChangeInfo  RefundInfo      `json:"changeInfo"`
+        FlightInfoID    int64       `json:"flightInfoId"`       // 航班信息ID
+        FlightNumber    string      `json:"flightNumber"`       // 航班号，例如MU5735
+        FlightType      string      `json:"flightType"`         // 机型
+        SetOutDate      string      `json:"setOutDate"`         // 出发日期
+        IsFirstClass    bool        `json:"isFirstClass"`       // 是否为头等舱/商务舱
+        SpaceID         int64       `json:"spaceId"`            // 舱位ID
+        Price uint64                `json:"price"`              // 票价(￥)
+        Discount int64              `json:"discount"`           // 折扣(-n%)
+        Surplus int64              `json:"surplus"`             // 剩余量(由于有超卖可能性，可能为负)
+        Punctuality uint32          `json:"punctuality"`        // 准点率(例如97，表示97%)
+        DepartPosition string       `json:"departPosition"`     // 起飞地点
+        DepartTime  string          `json:"departTime"`         // 起飞时间
+        ArrivePosition string       `json:"arrivePosition"`     // 降落地点
+        ArriveTime  string          `json:"arriveTime"`         // 降落时间
+        RefundInfo  RefundInfo      `json:"refundInfo"`         // 退票信息
+        ChangeInfo  RefundInfo      `json:"changeInfo"`         // 改票信息
     }
-
+    // 表示一条航班
     UniqFlightWithSpaces {
-        // 航班信息ID
-        FlightInfoID            int64           `json:"flightInfoId"`
-        SpacesOfFlightInfo      []Flightinfo    `json:"spacesOfFlightInfo"`
+        FlightInfoID            int64           `json:"flightInfoId"`           // 航班信息ID
+        SpacesOfFlightInfo      []Flightinfo    `json:"spacesOfFlightInfo"`     // 一条航班的2种舱位，正常应该只返回2个，经济舱和头等舱/商务舱
     }
 
     TransferFlights {
-        UniqFlightWithSpaceses  []*UniqFlightWithSpaces  `json:"uniqFlightWithSpaceses"`
+        UniqFlightWithSpaceses  []*UniqFlightWithSpaces  `json:"uniqFlightWithSpaceses"`    // 组成一条中转航班的多条航班
     }
 )
 
@@ -73,125 +56,101 @@ type (
 type (
     //QuireBySetOutDateAndFlightNumberReq 通过给定日期、航班号进行航班查询请求
     QuireBySetOutDateAndFlightNumberReq {
-        //航班号，例如MU5735
-        FlightNumber    string      `json:"flightNumber"`
-        //出发日期
-        SetOutDate      string      `json:"setOutDate"`
+        FlightNumber    string      `json:"flightNumber"`   // 航班号，例如MU5735
+        SetOutDate      string      `json:"setOutDate"`     // 出发日期
     }
     //QuireBySetOutDateAndFlightNumberResp 为 QuireBySetOutDateAndFlightNumberReq 的响应
     QuireBySetOutDateAndFlightNumberResp {
-        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`   // 多条航班内容
     }
 )
 
 type (
     //QuireBySetOutDateStartPositionEndPositionReq 通过给定日期、出发地、目的地进行航班查询请求
     QuireBySetOutDateStartPositionEndPositionReq {
-        //出发日期
-        SetOutDate      string      `json:"setOutDate"`
-        //出发地
-        DepartPosition  string      `json:"departPosition"`
-        //目的地
-        ArrivePosition  string      `json:"arrivePosition"`
+        SetOutDate      string      `json:"setOutDate"`         // 出发日期
+        DepartPosition  string      `json:"departPosition"`     // 起飞地点
+        ArrivePosition  string      `json:"arrivePosition"`     // 降落地点
     }
-        //QuireBySetOutDateStartPositionEndPositionResp 为 QuireBySetOutTimeStartPositionEndPositionReq 的响应
+
     QuireBySetOutDateStartPositionEndPositionResp {
-        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`   // 多条航班内容
     }
 )
 
 type (
     //GetDiscountFlightsReq 查询两地之间 days 天内的 num 条折扣航班(优先返回折扣大的航班)
     GetDiscountFlightsReq {
-        //出发地
-        DepartPosition  string      `json:"departPosition"`
-        //目的地
-        ArrivePosition  string      `json:"arrivePosition"`
-        //选定日期
-        SelectedDate    string      `json:"selectedDate"`
-        //天数
-        Days            int64       `json:"days"`
-        //条数
-        Num             int64       `json:"num"`
+        DepartPosition  string      `json:"departPosition"`     // 起飞地点
+        ArrivePosition  string      `json:"arrivePosition"`     // 降落地点
+        SelectedDate    string      `json:"selectedDate"`       // 选定日期
+        Days            int64       `json:"days"`               // 天数
+        Num             int64       `json:"num"`                // 条数
     }
 
     GetDiscountFlightsResp {
-        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`   // 多条航班内容
     }
 )
 
 type (
     //GetFlightsByFlightNumberReq 根据航班号查询数据
     GetFlightsByFlightNumberReq {
-        // 航班号
-        FlightNumber    string      `json:"flightNumber"`
-        //天数
-        Days            int64       `json:"days"`
-        //条数
-        Num             int64       `json:"num"`
+        FlightNumber    string      `json:"flightNumber"`       // 航班号
+        Days            int64       `json:"days"`               // 天数
+        Num             int64       `json:"num"`                // 条数
     }
 
     GetFlightsByFlightNumberResp {
-        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`   // 多条航班内容
     }
 )
 
 type (
     //GetFlightsByPriceRangeReq 查询两地之间指定价格区间的航班
     GetFlightsByPriceRangeReq {
-        //出发地
-        DepartPosition  string      `json:"departPosition"`
-        //目的地
-        ArrivePosition  string      `json:"arrivePosition"`
-        //最高价格(分)
-        MaxPrice        int64       `json:"maxPrice"`
-        //最低价格(分)
-        MinPrice        int64       `json:"minPrice"`
-        //选定日期
-        SelectedDate    string      `json:"selectedDate"`
-        //天数
-        Days            int64       `json:"days"`
-        //条数
-        Num             int64       `json:"num"`
+        DepartPosition  string      `json:"departPosition"`     // 起飞地点
+        ArrivePosition  string      `json:"arrivePosition"`     // 降落地点
+        MaxPrice        int64       `json:"maxPrice"`           // 最高价格(分)
+        MinPrice        int64       `json:"minPrice"`           // 最低价格(分)
+        SelectedDate    string      `json:"selectedDate"`       // 选定日期
+        Days            int64       `json:"days"`               // 天数
+        Num             int64       `json:"num"`                // 条数
     }
     GetFlightsByPriceRangeResp {
-        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`   // 多条航班内容
     }
 )
 
 type (
     //QuireTransferFlightsReq 查询中转航班
     QuireTransferFlightsReq {
-        //出发地
-        DepartPosition  string      `json:"departPosition"`
-        //目的地
-        ArrivePosition  string      `json:"arrivePosition"`
-        //出发日期
-        SetOutDate      string      `json:"setOutDate"`
+        DepartPosition  string      `json:"departPosition"`     // 起飞地点
+        ArrivePosition  string      `json:"arrivePosition"`     // 降落地点
+        SetOutDate      string      `json:"setOutDate"`         // 出发日期
     }
     QuireTransferFlightsResp {
-        Transfers       []TransferFlights   `json:"transfers"`
+        Transfers       []TransferFlights   `json:"transfers"`  // 多条中转航班
     }
 )
 
 type (
     //根据指定航班信息提供返程机票推荐(仅支持直飞)
     RecommendReturnJourneyByFlightInfoReq {
-        FlightInfoID             int64                      `json:"flightInfoId"`
-        //选定日期
-        SelectedDate    string      `json:"selectedDate"`
+        FlightInfoID    int64       `json:"flightInfoId"`   // 航班信息 ID
+        SelectedDate    string      `json:"selectedDate"`   // 选定日期
     }
     RecommendReturnJourneyByFlightInfoResp {
-        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`
+        UniqFlightWithSpaces     []*UniqFlightWithSpaces    `json:"uniqFlightWithSpaces"`   // 多条航班内容
     }
 )
 
 type (
     //根据 ticketID 查询航班详情
     GetFlightDetailByTicketIDReq {
-        TicketID                 int64  `json:"ticketId"`
+        TicketID                 int64  `json:"ticketId"`           // 票 ID
     }
     GetFlightDetailByTicketIDResp {
-        Flightinfo               Flightinfo `json:"flightinfo"`
+        Flightinfo               Flightinfo `json:"flightinfo"`     // 航班信息(不包含舱位等信息)
     }
 )
