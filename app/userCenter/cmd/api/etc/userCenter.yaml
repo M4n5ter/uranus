@@ -21,11 +21,6 @@ UserCenterRpc:
     - 127.0.0.1:9013
   NonBlock: true
 
-AuthRpc:
-  Endpoints:
-    - 127.0.0.1:9011
-  NonBlock: true
-
 #监控
 Prometheus:
   Host: 0.0.0.0
