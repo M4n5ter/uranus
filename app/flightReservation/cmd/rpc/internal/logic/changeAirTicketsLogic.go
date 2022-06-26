@@ -109,13 +109,13 @@ func (l *ChangeAirTicketsLogic) ChangeAirTickets(in *pb.ChangeAirTicketsReq) (*p
 		return nil
 	}, func() error {
 		// 查询旧订单支付时的费用
-		paymentResp, err := l.svcCtx.PaymentRpcClient.GetPaymentBySn(l.ctx, &payment.GetPaymentBySnReq{Sn: in.OrderSn})
+		paymentResp, err := l.svcCtx.PaymentRpcClient.GetPaymentSuccessRefundByOrderSn(l.ctx, &payment.GetPaymentSuccessRefundByOrderSnReq{OrderSn: in.OrderSn})
 		if err != nil {
 			return err
 		}
 
 		if paymentResp.PaymentDetail.PayStatus != paymentModel.PaymentLocalPayStatusSuccess {
-			return errors.Wrapf(xerr.NewErrMsg("支付流水异常，请联系管理员"), "支付流水状态与订单状态不符，订单为带使用，流水却不是已支付. paymentSn: %s", paymentResp.PaymentDetail.Sn)
+			return errors.Wrapf(xerr.NewErrMsg("支付流水异常，请联系管理员"), "支付流水状态与订单状态不符，订单为未使用，流水却不是已支付. paymentSn: %s", paymentResp.PaymentDetail.Sn)
 		}
 
 		oriPay = paymentResp.PaymentDetail.PayTotal
