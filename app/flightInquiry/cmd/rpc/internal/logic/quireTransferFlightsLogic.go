@@ -59,19 +59,9 @@ func (l *QuireTransferFlightsLogic) QuireTransferFlights(in *pb.QuireTransferFli
 				logx.Errorf("ADD bizcache ERR: %v", err)
 			}
 		}
-
-		for _, transfer := range transfers {
-			combinedFLIs, err := l.svcCtx.CombineAllInfos(transfer.F)
-			if err != nil {
-				return nil, err
-			}
-
-			combinedTransfers = append(combinedTransfers, &pb.TransferFlightInfo{UniqFlightWithSpaces: l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedFLIs)})
-		}
-		return &pb.QuireTransferFlightsResp{TransferFlights: combinedTransfers}, nil
 	}
 
-	// 查到 bizcache
+	// 组合出需要的中转信息
 	for _, transfer := range transfers {
 		combinedFLIs, err := l.svcCtx.CombineAllInfos(transfer.F)
 		if err != nil {

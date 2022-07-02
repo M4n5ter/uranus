@@ -55,21 +55,12 @@ func (l *QuireBySetOutDateStartPositionEndPositionLogic) QuireBySetOutDateStartP
 				logx.Errorf("ADD bizcache ERR: %v", err)
 			}
 		}
-
-		// 组合数据并返回
-		combinedResp, err := l.svcCtx.CombineAllInfos(flightInfos)
+	} else {
+		// 查到bizcache的情况
+		flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
 		if err != nil {
 			return nil, err
 		}
-
-		ret := l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedResp)
-		return &pb.QuireBySetOutDateStartPositionEndPositionResp{UniqFlightWithSpaces: ret}, nil
-	}
-
-	// 查到bizcache的情况
-	flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
-	if err != nil {
-		return nil, err
 	}
 
 	// 组合数据并返回

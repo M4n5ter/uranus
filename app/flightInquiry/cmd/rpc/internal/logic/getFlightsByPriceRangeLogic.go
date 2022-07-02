@@ -59,23 +59,14 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 				logx.Errorf("ADD bizcache ERR: %v", err)
 			}
 		}
-		logx.Errorf("组合前航班信息: %+v", flightInfos)
-		combinedFLIs, err := l.svcCtx.CombineAllInfos(flightInfos)
+	} else {
+		// 查到 bizcache
+		flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
 		if err != nil {
 			return nil, err
 		}
-
-		logx.Errorf("过滤前航班信息: %+v", combinedFLIs)
-		filteredCombinedFLIs := filterByPrice(combinedFLIs, in.MinPrice, in.MaxPrice)
-		logx.Errorf("过滤后航班信息: %+v", filteredCombinedFLIs)
-		return &pb.GetFlightsByPriceRangeResp{UniqFlightWithSpaces: l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(filteredCombinedFLIs)}, nil
 	}
 
-	// 查到 bizcache
-	flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
-	if err != nil {
-		return nil, err
-	}
 	logx.Errorf("组合前航班信息: %+v", flightInfos)
 	combinedFLIs, err := l.svcCtx.CombineAllInfos(flightInfos)
 	if err != nil {

@@ -58,21 +58,12 @@ func (l *GetFlightsByFlightNumberLogic) GetFlightsByFlightNumber(in *pb.GetFligh
 				logx.Errorf("ADD bizcache ERR: %v", err)
 			}
 		}
-
-		combinedResp, err := l.svcCtx.CombineAllInfos(flightInfos)
+	} else {
+		// 查到 bizcache
+		flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
 		if err != nil {
 			return nil, err
 		}
-
-		uniqFlightWithSpaces := l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedResp)
-
-		return &pb.GetFlightsByFlightNumberResp{UniqFlightWithSpaces: uniqFlightWithSpaces}, nil
-	}
-
-	// 查到 bizcache
-	flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
-	if err != nil {
-		return nil, err
 	}
 
 	combinedResp, err := l.svcCtx.CombineAllInfos(flightInfos)

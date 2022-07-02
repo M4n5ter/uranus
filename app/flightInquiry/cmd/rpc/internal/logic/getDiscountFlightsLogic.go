@@ -62,21 +62,12 @@ func (l *GetDiscountFlightsLogic) GetDiscountFlights(in *pb.GetDiscountFlightsRe
 				logx.Errorf("ADD bizcache ERR: %v", err)
 			}
 		}
-
-		// 组合成完整数据组
-		combinedInfos, err := l.svcCtx.CombineAllInfos(flightInfos)
+	} else {
+		// 查到 bizcache
+		flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
 		if err != nil {
 			return nil, err
 		}
-
-		discountFlights := l.getDiscountFlights(combinedInfos, in.Num)
-		ret := l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(discountFlights)
-		return &pb.GetDiscountFlightsResp{UniqFlightWithSpaces: ret}, nil
-	}
-	// 查到 bizcache
-	flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
-	if err != nil {
-		return nil, err
 	}
 
 	// 组合成完整数据组

@@ -66,20 +66,12 @@ func (l *RecommendReturnJourneyByFlightInfoLogic) RecommendReturnJourneyByFlight
 				logx.Errorf("ADD bizcache ERR: %v", err)
 			}
 		}
-
-		combinedFLIs, err := l.svcCtx.CombineAllInfos(flightInfos)
+	} else {
+		// 找到 bizcache
+		flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
 		if err != nil {
 			return nil, err
 		}
-
-		ret := l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(combinedFLIs)
-		return &pb.RecommendReturnJourneyByFlightInfoResp{UniqFlightWithSpaces: ret}, nil
-	}
-
-	// 找到 bizcache
-	flightInfos, err = l.svcCtx.GetFlightInfosByIdList(idList)
-	if err != nil {
-		return nil, err
 	}
 
 	combinedFLIs, err := l.svcCtx.CombineAllInfos(flightInfos)
