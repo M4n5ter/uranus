@@ -39,7 +39,7 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 	var flightInfos []*commonModel.FlightInfos
 
 	// 从 bizcache 查 id 列表
-	zset := fmt.Sprintf("GetFlightsByPriceRange-%s_%s", in.DepartPosition, in.ArrivePosition)
+	zset := fmt.Sprintf("GetFlightsByPriceRange-%s_%s_%s", in.DepartPosition, in.ArrivePosition, timeTools.Timestamppb2TimeStringYMD(in.SelectedDate))
 	idList, err := bizcache.ListAll(l.svcCtx.Redis, zset, bizcache.BizFLICachePrefix)
 	if err != nil || len(idList) == 0 {
 		// 查不到 bizcache
@@ -67,15 +67,12 @@ func (l *GetFlightsByPriceRangeLogic) GetFlightsByPriceRange(in *pb.GetFlightsBy
 		}
 	}
 
-	logx.Errorf("组合前航班信息: %+v", flightInfos)
 	combinedFLIs, err := l.svcCtx.CombineAllInfos(flightInfos)
 	if err != nil {
 		return nil, err
 	}
 
-	logx.Errorf("过滤前航班信息: %+v", combinedFLIs)
 	filteredCombinedFLIs := filterByPrice(combinedFLIs, in.MinPrice, in.MaxPrice)
-	logx.Errorf("过滤后航班信息: %+v", filteredCombinedFLIs)
 	return &pb.GetFlightsByPriceRangeResp{UniqFlightWithSpaces: l.svcCtx.GetUniqFlightWithSpacesFromCombinedFlightInfos(filteredCombinedFLIs)}, nil
 }
 
