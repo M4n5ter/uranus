@@ -18,7 +18,7 @@ type FlightOrder {
     arriveTime          string  `json:"arriveTime"`         // 降落地点
     ticketPrice         int64   `json:"ticketPrice"`        // 票价(分)
     discount            int64   `json:"discount"`           // 折扣(-n%)
-    tradeState          int64   `json:"tradeState"`         // 交易状态（-1: 已取消 0:待支付 1:未使用 2:已使用  3:已退款 4:已过期）
+    tradeState          int64   `json:"tradeState"`         // 交易状态（-2: 已废弃 -1: 已取消 0:待支付 1:未使用 2:已使用  3:已退款 4:已过期）
     TradeCode           string  `json:"tradeCode"`          // 仅第三方平台订单才会提供该字段的值
     orderTotalPrice     int64   `json:"orderTotalPrice"`    // 订单总价(分)(ticketPrice-ticketPrice*discount)
     createTime          string  `json:"createTime"`         // 订单创建时间
@@ -29,7 +29,7 @@ type (
     UserFlightOrderListReq {
         LastId      int64 `json:"lastId"`       // 最大的 id ，小于等于 0 表示不做最大 id 限制
         pageSize    int64 `json:"pageSize"`     // 查询的条数
-        TraderState int64 `json:"traderState"`  // 交易状态（-1: 已取消 0:待支付 1:未使用 2:已使用  3:已退款 4:已过期）
+        TraderState int64 `json:"traderState"`  // 交易状态（-2: 已废弃 -1: 已取消 0:待支付 1:未使用 2:已使用  3:已退款 4:已过期）
     }
     UserFlightOrderListResp {
         flightOrderList []string `json:"flightOrderList"`// 用户拥有的订单号
