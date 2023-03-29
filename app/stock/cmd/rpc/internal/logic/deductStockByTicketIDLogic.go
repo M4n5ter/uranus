@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"database/sql"
-	"github.com/dtm-labs/dtm/dtmgrpc"
+	"github.com/dtm-labs/dtm/client/dtmgrpc"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"google.golang.org/grpc/codes"

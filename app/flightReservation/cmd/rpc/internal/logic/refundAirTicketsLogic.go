@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 	"fmt"
-	"github.com/dtm-labs/dtm/dtmcli/logger"
-	"github.com/dtm-labs/dtm/dtmgrpc"
+	"github.com/dtm-labs/dtm/client/dtmcli/logger"
+	"github.com/dtm-labs/dtm/client/dtmgrpc"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/mr"
 	"google.golang.org/protobuf/types/known/timestamppb"
