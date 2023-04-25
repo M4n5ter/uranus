@@ -3,7 +3,7 @@ module uranus
 go 1.18
 
 require (
-	github.com/Masterminds/squirrel v1.5.2
+	github.com/Masterminds/squirrel v1.5.4
 	github.com/casbin/casbin/v2 v2.42.0
 	github.com/casbin/gorm-adapter/v3 v3.5.0
 	github.com/dtm-labs/dtm v1.17.1
