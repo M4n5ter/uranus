@@ -13,7 +13,7 @@ require (
 	github.com/golang/protobuf v1.5.3
 	github.com/hibiken/asynq v0.22.1
 	github.com/jinzhu/copier v0.3.5
-	github.com/panjf2000/ants/v2 v2.5.0
+	github.com/panjf2000/ants/v2 v2.7.3
 	github.com/pkg/errors v0.9.1
 	github.com/qiniu/go-sdk/v7 v7.12.1
 	github.com/shopspring/decimal v1.3.1
