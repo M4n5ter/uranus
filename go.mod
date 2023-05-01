@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
-	github.com/casbin/casbin/v2 v2.42.0
+	github.com/casbin/casbin/v2 v2.68.0
 	github.com/casbin/gorm-adapter/v3 v3.5.0
 	github.com/dtm-labs/dtm v1.17.1
 	github.com/duke-git/lancet/v2 v2.1.14
