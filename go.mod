@@ -18,7 +18,7 @@ require (
 	github.com/qiniu/go-sdk/v7 v7.12.1
 	github.com/shopspring/decimal v1.3.1
 	github.com/silenceper/wechat/v2 v2.1.4
-	github.com/sony/sonyflake v1.0.0
+	github.com/sony/sonyflake v1.1.0
 	github.com/wechatpay-apiv3/wechatpay-go v0.2.16
 	github.com/zeromicro/go-queue v1.1.3
 	github.com/zeromicro/go-zero v1.5.0
