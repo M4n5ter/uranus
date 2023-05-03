@@ -8,7 +8,7 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.5.0
 	github.com/dtm-labs/dtm v1.17.1
 	github.com/duke-git/lancet/v2 v2.1.14
-	github.com/go-sql-driver/mysql v1.7.0
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/protobuf v1.5.3
 	github.com/hibiken/asynq v0.22.1
